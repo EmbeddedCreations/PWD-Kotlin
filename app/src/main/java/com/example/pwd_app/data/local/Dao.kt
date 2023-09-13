@@ -61,6 +61,7 @@ interface Dao {
     @Query("SELECT COUNT(*) FROM ImageDataTable")
     suspend fun getDbCount(): Int
 
-//    @Delete
-//    suspend fun delete(imageData: ImageData)
+    @Query("DELETE FROM ImageDataTable WHERE school_Name = :schoolName AND po_office = :poOffice")
+    suspend fun deleteItems(schoolName: String, poOffice: String)
+
 }

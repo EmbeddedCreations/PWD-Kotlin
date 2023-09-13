@@ -39,7 +39,7 @@ interface ApiInterface{
         @Query("user") user: String
     ):Response<List<SchoolData>>
 
-    @GET("appFetchSchools.php")
+    @GET("appFetchSchoolBuildings.php")
     suspend fun getBuildings(
         @Query("user") user: String,
         @Query("school") school: String

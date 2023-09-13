@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.R
 import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.repository.LocalDatabaseRepository
-import com.example.pwd_app.viewModel.buildingDisplay.BuildingAdapter
 import com.example.pwd_app.viewModel.buildingDisplay.LocalDbAdapter
 
 class LocalDbView : Fragment() {
