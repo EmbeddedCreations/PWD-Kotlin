@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Profile">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/local_dbCount"
+        android:text="items in Local DB : 0"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <!-- Status Text -->
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Internet Status"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="8dp"
+        />
+
+    <!-- Status Icon -->
+    <ImageView
+        android:id="@+id/statusIcon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginStart="8dp"
+        android:contentDescription="Status"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/statusText" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.50" />
+
+    <!-- Round Profile Icon -->
+    <ImageView
+        android:id="@+id/profile_icon"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="100dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/profile"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5" />
+
+
+    <!-- ATC Office Label -->
+    <TextView
+        android:id="@+id/atc_office_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="ATC Office:"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/atc_office_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/profile_icon"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <!-- ATC Office Text -->
+    <TextView
+        android:id="@+id/atc_office_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/atc_office_label"
+        app:layout_constraintTop_toBottomOf="@+id/profile_icon"
+        app:layout_constraintVertical_bias="0.1" />
+
+    <!-- PO Office Label -->
+    <TextView
+        android:id="@+id/po_office_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="PO Office:"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/po_office_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/atc_office_text"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <!-- PO Office Text -->
+    <TextView
+        android:id="@+id/po_office_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/po_office_label"
+        app:layout_constraintTop_toBottomOf="@+id/atc_office_text"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <!-- Junior Engineer Name Label -->
+    <TextView
+        android:id="@+id/junior_engineer_name_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Jr Engineer:"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toStartOf="@+id/junior_engineer_name_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/po_office_text"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <!-- Junior Engineer Name Text -->
+    <TextView
+        android:id="@+id/junior_engineer_name_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/junior_engineer_name_label"
+        app:layout_constraintTop_toBottomOf="@+id/po_office_text"
+        app:layout_constraintVertical_bias="0.05" />
+
+    <!-- Add this Guideline for setting the maximum width -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/buttonMaxWidthGuideline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" /> <!-- Adjust the percentage to control the maximum width -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/buttonWidthGuideline"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25" /> <!-- Adjust the percentage to control the maximum width -->
+
+
+    <!-- Button - View History -->
+    <Button
+        android:id="@+id/view_history_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="View History"
+        app:layout_constraintEnd_toEndOf="@+id/buttonMaxWidthGuideline"
+    app:layout_constraintStart_toStartOf="@+id/buttonWidthGuideline"
+    app:layout_constraintTop_toBottomOf="@+id/junior_engineer_name_text" />
+
+    <!-- Button - Upload Local DB -->
+    <Button
+        android:id="@+id/upload_db_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Upload Local DB"
+        app:layout_constraintEnd_toEndOf="@+id/buttonMaxWidthGuideline"
+    app:layout_constraintStart_toStartOf="@+id/buttonWidthGuideline"
+    app:layout_constraintTop_toBottomOf="@+id/view_history_button" />
+    <Button
+        android:id="@+id/view_db_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="View Local DB"
+        app:layout_constraintEnd_toEndOf="@+id/buttonMaxWidthGuideline"
+        app:layout_constraintStart_toStartOf="@+id/buttonWidthGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/upload_db_button" />
+    <Button
+        android:id="@+id/logOutButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Log out"
+        app:layout_constraintEnd_toEndOf="@+id/buttonMaxWidthGuideline"
+        app:layout_constraintStart_toStartOf="@+id/buttonWidthGuideline"
+        app:layout_constraintTop_toBottomOf="@+id/view_db_button" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
