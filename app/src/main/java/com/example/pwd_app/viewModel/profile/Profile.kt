@@ -35,6 +35,7 @@ import com.example.pwd_app.viewModel.upload.UploadViewModelFactory
 import kotlinx.coroutines.launch
 
 class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
+    private lateinit var sessionManager: SessionManager
     private lateinit var localDbViewModel: LocalDbViewModel
     private lateinit var uploadViewModel : UploadViewModel
     private lateinit var atcOfficeText: TextView
@@ -44,9 +45,9 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var logOutButton: Button
     private lateinit var status: ImageView
     private lateinit var networkStatusUtility: NetworkStatusUtility
-    private lateinit var sessionManager: SessionManager
     private lateinit var viewLocalDBButton: Button
     private lateinit var uploadDbButton:Button
+    private lateinit var localDbCount : TextView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -62,6 +63,7 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        sessionManager = SessionManager(requireContext())
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(requireContext())
         val localDatabaseRepository = LocalDatabaseRepository(database)
@@ -78,6 +80,11 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
         status = view.findViewById(R.id.statusIcon)
         viewLocalDBButton = view.findViewById(R.id.view_db_button)
         uploadDbButton = requireView().findViewById(R.id.upload_db_button)
+        localDbCount = requireView().findViewById(R.id.local_dbCount)
+
+        lifecycleScope.launch {
+            localDbCount.text = "items in Local DB : " + database.Dao().getDbCount()
+        }
 
         // Initialize networkStatusUtility
         networkStatusUtility = NetworkStatusUtility(requireContext())
@@ -189,17 +196,10 @@ class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
                         description,
                         ags
                     )
-                    uploadViewModel.uploadStatus.observe(viewLifecycleOwner){isUploaded->
-
-                        if (isUploaded) {
-                            // Reset UI elements on successful upload
-                            // Dismiss the progress dialog
-//                            lifecycleScope.launch {
-//                                localDbViewModel.deleteData(item)
-//                            }
-                        } else {
-
-                        }
+                    lifecycleScope.launch {
+                        database.Dao().deleteItems(schoolName,poOffice)
+                        localDatabaseRepository.getCount()
+                        localDbCount.text = "items in Local DB : " + database.Dao().getDbCount()
                     }
                 }
             }

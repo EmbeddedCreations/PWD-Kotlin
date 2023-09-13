@@ -22,8 +22,5 @@ class LocalDatabaseRepository(
     suspend fun getData(){
         imageData.postValue(database.Dao().getAllImages())
     }
-//    suspend fun deleteImageData(imageData: ImageData) {
-//        // Perform the deletion using the DAO
-//        database.delete(imageData)
-    //}
+
 }

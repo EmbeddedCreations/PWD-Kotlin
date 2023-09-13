@@ -46,6 +46,7 @@ class SchoolAdapter(
             //Intent to Start a New Activity
             //i want to get the context and startActivity
             Credentials.SELECTED_SCHOOL_FOR_DISPLAY = currentItem.school_name.toString()
+
             val context = holder.itemView.context
             // Create and start the intent
             val intent = Intent(context, BuildingDisplay::class.java)

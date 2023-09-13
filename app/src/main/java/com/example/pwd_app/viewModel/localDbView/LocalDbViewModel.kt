@@ -15,12 +15,11 @@ class LocalDbViewModel(
     init{
         viewModelScope.launch (Dispatchers.IO){
             localDatabaseRepository.getData()
+            localDatabaseRepository.getCount()
         }
     }
     val surveyData : LiveData<List<ImageData>>
         get() = localDatabaseRepository.images
-
-//    suspend fun deleteData(imageData: ImageData){
-//        localDatabaseRepository.deleteImageData(imageData)
-//    }
+    val count: LiveData<Int>
+        get() = localDatabaseRepository.dbCount
 }
