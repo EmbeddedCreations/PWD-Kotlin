@@ -1,15 +1,11 @@
 package com.example.pwd_app.viewModel.login
 
+import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Spinner
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.MainActivity
@@ -23,12 +19,15 @@ import com.example.pwd_app.repository.LoginRepository
 class Login : AppCompatActivity(){
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var sessionManager: SessionManager
+    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-
+        progressDialog = ProgressDialog(this)
+        progressDialog!!.setMessage("Logging in...")
+        progressDialog!!.setCancelable(false)
         val loginApiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(applicationContext)
         val loginRepository = LoginRepository(loginApiInterface, database, applicationContext)
@@ -140,16 +139,19 @@ class Login : AppCompatActivity(){
 
         loginButton.setOnClickListener(object : View.OnClickListener{
 
-
             override fun onClick(v: View?){
+                progressDialog!!.show() // Show the progress dialog
                 val inputPassword = passwordEditText.text.toString()
                 Log.d("password",enteredPassword)
                 if(inputPassword.equals(enteredPassword.substring(1, enteredPassword.length - 1))){
                     onLoginSuccess(selectedAtcOffice,selectedPoOffice,selectedJe)
+
                     Toast.makeText(this@Login, "Successful Login", Toast.LENGTH_SHORT).show()
                     // Store user login details in the session
                     sessionManager.createLoginSession(selectedAtcOffice, selectedPoOffice, selectedJe)
                     val i = Intent(this@Login, MainActivity::class.java)
+                    progressDialog!!.dismiss()
+
                     startActivity(i)
 
                 }else{
