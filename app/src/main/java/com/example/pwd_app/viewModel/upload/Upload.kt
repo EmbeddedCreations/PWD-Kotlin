@@ -122,7 +122,6 @@ class UploadFragment : Fragment(), AdapterView.OnItemSelectedListener {
         buttonSaveImage = requireView().findViewById(R.id.buttonSaveImage)
         status = requireView().findViewById(R.id.statusIcon)
         val textViewLoggedIn = requireView().findViewById<TextView>(R.id.textViewLoggedIn)
-        textUri = requireView().findViewById<TextView>(R.id.Dimensions)
         textUri?.setOnClickListener(textUriOnClickListener)
         editTextDescription = requireView().findViewById(R.id.editTextDescription)
 
