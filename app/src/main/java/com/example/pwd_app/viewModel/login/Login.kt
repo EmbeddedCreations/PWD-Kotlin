@@ -137,24 +137,24 @@ class Login : AppCompatActivity(){
 
         }
 
-        loginButton.setOnClickListener(object : View.OnClickListener{
-
-            override fun onClick(v: View?){
+        loginButton.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
                 progressDialog!!.show() // Show the progress dialog
                 val inputPassword = passwordEditText.text.toString()
-                Log.d("password",enteredPassword)
-                if(inputPassword.equals(enteredPassword.substring(1, enteredPassword.length - 1))){
-                    onLoginSuccess(selectedAtcOffice,selectedPoOffice,selectedJe)
+                Log.d("password", enteredPassword)
+                if (inputPassword.equals(enteredPassword.substring(1, enteredPassword.length - 1))) {
+                    onLoginSuccess(selectedAtcOffice, selectedPoOffice, selectedJe)
 
                     Toast.makeText(this@Login, "Successful Login", Toast.LENGTH_SHORT).show()
                     // Store user login details in the session
                     sessionManager.createLoginSession(selectedAtcOffice, selectedPoOffice, selectedJe)
                     val i = Intent(this@Login, MainActivity::class.java)
-                    progressDialog!!.dismiss()
-
                     startActivity(i)
 
-                }else{
+                    // Dismiss the progress dialog after starting MainActivity
+                    progressDialog!!.dismiss()
+                } else {
+                    progressDialog!!.dismiss() // Dismiss the dialog on login failure
                     Toast.makeText(
                         this@Login,
                         "Incorrect Password or Incorrect Credentials",
@@ -163,7 +163,6 @@ class Login : AppCompatActivity(){
                 }
             }
         })
-
     }
 
     private fun onLoginSuccess(atcValue: String, poValue: String, juniorEngineerValue: String) {
