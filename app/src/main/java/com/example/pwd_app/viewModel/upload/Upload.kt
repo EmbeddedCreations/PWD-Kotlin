@@ -48,7 +48,7 @@ import java.util.Date
 import java.util.Locale
 
 
-class UploadFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class Upload : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var uploadViewModel : UploadViewModel
 
@@ -509,7 +509,7 @@ class UploadFragment : Fragment(), AdapterView.OnItemSelectedListener {
             ) { dialog, which ->
                 when (which) {
                     0 -> // "Capture from Camera" option is selected
-                        ImagePicker.with(this@UploadFragment)
+                        ImagePicker.with(this@Upload)
                             .cameraOnly()
                             .crop()
                             .compress(1024)

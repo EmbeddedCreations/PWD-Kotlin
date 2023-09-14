@@ -23,14 +23,14 @@ import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.model.UploadObject
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.HomeRepository
-import com.example.pwd_app.viewModel.upload.UploadFragment
+import com.example.pwd_app.viewModel.upload.Upload
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
 class Home : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
-    val uploadFragment: Fragment = UploadFragment()
+    val uploadFragment: Fragment = Upload()
     //Selected variables
     var selectedSchool="Select School"
     var selectedBuilding="Select Building"
