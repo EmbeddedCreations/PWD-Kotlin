@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.example.pwd_app.MainActivity
 import com.example.pwd_app.R
 import com.example.pwd_app.viewModel.login.Login
 

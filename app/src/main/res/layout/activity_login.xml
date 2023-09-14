@@ -2,9 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    tools:context=".Login">
-
+    android:padding="16dp">
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
     <LinearLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
@@ -12,14 +16,16 @@
         android:layout_centerInParent="true"
         android:background="@drawable/round_border"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="16dp"
+        tools:ignore="UselessParent">
 
         <ImageView
             android:id="@+id/logo"
             android:layout_width="326dp"
             android:layout_height="226dp"
             android:layout_gravity="center_horizontal"
-            android:src="@drawable/pwd" />
+            android:src="@drawable/pwd"
+            android:contentDescription="@string/login_logo" />
 
         <!-- Add the "Select ATC office" dropdown -->
         <Spinner
@@ -67,23 +73,22 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="10dp"
-                android:layout_marginLeft="5dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="2"
                 android:background="@drawable/background_drawing_view_layout"
                 android:drawableStart="@drawable/ic_baseline_password_24"
                 android:drawablePadding="8dp"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:padding="10dp"
                 android:textColor="@android:color/black"
                 android:textSize="16sp" />
 
             <ImageView
-                android:id="@+id/eye_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
-                android:contentDescription="Toggle Password Visibility"
+                android:contentDescription="@string/toggle_password_visibility"
                 android:focusable="true"
                 android:padding="12dp"
                 android:src="@drawable/ic_baseline_visibility_24" />
@@ -95,10 +100,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:background="@drawable/background_drawing_view_layout"
-            android:text="Log In"
+            android:text="@string/log_in"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
-
 
     </LinearLayout>
 

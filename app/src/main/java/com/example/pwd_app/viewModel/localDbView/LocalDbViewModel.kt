@@ -20,6 +20,6 @@ class LocalDbViewModel(
     }
     val surveyData : LiveData<List<ImageData>>
         get() = localDatabaseRepository.images
-    val count: LiveData<Int>
-        get() = localDatabaseRepository.dbCount
+//    val count: LiveData<Int>
+//        get() = localDatabaseRepository.dbCount
 }

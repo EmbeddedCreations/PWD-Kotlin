@@ -1,7 +1,6 @@
 package com.example.pwd_app.viewModel.schoolDisplay
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener  {
         val view = inflater.inflate(R.layout.history_schools, container, false)
 
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
-        schoolDisplayViewModel = ViewModelProvider(this,SchoolDisplayViewModelFactory(apiInterface)).get(SchoolDisplayViewModel::class.java)
+        schoolDisplayViewModel = ViewModelProvider(this,SchoolDisplayViewModelFactory(apiInterface))[SchoolDisplayViewModel::class.java]
         recyclerView = view.findViewById(R.id.schoolRecyclerView)
 
         // Set up RecyclerView layout manager and adapter

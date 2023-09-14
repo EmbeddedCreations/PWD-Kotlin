@@ -23,14 +23,15 @@ class LocalDbView : Fragment() {
         return inflater.inflate(R.layout.activity_loacaldb, container, false)
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
         val database = DatabaseHelper.getDatabase(requireContext())
         val localDatabaseRepository = LocalDatabaseRepository(database)
-        localDbViewModel = ViewModelProvider(this,LocalDbViewModelFactory(localDatabaseRepository)).get(LocalDbViewModel::class.java)
+        localDbViewModel = ViewModelProvider(this,LocalDbViewModelFactory(localDatabaseRepository))[LocalDbViewModel::class.java]
 
-        var recyclerView = requireView().findViewById<RecyclerView>(R.id.localDbRecyclerView)
+        val recyclerView = requireView().findViewById<RecyclerView>(R.id.localDbRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         localDbViewModel.surveyData.observe(viewLifecycleOwner){ savedData->
             recyclerView.adapter = LocalDbAdapter(savedData)

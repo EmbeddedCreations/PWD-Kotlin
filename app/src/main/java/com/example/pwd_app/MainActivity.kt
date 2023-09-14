@@ -20,9 +20,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var bottomNavigationView: BottomNavigationView
 
-    var homeFragment: Home = Home()
-    var profile: Profile = Profile()
-    var workOrderSheet: WorkOrderSheet = WorkOrderSheet()
+    private var homeFragment: Home = Home()
+    private var profile: Profile = Profile()
+    private var workOrderSheet: WorkOrderSheet = WorkOrderSheet()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,8 +31,7 @@ class MainActivity : AppCompatActivity() {
         val loginApiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(applicationContext)
         val loginRepository = LoginRepository(loginApiInterface,database,applicationContext)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository)).get(
-            LoginViewModel::class.java)
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository))[LoginViewModel::class.java]
 
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
         bottomNavigationView = findViewById(R.id.bottom_navigation)

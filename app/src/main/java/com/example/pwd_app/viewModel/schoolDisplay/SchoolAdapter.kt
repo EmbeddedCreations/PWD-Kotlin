@@ -1,15 +1,12 @@
 package com.example.pwd_app.viewModel.schoolDisplay
 
-import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pwd_app.MainActivity
 import com.example.pwd_app.R
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.model.Schools

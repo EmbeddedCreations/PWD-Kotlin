@@ -1,5 +1,6 @@
 package com.example.pwd_app.viewModel.profile
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Intent
@@ -8,8 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
-import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -52,22 +51,22 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.activity_profile, container, false)
 
         // Initialize views and perform other setup
 
-        return view
+        return inflater.inflate(R.layout.activity_profile, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         sessionManager = SessionManager(requireContext())
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(requireContext())
         val localDatabaseRepository = LocalDatabaseRepository(database)
-        localDbViewModel = ViewModelProvider(this, LocalDbViewModelFactory(localDatabaseRepository)).get(LocalDbViewModel::class.java)
+        localDbViewModel = ViewModelProvider(this, LocalDbViewModelFactory(localDatabaseRepository))[LocalDbViewModel::class.java]
         val dataRepository = DataRepository(apiInterface)
-        uploadViewModel = ViewModelProvider(this, UploadViewModelFactory(dataRepository)).get(UploadViewModel::class.java)
+        uploadViewModel = ViewModelProvider(this, UploadViewModelFactory(dataRepository))[UploadViewModel::class.java]
 
         // Initialize views
         atcOfficeText = view.findViewById(R.id.atc_office_text)
@@ -87,187 +86,174 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
         // Initialize networkStatusUtility
         networkStatusUtility = NetworkStatusUtility(requireContext())
 
-        // Check network status and set image
+        // Check network status and set button states
         if (networkStatusUtility.isNetworkAvailable) {
             status.setImageResource(R.drawable.online)
+            uploadDbButton.alpha = 1.0f
+            uploadDbButton.isEnabled = true
+            viewHistoryButton.alpha = 1.0f
+            viewHistoryButton.isEnabled = true
         } else {
             status.setImageResource(R.drawable.offline)
+            uploadDbButton.alpha = 0.5f
+            uploadDbButton.isEnabled = false
+            viewHistoryButton.alpha = 0.5f
+            viewHistoryButton.isEnabled = false
         }
 
         // Set network status listener
         networkStatusUtility.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
             override fun onNetworkAvailable() {
-                updateButtonStatus(true)
+//                updateButtonStatus(true)
                 status.setImageResource(R.drawable.online)
+                uploadDbButton.alpha = 1.0f
+                uploadDbButton.isEnabled = true
+                viewHistoryButton.alpha = 1.0f
+                viewHistoryButton.isEnabled = true
                 status.setOnClickListener {
                     showToast("Online")
                 }
             }
 
             override fun onNetworkLost() {
-                updateButtonStatus(false)
+//                updateButtonStatus(false)
                 status.setImageResource(R.drawable.offline)
+                uploadDbButton.alpha = 0.5f
+                uploadDbButton.isEnabled = false
+                viewHistoryButton.alpha = 0.5f
+                viewHistoryButton.isEnabled = false
                 status.setOnClickListener {
                     showToast("Offline")
                 }
             }
         })
-
         // Set initial values for TextViews
         atcOfficeText.text = Credentials.DEFAULT_ATC
         poOfficeText.text = Credentials.DEFAULT_PO
         juniorEngineerNameText.text = Credentials.DEFAULT_JUNIOR_ENGINEER
 
-        // Set click listeners for buttons
-//        viewHistoryButton.setOnClickListener {
-//            // Handle button click
-//            if (!networkStatusUtility.isNetworkAvailable) {
-//                val builder = AlertDialog.Builder(requireContext())
-//                builder.setTitle("Cannot Connect To the Server")
-//                    .setMessage("Please make Sure you have an Internet Connection to View History")
-//                    .setPositiveButton(
-//                        "OK"
-//                    ) { dialogInterface, i -> dialogInterface.dismiss() }
-//            } else {
-//                // Show a loading dialog or progress bar here
-//                val progressDialog = ProgressDialog(requireContext())
-//                progressDialog.setMessage("Fetching data...")
-//                progressDialog.setCancelable(false)
-//                progressDialog.show()
-//
-//                // Start the Fragment or Activity to display the data here
-//                val displaySchoolFragment: Fragment = SchoolDisplay()
-//                val fragmentManager = requireActivity().supportFragmentManager
-//                General.replaceFragment(
-//                    fragmentManager,
-//                    R.id.container,
-//                    displaySchoolFragment,
-//                    true,
-//                    "DisplaySchoolFragmentTag",
-//                    R.anim.slide_in,  // Enter animation
-//                    R.anim.slide_out,  // Exit animation
-//                    0,  // Pop enter animation (you can specify one if needed)
-//                    0 // Pop exit animation (you can specify one if needed)
-//                )
-//                progressDialog.dismiss()
-//            }
 
-            viewHistoryButton.setOnClickListener {
-                if (!networkStatusUtility.isNetworkAvailable) {
-                    val builder = AlertDialog.Builder(requireContext())
-                    builder.setTitle("Cannot Connect To the Server")
-                        .setMessage("Please make Sure you have an Internet Connection to View History")
-                        .setPositiveButton(
-                            "OK"
-                        ) { dialogInterface, i -> dialogInterface.dismiss() }
-                } else {
-                    // Show a loading dialog or progress bar here
-                    val progressDialog = ProgressDialog(requireContext())
-                    progressDialog.setMessage("Fetching data...")
-                    progressDialog.setCancelable(false)
-                    progressDialog.show()
+        viewHistoryButton.setOnClickListener {
+            if (!networkStatusUtility.isNetworkAvailable) {
+                val builder = AlertDialog.Builder(requireContext())
+                builder.setTitle("Cannot Connect To the Server")
+                    .setMessage("Please make Sure you have an Internet Connection to View History")
+                    .setPositiveButton(
+                        "OK"
+                    ) { dialogInterface, _ -> dialogInterface.dismiss() }
+            } else {
+                // Show a loading dialog or progress bar here
+                val progressDialog = ProgressDialog(requireContext())
+                progressDialog.setMessage("Fetching data...")
+                progressDialog.setCancelable(false)
+                progressDialog.show()
 
-                    // You can replace this delay with your actual data fetching and display logic
-                    Thread {
-                        try {
-                            Thread.sleep(1500) // Simulate data fetching taking 2 seconds
-                        } catch (e: InterruptedException) {
-                            e.printStackTrace()
-                        }
-                        // Dismiss the loading dialog when data is fetched
-                        requireActivity().runOnUiThread {
-                            progressDialog.dismiss()
+                // You can replace this delay with your actual data fetching and display logic
+                Thread {
+                    try {
+                        Thread.sleep(1500) // Simulate data fetching taking 2 seconds
+                    } catch (e: InterruptedException) {
+                        e.printStackTrace()
+                    }
+                    // Dismiss the loading dialog when data is fetched
+                    requireActivity().runOnUiThread {
+                        progressDialog.dismiss()
 
-                            // Start the Fragment or Activity to display the data here
-                            val displaySchoolFragment: Fragment = SchoolDisplay()
-                            val fragmentManager = requireActivity().supportFragmentManager
-                            General.replaceFragment(
-                                fragmentManager,
-                                R.id.container,
-                                displaySchoolFragment,
-                                true,
-                                "DisplaySchoolFragmentTag",
-                                R.anim.slide_in,  // Enter animation
-                                R.anim.slide_out,  // Exit animation
-                                0,  // Pop enter animation (you can specify one if needed)
-                                0 // Pop exit animation (you can specify one if needed)
-                            )
-                        }
-                    }.start()
-                }
+                        // Start the Fragment or Activity to display the data here
+                        val displaySchoolFragment: Fragment = SchoolDisplay()
+                        val fragmentManager = requireActivity().supportFragmentManager
+                        General.replaceFragment(
+                            fragmentManager,
+                            R.id.container,
+                            displaySchoolFragment,
+                            true,
+                            "DisplaySchoolFragmentTag",
+                            R.anim.slide_in,  // Enter animation
+                            R.anim.slide_out,  // Exit animation
+                            0,  // Pop enter animation (you can specify one if needed)
+                            0 // Pop exit animation (you can specify one if needed)
+                        )
+                    }
+                }.start()
             }
+        }
 
         uploadDbButton.setOnClickListener {
             localDbViewModel.surveyData.observe(viewLifecycleOwner) { imageData ->
 
                 if (imageData.isNotEmpty()) { // Check if there is data to upload
+                    try {
+                        for (item in imageData) {
+                            for (item in imageData) {
+                                val schoolName = item.school_Name ?: ""
+                                val poOffice = item.po_office ?: ""
+                                val imageName = item.image_name ?: ""
+                                val imageType = item.image_type ?: ""
+                                val imagePdf = item.image_pdf ?: ""
+                                val uploadDate = item.upload_date ?: ""
+                                val uploadTime = item.upload_time ?: ""
+                                val entryBy = item.EntryBy ?: ""
+                                val latitude = item.Latitude ?: ""
+                                val longitude = item.Longitude ?: ""
+                                val userUploadDate = item.user_upload_date ?: ""
+                                val inspectionType = item.InspectionType ?: ""
+                                val workorderNumber = item.WorkorderNumber ?: ""
+                                val description = item.Description ?: ""
+                                val ags = item.ags ?: ""
 
-                    val notificationBuilder = NotificationCompat.Builder(requireContext(), "upload_channel_id")
-                        .setSmallIcon(R.drawable.ic_baseline_cloud_upload_24)
-                        .setContentTitle("Uploading Local Database")
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setOnlyAlertOnce(true)
+                                // Call the uploadData function with extracted data
+                                uploadViewModel.uploadData(
+                                    schoolName,
+                                    poOffice,
+                                    imageName,
+                                    imageType,
+                                    imagePdf,
+                                    uploadDate,
+                                    uploadTime,
+                                    entryBy,
+                                    latitude,
+                                    longitude,
+                                    userUploadDate,
+                                    inspectionType,
+                                    workorderNumber,
+                                    description,
+                                    ags
+                                )
+                                // Delete item from the database
+                                lifecycleScope.launch {
+                                    database.Dao().deleteItems(schoolName, poOffice)
+                                    localDatabaseRepository.getCount()
+                                    localDbCount.text =
+                                        "items in Local DB : " + database.Dao().getDbCount()
+                                }
+                            }
+                            // Show a success AlertDialog
+                            val successDialog = AlertDialog.Builder(requireContext())
+                                .setTitle("Success")
+                                .setMessage("Local Database Upload Successful")
+                                .setPositiveButton("OK") { _, _ ->
 
-                    // Show the initial notification
-                    val notificationManager = NotificationManagerCompat.from(requireContext())
-                    notificationManager.notify(0, notificationBuilder.build())
-
-                    for (item in imageData) {
-                        val schoolName = item.school_Name ?: ""
-                        val poOffice = item.po_office ?: ""
-                        val imageName = item.image_name ?: ""
-                        val imageType = item.image_type ?: ""
-                        val imagePdf = item.image_pdf ?: ""
-                        val uploadDate = item.upload_date ?: ""
-                        val uploadTime = item.upload_time ?: ""
-                        val entryBy = item.EntryBy ?: ""
-                        val latitude = item.Latitude ?: ""
-                        val longitude = item.Longitude ?: ""
-                        val userUploadDate = item.user_upload_date ?: ""
-                        val inspectionType = item.InspectionType ?: ""
-                        val workorderNumber = item.WorkorderNumber ?: ""
-                        val description = item.Description ?: ""
-                        val ags = item.ags ?: ""
-
-                        // Call the uploadData function with extracted data
-                        uploadViewModel.uploadData(
-                            schoolName,
-                            poOffice,
-                            imageName,
-                            imageType,
-                            imagePdf,
-                            uploadDate,
-                            uploadTime,
-                            entryBy,
-                            latitude,
-                            longitude,
-                            userUploadDate,
-                            inspectionType,
-                            workorderNumber,
-                            description,
-                            ags
-                        )
-                        lifecycleScope.launch {
-                            database.Dao().deleteItems(schoolName, poOffice)
-                            localDatabaseRepository.getCount()
-                            localDbCount.text = "items in Local DB : " + database.Dao().getDbCount()
+                                }
+                                .create()
+                            successDialog.show()
                         }
+                    } catch (e: Exception) {
+                        // Show a failure AlertDialog
+                        val failureDialog = AlertDialog.Builder(requireContext())
+                            .setTitle("Failure")
+                            .setMessage("Upload failed. Check your internet connection and try again.")
+                            .setPositiveButton("OK") { _, _ ->
+
+                            }
+                            .create()
+                        failureDialog.show()
                     }
-
-                    // Add a notification for successful upload
-                    val successNotificationBuilder = NotificationCompat.Builder(requireContext(), "upload_channel_id")
-                        .setSmallIcon(R.drawable.ic_baseline_cloud_upload_24)
-                        .setContentTitle("Local Database Upload Successful")
-                        .setPriority(NotificationCompat.PRIORITY_HIGH)
-                        .setOnlyAlertOnce(true)
-
-                    // Show the success notification
-                    notificationManager.notify(1, successNotificationBuilder.build())
                 } else {
                     Toast.makeText(requireContext(), "There is no data in the local database", Toast.LENGTH_SHORT).show()
                 }
             }
         }
+
 
 
         viewLocalDBButton.setOnClickListener {
@@ -310,32 +296,6 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
     override fun onNothingSelected(p0: AdapterView<*>?) {
         // Handle when nothing is selected
     }
-
-//    private fun updateButtonStatus(isNetworkAvailable: Boolean) {
-//        val uploadDbButton = requireView().findViewById<Button>(R.id.upload_db_button)
-//        val viewHistoryButton = requireView().findViewById<Button>(R.id.view_history_button)
-//        val alpha = if (isNetworkAvailable) 1f else 0.5f
-//        val isEnabled = isNetworkAvailable
-//        uploadDbButton.alpha = alpha
-//        uploadDbButton.isEnabled = isEnabled
-//        viewHistoryButton.alpha = alpha
-//        viewHistoryButton.isEnabled = isEnabled
-//    }
-private fun updateButtonStatus(isNetworkAvailable: Boolean) {
-    val uploadDbButton = requireView().findViewById<Button>(R.id.upload_db_button)
-    val viewHistoryButton = requireView().findViewById<Button>(R.id.view_history_button)
-    if (isNetworkAvailable) {
-        uploadDbButton.alpha = 1f
-        uploadDbButton.isEnabled = true
-        viewHistoryButton.alpha = 1f
-        viewHistoryButton.isEnabled = true
-    } else {
-        uploadDbButton.alpha = 0.5f
-        uploadDbButton.isEnabled = false
-        viewHistoryButton.alpha = 0.5f
-        viewHistoryButton.isEnabled = false
-    }
-}
 
     private fun showToast(statusText: String) {
         Toast.makeText(requireContext(), statusText, Toast.LENGTH_SHORT).show()
