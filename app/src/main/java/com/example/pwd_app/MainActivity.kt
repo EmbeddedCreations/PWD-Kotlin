@@ -10,7 +10,8 @@ import com.example.pwd_app.repository.LoginRepository
 import com.example.pwd_app.viewModel.home.Home
 import com.example.pwd_app.viewModel.login.LoginViewModel
 import com.example.pwd_app.viewModel.login.LoginViewModelFactory
-import com.example.pwd_app.viewModel.profile.ProfileFragment
+import com.example.pwd_app.viewModel.profile.Profile
+import com.example.pwd_app.viewModel.workOrder.WorkOrderSheet
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 
@@ -20,7 +21,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomNavigationView: BottomNavigationView
 
     var homeFragment: Home = Home()
-    var profileFragment: ProfileFragment = ProfileFragment()
+    var profile: Profile = Profile()
+    var workOrderSheet: WorkOrderSheet = WorkOrderSheet()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,16 +45,15 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.profile -> {
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, profileFragment).commit()
+                        .replace(R.id.container, profile).commit()
                     return@OnItemSelectedListener true
                 }
-//
-//                R.id.progress -> {
-//                    supportFragmentManager.beginTransaction()
-//                        .replace(R.id.container, workOrderCheckSheet).commit()
-//                    return@OnItemSelectedListener true
-//                }
-//
+
+                R.id.progress -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, workOrderSheet).commit()
+                    return@OnItemSelectedListener true
+                }
 //                R.id.analytics -> {
 //                    supportFragmentManager.beginTransaction()
 //                        .replace(R.id.container, AnalyticsFragment).commit()

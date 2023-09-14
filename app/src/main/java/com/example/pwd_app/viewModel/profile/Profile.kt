@@ -33,7 +33,7 @@ import com.example.pwd_app.viewModel.upload.UploadViewModelFactory
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ProfileFragment : Fragment(), AdapterView.OnItemSelectedListener {
+class Profile : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var sessionManager: SessionManager
     private lateinit var localDbViewModel: LocalDbViewModel
     private lateinit var uploadViewModel : UploadViewModel
