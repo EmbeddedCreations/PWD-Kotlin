@@ -107,7 +107,6 @@ class UploadFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
     }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -361,8 +360,7 @@ class UploadFragment : Fragment(), AdapterView.OnItemSelectedListener {
             }
 
         })
-
-
+        
         textView = requireView().findViewById<TextView>(R.id.textViewTags)
         textView?.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(requireContext())
