@@ -20,7 +20,7 @@ class WorkOrderSheet : Fragment(),AdapterView.OnItemSelectedListener {
 
     private lateinit var checkboxStates: Array<IntArray>
 
-    private fun checkMatchingScheduleAndProgress(checkboxStates: Array<IntArray>) {
+    private fun checkMatchingScheduleAndProgress() {
         val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
         val numRows = tableLayout.childCount
         var i = 1
@@ -96,7 +96,7 @@ class WorkOrderSheet : Fragment(),AdapterView.OnItemSelectedListener {
                         checkBox.isChecked = checkboxStates[i - 1][checkboxIndex] == 1
 
                         // Add an OnCheckedChangeListener to prevent unchecking and update the array
-                        checkBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { buttonView, isChecked ->
+                        checkBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
                             if (!isChecked) {
                                 // If the checkbox is unchecked, force it to be checked
                                 checkBox.isChecked = true
@@ -107,7 +107,7 @@ class WorkOrderSheet : Fragment(),AdapterView.OnItemSelectedListener {
                                 ).show()
                                 return@OnCheckedChangeListener
                             }
-                            checkMatchingScheduleAndProgress(checkboxStates)
+                            checkMatchingScheduleAndProgress()
                             // Update the corresponding value in the checkboxStates array
                             val rowIndex = tableLayout.indexOfChild(row)
                             val checkboxArrayIndex = (columnIndex - 1) * 4 + k

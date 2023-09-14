@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingStart="16dp"
     android:paddingTop="16dp"
     android:paddingEnd="16dp"
-    android:paddingBottom="16dp"
-    tools:context=".Home">
-
+    android:paddingBottom="16dp">
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:visibility="gone" />
     <!-- "Logged In" TextView -->
     <TextView
         android:id="@+id/textViewLoggedIn"
@@ -25,16 +28,15 @@
         android:layout_width="18dp"
         android:layout_height="18dp"
         android:layout_marginTop="2dp"
-        android:contentDescription="Status"
+        android:contentDescription="@string/status"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:id="@+id/textViewStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Status:"
-        android:layout_marginRight="5dp"
+        android:text="@string/status_text"
+        android:layout_marginEnd="5dp"
         android:textSize="15sp"
         app:layout_constraintEnd_toStartOf="@+id/statusIcon"
         app:layout_constraintTop_toTopOf="parent" />
@@ -55,14 +57,15 @@
         android:src="@drawable/form"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLoggedIn" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewLoggedIn"
+        android:contentDescription="@string/fill_details" />
 
     <TextView
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="Fill in the details below"
+        android:text="@string/fill_in_the_details_below"
         android:textAlignment="center"
         android:textSize="15sp"
         app:flow_horizontalAlign="center"
@@ -76,9 +79,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="ATC Office"
+        android:hint="@string/atc_office"
         android:textSize="15sp"
-        android:textFontWeight="@integer/material_motion_duration_short_1"
         app:layout_constraintEnd_toStartOf="@+id/po"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/logo" />
@@ -89,7 +91,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:hint="PO Office"
+        android:hint="@string/po_office"
         android:textSize="15sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/atc"
@@ -101,7 +103,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:text="School:"
+        android:text="@string/school"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -122,7 +124,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Visit Type:"
+        android:text="@string/visit_type"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textViewDateTitle"
@@ -144,7 +146,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Workorder :"
+        android:text="@string/workorder"
         android:textSize="22sp"
         android:textStyle="bold"
         android:visibility="gone"
@@ -168,7 +170,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Building:"
+        android:text="@string/building_"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textViewSchoolTitle"
@@ -191,7 +193,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Date:"
+        android:text="@string/date_"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textViewSchoolTitle"
@@ -211,7 +213,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Start Survey"
+        android:text="@string/start_survey"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/spinnerBuilding"
         app:layout_constraintStart_toStartOf="@+id/textViewSchoolTitle"

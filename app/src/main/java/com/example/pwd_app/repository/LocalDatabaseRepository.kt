@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.model.ImageData
-import com.example.pwd_app.model.LoginCredentials
 
 class LocalDatabaseRepository(
     private val database: DatabaseHelper

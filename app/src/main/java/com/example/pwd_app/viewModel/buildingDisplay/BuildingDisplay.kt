@@ -21,10 +21,10 @@ class BuildingDisplay : AppCompatActivity() {
         setContentView(R.layout.activity_image)
 
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
-        buildingDisplayViewModel = ViewModelProvider(this,BuildingDisplayViewModelFactory(apiInterface)).get(BuildingDisplayViewModel::class.java)
+        buildingDisplayViewModel = ViewModelProvider(this,BuildingDisplayViewModelFactory(apiInterface))[BuildingDisplayViewModel::class.java]
         // Find views by their IDs
         val schoolNameTextView = findViewById<TextView>(R.id.schoolNameTextView)
-        var recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
 
         // Initialize the RecyclerView and its adapter
         recyclerView.layoutManager = LinearLayoutManager(this)

@@ -1,6 +1,5 @@
 package com.example.pwd_app.viewModel.login
 
-import android.app.ProgressDialog
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -19,21 +18,16 @@ import com.example.pwd_app.repository.LoginRepository
 class Login : AppCompatActivity(){
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var sessionManager: SessionManager
-    private var progressDialog: ProgressDialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        progressDialog = ProgressDialog(this)
-        progressDialog!!.setMessage("Logging in...")
-        progressDialog!!.setCancelable(false)
+        val loadingProgressBar = findViewById<ProgressBar>(R.id.loadingProgressBar)
         val loginApiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(applicationContext)
         val loginRepository = LoginRepository(loginApiInterface, database, applicationContext)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository)).get(
-            LoginViewModel::class.java
-        )
+        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository))[LoginViewModel::class.java]
 
         //Session Manager
         sessionManager = SessionManager(this)
@@ -45,11 +39,11 @@ class Login : AppCompatActivity(){
         var enteredPassword = ""
 
         // Find the views by their IDs
-        var selectAtcOfficeSpinner = findViewById<Spinner>(R.id.select_atc_office)
-        var selectPoOfficeSpinner = findViewById<Spinner>(R.id.select_po_office)
-        var selectJuniorEngineerSpinner = findViewById<Spinner>(R.id.select_junior_engineer)
-        var passwordEditText = findViewById<EditText>(R.id.password)
-        var loginButton = findViewById<Button>(R.id.login_button)
+        val selectAtcOfficeSpinner = findViewById<Spinner>(R.id.select_atc_office)
+        val selectPoOfficeSpinner = findViewById<Spinner>(R.id.select_po_office)
+        val selectJuniorEngineerSpinner = findViewById<Spinner>(R.id.select_junior_engineer)
+        val passwordEditText = findViewById<EditText>(R.id.password)
+        val loginButton = findViewById<Button>(R.id.login_button)
 
         // Check if the user is already logged in, and if so, redirect them to MainActivity
         if (sessionManager.isLoggedIn()) {
@@ -117,7 +111,6 @@ class Login : AppCompatActivity(){
             }
 
         }
-
         selectJuniorEngineerSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                 selectedJe = selectJuniorEngineerSpinner.selectedItem as String
@@ -137,32 +130,28 @@ class Login : AppCompatActivity(){
 
         }
 
-        loginButton.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                progressDialog!!.show() // Show the progress dialog
-                val inputPassword = passwordEditText.text.toString()
-                Log.d("password", enteredPassword)
-                if (inputPassword.equals(enteredPassword.substring(1, enteredPassword.length - 1))) {
-                    onLoginSuccess(selectedAtcOffice, selectedPoOffice, selectedJe)
+        loginButton.setOnClickListener {
+            loadingProgressBar.visibility = View.VISIBLE
+            val inputPassword = passwordEditText.text.toString()
+            Log.d("password", enteredPassword)
+            if (inputPassword == enteredPassword.substring(1, enteredPassword.length - 1)) {
+                onLoginSuccess(selectedAtcOffice, selectedPoOffice, selectedJe)
 
-                    Toast.makeText(this@Login, "Successful Login", Toast.LENGTH_SHORT).show()
-                    // Store user login details in the session
-                    sessionManager.createLoginSession(selectedAtcOffice, selectedPoOffice, selectedJe)
-                    val i = Intent(this@Login, MainActivity::class.java)
-                    startActivity(i)
-
-                    // Dismiss the progress dialog after starting MainActivity
-                    progressDialog!!.dismiss()
-                } else {
-                    progressDialog!!.dismiss() // Dismiss the dialog on login failure
-                    Toast.makeText(
-                        this@Login,
-                        "Incorrect Password or Incorrect Credentials",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+                Toast.makeText(this@Login, "Successful Login", Toast.LENGTH_SHORT).show()
+                // Store user login details in the session
+                sessionManager.createLoginSession(selectedAtcOffice, selectedPoOffice, selectedJe)
+                val i = Intent(this@Login, MainActivity::class.java)
+                startActivity(i)
+                loadingProgressBar.visibility = View.GONE
+            } else {
+                loadingProgressBar.visibility = View.GONE
+                Toast.makeText(
+                    this@Login,
+                    "Incorrect Password or Incorrect Credentials",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-        })
+        }
     }
 
     private fun onLoginSuccess(atcValue: String, poValue: String, juniorEngineerValue: String) {

@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
@@ -31,6 +32,8 @@ import java.util.Locale
 class Home : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
     val uploadFragment: Fragment = Upload()
+    // Declare the ProgressBar as a class-level property
+    private lateinit var loadingProgressBar: ProgressBar
     //Selected variables
     var selectedSchool="Select School"
     var selectedBuilding="Select Building"
@@ -57,17 +60,19 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
     ): View? {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.activity_home, container, false)
-
+        loadingProgressBar = view.findViewById(R.id.loadingProgressBar)
         // Initialize your UI components and set listeners here
         return view
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        loadingProgressBar.visibility = View.VISIBLE
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(requireContext())
         val homeRepository = HomeRepository(apiInterface,database,requireContext())
-        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(homeRepository)).get(HomeViewModel::class.java)
+        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
 
         // Initialize UI components here
         //Selected variables
@@ -85,7 +90,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         textViewPoOffice = view.findViewById(R.id.po)
 
         //NetworkStatus
-        var status = requireView().findViewById<ImageView>(R.id.statusIcon)
+        val status = requireView().findViewById<ImageView>(R.id.statusIcon)
         networkStatusUtility = NetworkStatusUtility(requireContext())
         if (networkStatusUtility!!.isNetworkAvailable) {
             status.setImageResource(R.drawable.online)
@@ -95,12 +100,12 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         networkStatusUtility!!.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
             override fun onNetworkAvailable() {
                 status.setImageResource(R.drawable.online)
-                status.setOnClickListener(View.OnClickListener { showToast("Online") })
+                status.setOnClickListener { showToast("Online") }
             }
 
             override fun onNetworkLost() {
                 status.setImageResource(R.drawable.offline)
-                status.setOnClickListener(View.OnClickListener { showToast("Offline") })
+                status.setOnClickListener { showToast("Offline") }
             }
         })
 
@@ -111,9 +116,9 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         spinnerWorkorder.onItemSelectedListener = this
 
         //Putting values into calendar
-        var calendar = Calendar.getInstance()
+        val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val currentDate = dateFormat.format(calendar.getTime())
+        val currentDate = dateFormat.format(calendar.time)
         textViewSelectedDate.text = currentDate
         //into TexViews
         textViewLoggedIn.text = "Logged in as: " + Credentials.DEFAULT_JUNIOR_ENGINEER
@@ -134,7 +139,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         )
         workorderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerWorkorder.adapter = workorderAdapter
-
+        loadingProgressBar.visibility = View.GONE
         //Survey Button
         buttonSurvey.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View) {

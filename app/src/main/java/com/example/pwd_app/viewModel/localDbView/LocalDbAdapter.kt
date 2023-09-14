@@ -1,5 +1,6 @@
 package com.example.pwd_app.viewModel.buildingDisplay
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.BitmapFactory
 import android.util.Base64
@@ -34,12 +35,11 @@ class LocalDbAdapter(
         return buildingList.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = buildingList[position]
         Log.d("Building List",buildingList.toString())
         val decodedImage: ByteArray = Base64.decode(currentItem.image_pdf, Base64.DEFAULT)
-
-        // Create a Bitmap from the byte array
 
         // Create a Bitmap from the byte array
         val decodedBitmap = BitmapFactory.decodeByteArray(decodedImage, 0, decodedImage.size)
@@ -49,9 +49,7 @@ class LocalDbAdapter(
         holder.descriptionTextView.text = "Description: " + currentItem.Description
         holder.Date.text = "Upload Date: " + currentItem.user_upload_date
         holder.BuildingName.text = "Building Name: " + currentItem.image_name
-        holder.imageView.setOnClickListener { v: View? ->
-            // Create a dialog to display the enlarged image
-
+        holder.imageView.setOnClickListener {
             // Create a dialog to display the enlarged image
             val dialog = Dialog(holder.itemView.context)
             dialog.setContentView(R.layout.dialog_enlarged_image)
@@ -60,10 +58,8 @@ class LocalDbAdapter(
             enlargedImageView.setImageBitmap(decodedBitmap)
 
             // Handle the close button click to dismiss the dialog
-
-            // Handle the close button click to dismiss the dialog
             val closeButton = dialog.findViewById<ImageButton>(R.id.closeImageButton)
-            closeButton.setOnClickListener { v1: View? -> dialog.dismiss() }
+            closeButton.setOnClickListener { dialog.dismiss() }
 
             dialog.show()
         }

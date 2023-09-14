@@ -2,7 +2,6 @@ package com.example.pwd_app.data.local
 
 import com.example.pwd_app.model.SchoolBuildings
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query

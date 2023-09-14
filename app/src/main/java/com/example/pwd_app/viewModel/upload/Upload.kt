@@ -1,5 +1,6 @@
 package com.example.pwd_app.viewModel.upload
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.ProgressDialog
 import android.content.Intent
@@ -9,9 +10,10 @@ import android.graphics.drawable.BitmapDrawable
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.util.Base64
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +27,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.viewModelScope
 import com.example.pwd_app.R
 import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
@@ -35,7 +36,6 @@ import com.example.pwd_app.model.ImageData
 import com.example.pwd_app.model.UploadObject
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
-import com.example.pwd_app.viewModel.localDbView.LocalDbViewModel
 import com.github.dhaval2404.imagepicker.ImagePicker
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -50,9 +50,8 @@ import java.util.Locale
 
 class Upload : Fragment(), AdapterView.OnItemSelectedListener {
 
-    private lateinit var uploadViewModel : UploadViewModel
+    private lateinit var uploadViewModel: UploadViewModel
 
-    private val CAMERA_CODE = 101
     private val RQS_OPEN_IMAGE = 1
     private val INITIAL_IMAGE_RESOURCE = R.drawable.uploadfile
 
@@ -107,13 +106,19 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
     }
+
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(requireContext())
         val dataRepository = DataRepository(apiInterface)
-        uploadViewModel = ViewModelProvider(this,UploadViewModelFactory(dataRepository)).get(UploadViewModel::class.java)
+        uploadViewModel = ViewModelProvider(
+            this,
+            UploadViewModelFactory(dataRepository)
+        ).get(UploadViewModel::class.java)
+        val mainHandler = Handler(Looper.getMainLooper())
 
         status = requireView().findViewById(R.id.statusIcon)
         iv_imgView = requireView().findViewById(R.id.image_view)
@@ -138,26 +143,29 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         } else {
             status?.setImageResource(R.drawable.offline)
         }
+        // Capture a reference to networkStatusUtility in a local variable
+        val utility = networkStatusUtility
 
-        networkStatusUtility!!.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
+        utility?.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
             override fun onNetworkAvailable() {
-                requireActivity().runOnUiThread {
+                mainHandler.post {
                     status?.setImageResource(R.drawable.online)
                     buttonUploadImage?.isEnabled = true
                     buttonUploadImage?.alpha = 1.0f
-                    status?.setOnClickListener(View.OnClickListener { showToast("Online") })
+                    status?.setOnClickListener { showToast("Online") }
                 }
             }
 
             override fun onNetworkLost() {
-                requireActivity().runOnUiThread {
+                mainHandler.post {
                     status?.setImageResource(R.drawable.offline)
                     buttonUploadImage?.isEnabled = false
                     buttonUploadImage?.alpha = 0.5f
-                    status?.setOnClickListener(View.OnClickListener { showToast("Offline") })
+                    status?.setOnClickListener { showToast("Offline") }
                 }
             }
         })
+
 
         buttonUploadImage?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -198,7 +206,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                     var Tags = Arrays.toString(selectedIssuesList.toTypedArray())
                     Tags = Tags.substring(1, Tags.length - 1)
                     val finalTags = Tags
-                    val bitmap = (iv_imgView!!.getDrawable() as BitmapDrawable).bitmap
+                    val bitmap = (iv_imgView!!.drawable as BitmapDrawable).bitmap
                     encodeBitmap(bitmap)
 
                     UploadObject.DESCRIPTION = description
@@ -208,29 +216,28 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                     UploadObject.UPLOAD_DATE = date_today.toString()
                     UploadObject.UPLOAD_TIME = time_today.toString()
                     UploadObject.IMAGE_PDF = encodedImage
-                    UploadObject.IMAGE_TYPE="jpg"
+                    UploadObject.IMAGE_TYPE = "jpg"
                     uploadViewModel.uploadData(
-                         UploadObject.SCHOOL_NAME,
-                         UploadObject.PO_OFFICE,
-                         UploadObject.IMAGE_NAME,
-                         UploadObject.IMAGE_TYPE,
-                         UploadObject.IMAGE_PDF,
-                         UploadObject.UPLOAD_DATE,
-                         UploadObject.UPLOAD_TIME,
-                         UploadObject.ENTRYBY,
-                         UploadObject.LATITUDE,
-                         UploadObject.LONGITUDE,
-                         UploadObject.USER_UPLOAD_DATE,
-                         UploadObject.INSPECTIONTYPE,
-                         UploadObject.WORKORDERNUMBER,
-                         UploadObject.DESCRIPTION,
-                         UploadObject.AGS
+                        UploadObject.SCHOOL_NAME,
+                        UploadObject.PO_OFFICE,
+                        UploadObject.IMAGE_NAME,
+                        UploadObject.IMAGE_TYPE,
+                        UploadObject.IMAGE_PDF,
+                        UploadObject.UPLOAD_DATE,
+                        UploadObject.UPLOAD_TIME,
+                        UploadObject.ENTRYBY,
+                        UploadObject.LATITUDE,
+                        UploadObject.LONGITUDE,
+                        UploadObject.USER_UPLOAD_DATE,
+                        UploadObject.INSPECTIONTYPE,
+                        UploadObject.WORKORDERNUMBER,
+                        UploadObject.DESCRIPTION,
+                        UploadObject.AGS
                     )
-                    uploadViewModel.uploadStatus.observe(viewLifecycleOwner){isUploaded->
+                    uploadViewModel.uploadStatus.observe(viewLifecycleOwner) { isUploaded ->
 
 
                         progressDialog!!.dismiss()
-                        // Re-enable the "Upload" button after the upload is completed
                         // Re-enable the "Upload" button after the upload is completed
                         buttonUploadImage!!.isEnabled = true
                         editTextDescription?.setText("")
@@ -244,97 +251,12 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                             "Uploaded Successfull",
                             Toast.LENGTH_SHORT
                         ).show()
-//                        if (isUploaded) {
-//                            // Reset UI elements on successful upload
-//                            // Dismiss the progress dialog
-//                            progressDialog!!.dismiss()
-//                            // Re-enable the "Upload" button after the upload is completed
-//                            // Re-enable the "Upload" button after the upload is completed
-//                            buttonUploadImage!!.isEnabled = true
-//                            editTextDescription?.setText("")
-//                            iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
-//                            selectedIssuesList.clear()
-//                            textView?.text = ""
-//                            imageChanged = false
-//
-//                            Toast.makeText(
-//                                requireContext(),
-//                                "Uploaded Successfull",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        } else {
-//                            progressDialog!!.dismiss()
-//                            // Re-enable the "Upload" button after the upload is completed
-//                            // Re-enable the "Upload" button after the upload is completed
-//                            buttonUploadImage!!.isEnabled = true
-//                            Toast.makeText(
-//                                requireContext(),
-//                                "Uploaded Failed",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                        }
-                    }
-                }
-            }
-        })
-
-        buttonSaveImage?.setOnClickListener(object : View.OnClickListener{
-            override fun onClick(v: View?) {
-                val description = editTextDescription?.text.toString().trim()
-                if (description.isEmpty()) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Please enter a description.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else if (iv_imgView?.drawable == null) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Please select an image first.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else if (!imageChanged) {
-                    Toast.makeText(
-                        requireContext(),
-                        "Please select an image first",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    var Tags = Arrays.toString(selectedIssuesList.toTypedArray())
-                    Tags = Tags.substring(1, Tags.length - 1)
-                    val finalTags = Tags
-                    val bitmap = (iv_imgView!!.getDrawable() as BitmapDrawable).bitmap
-                    encodeBitmap(bitmap)
-                    UploadObject.DESCRIPTION = description
-                    UploadObject.AGS = finalTags
-                    UploadObject.LONGITUDE = gpsLongitude.toString()
-                    UploadObject.LATITUDE = gpsLatitude.toString()
-                    UploadObject.UPLOAD_DATE = date_today.toString()
-                    UploadObject.UPLOAD_TIME = time_today.toString()
-                    UploadObject.IMAGE_PDF = encodedImage
-                    UploadObject.IMAGE_TYPE="jpg"
-                    val imagedata = ImageData(
-                        school_Name = UploadObject.SCHOOL_NAME,
-                        po_office = UploadObject.PO_OFFICE,
-                        image_name = UploadObject.IMAGE_NAME,
-                        image_type = UploadObject.IMAGE_TYPE,
-                        image_pdf =  UploadObject.IMAGE_PDF,
-                        upload_date =UploadObject.UPLOAD_DATE,
-                        upload_time =UploadObject.UPLOAD_TIME,
-                        EntryBy = UploadObject.ENTRYBY,
-                        Latitude =UploadObject.LATITUDE,
-                        Longitude =UploadObject.LONGITUDE,
-                        user_upload_date = UploadObject.USER_UPLOAD_DATE,
-                        InspectionType = UploadObject.INSPECTIONTYPE,
-                        WorkorderNumber = UploadObject.WORKORDERNUMBER,
-                        Description = UploadObject.DESCRIPTION,
-                        ags = UploadObject.AGS
-                    )
-                    lifecycleScope.launch {
-                        //val newImageData = ImageData(/* your data here */)
-                        val insertedRowId = database.Dao().insertIntoLocalDb(imagedata)
-
-                        if (insertedRowId != -1L) {
+                        if (isUploaded) {
+                            // Reset UI elements on successful upload
+                            // Dismiss the progress dialog
+                            progressDialog!!.dismiss()
+                            // Re-enable the "Upload" button after the upload is completed
+                            buttonUploadImage!!.isEnabled = true
                             editTextDescription?.setText("")
                             iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
                             selectedIssuesList.clear()
@@ -343,24 +265,104 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
 
                             Toast.makeText(
                                 requireContext(),
-                                "Saved Successfull",
+                                "Uploaded Successfull",
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            // Insertion failed
-                            // Handle the failure scenario here
+                            progressDialog!!.dismiss()
+                            // Re-enable the "Upload" button after the upload is completed
+                            buttonUploadImage!!.isEnabled = true
                             Toast.makeText(
                                 requireContext(),
-                                "Saved Failed",
+                                "Uploaded Failed",
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
                     }
                 }
             }
-
         })
-        
+
+        buttonSaveImage?.setOnClickListener {
+            val description = editTextDescription?.text.toString().trim()
+            if (description.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Please enter a description.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (iv_imgView?.drawable == null) {
+                Toast.makeText(
+                    requireContext(),
+                    "Please select an image first.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (!imageChanged) {
+                Toast.makeText(
+                    requireContext(),
+                    "Please select an image first",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                var Tags = selectedIssuesList.toTypedArray().contentToString()
+                Tags = Tags.substring(1, Tags.length - 1)
+                val finalTags = Tags
+                val bitmap = (iv_imgView!!.drawable as BitmapDrawable).bitmap
+                encodeBitmap(bitmap)
+                UploadObject.DESCRIPTION = description
+                UploadObject.AGS = finalTags
+                UploadObject.LONGITUDE = gpsLongitude.toString()
+                UploadObject.LATITUDE = gpsLatitude.toString()
+                UploadObject.UPLOAD_DATE = date_today.toString()
+                UploadObject.UPLOAD_TIME = time_today.toString()
+                UploadObject.IMAGE_PDF = encodedImage
+                UploadObject.IMAGE_TYPE = "jpg"
+                val imagedata = ImageData(
+                    school_Name = UploadObject.SCHOOL_NAME,
+                    po_office = UploadObject.PO_OFFICE,
+                    image_name = UploadObject.IMAGE_NAME,
+                    image_type = UploadObject.IMAGE_TYPE,
+                    image_pdf = UploadObject.IMAGE_PDF,
+                    upload_date = UploadObject.UPLOAD_DATE,
+                    upload_time = UploadObject.UPLOAD_TIME,
+                    EntryBy = UploadObject.ENTRYBY,
+                    Latitude = UploadObject.LATITUDE,
+                    Longitude = UploadObject.LONGITUDE,
+                    user_upload_date = UploadObject.USER_UPLOAD_DATE,
+                    InspectionType = UploadObject.INSPECTIONTYPE,
+                    WorkorderNumber = UploadObject.WORKORDERNUMBER,
+                    Description = UploadObject.DESCRIPTION,
+                    ags = UploadObject.AGS
+                )
+                lifecycleScope.launch {
+                    //val newImageData = ImageData(/* your data here */)
+                    val insertedRowId = database.Dao().insertIntoLocalDb(imagedata)
+
+                    if (insertedRowId != -1L) {
+                        editTextDescription?.setText("")
+                        iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
+                        selectedIssuesList.clear()
+                        textView?.text = ""
+                        imageChanged = false
+
+                        Toast.makeText(
+                            requireContext(),
+                            "Saved Successfull",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        // Insertion failed
+                        // Handle the failure scenario here
+                        Toast.makeText(
+                            requireContext(),
+                            "Saved Failed",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
+
         textView = requireView().findViewById<TextView>(R.id.textViewTags)
         textView?.setOnClickListener(View.OnClickListener {
             val builder = AlertDialog.Builder(requireContext())
@@ -368,30 +370,31 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
             builder.setCancelable(false)
             builder.setMultiChoiceItems(
                 issueArray, null
-            ) { dialogInterface, i, b ->
+            ) { _, i, b ->
                 if (b) {
                     selectedIssuesList.add(issueArray[i])
                 } else {
                     selectedIssuesList.remove(issueArray[i])
                 }
             }
-            builder.setPositiveButton("OK") { dialogInterface, i ->
+            builder.setPositiveButton("OK") { _, _ ->
                 textView?.text = TextUtils.join(", ", selectedIssuesList)
             }
-            builder.setNegativeButton("Cancel") { dialogInterface, i ->
+            builder.setNegativeButton("Cancel") { dialogInterface, _ ->
                 dialogInterface.dismiss()
             }
-            builder.setNeutralButton("Clear All") { dialogInterface, i ->
+            builder.setNeutralButton("Clear All") { _, _ ->
                 selectedIssuesList.clear()
                 textView?.text = ""
             }
             builder.show()
         })
 
-        pickImageButton?.setOnClickListener(View.OnClickListener { showImageOptionsDialog() })
-        iv_imgView?.setOnClickListener(View.OnClickListener { showImageOptionsDialog() })
+        pickImageButton?.setOnClickListener { showImageOptionsDialog() }
+        iv_imgView?.setOnClickListener { showImageOptionsDialog() }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK || requestCode == ImagePicker.REQUEST_CODE) {
@@ -435,9 +438,11 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                             parcelFileDescriptor!!.fileDescriptor
                         val exifInterface = ExifInterface(fileDescriptor)
                         val latitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE)
-                        val latitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)
+                        val latitudeRef =
+                            exifInterface.getAttribute(ExifInterface.TAG_GPS_LATITUDE_REF)
                         val longitude = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE)
-                        val longitudeRef = exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
+                        val longitudeRef =
+                            exifInterface.getAttribute(ExifInterface.TAG_GPS_LONGITUDE_REF)
 
                         if (latitude != null && latitudeRef != null && longitude != null && longitudeRef != null) {
                             gpsLatitude = convertToDegree(latitude, latitudeRef)
@@ -506,7 +511,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         builder.setTitle("Choose an option")
             .setItems(
                 arrayOf<String>("Capture from Camera", "Select from Gallery")
-            ) { dialog, which ->
+            ) { _, which ->
                 when (which) {
                     0 -> // "Capture from Camera" option is selected
                         ImagePicker.with(this@Upload)
@@ -523,10 +528,17 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                             .crop()
                             .compress(1024)
                             .maxResultSize(720, 720)
-                            .start();
+                            .start()
                     }
                 }
             }
         builder.show()
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Stop monitoring network status when the fragment's view is destroyed
+        networkStatusUtility?.stopMonitoringNetworkStatus()
+    }
+
 }

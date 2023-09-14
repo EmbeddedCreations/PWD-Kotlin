@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 
 object ApiUtility {
-    val BASE_URL = "https://embeddedcreation.in/tribalpwd/adminPanelNewVer2/"
+    private const val BASE_URL = "https://embeddedcreation.in/tribalpwd/adminPanelNewVer2/"
 
     fun getInstance(): Retrofit{
         return Retrofit.Builder()
