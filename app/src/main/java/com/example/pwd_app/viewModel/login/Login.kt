@@ -130,11 +130,19 @@ class Login : AppCompatActivity(){
 
         }
 
-        loginButton.setOnClickListener {
+
+        loginButton.setOnClickListener{
+
             loadingProgressBar.visibility = View.VISIBLE
             val inputPassword = passwordEditText.text.toString()
             Log.d("password", enteredPassword)
-            if (inputPassword == enteredPassword.substring(1, enteredPassword.length - 1)) {
+            if ( inputPassword=="" || selectedAtcOffice=="Select ATC Office" || selectedPoOffice=="Select Po Office"|| selectedJe=="Select JE") {
+                Toast.makeText(
+                    this@Login,
+                    "Incorrect Password or Incorrect Credentials",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if(inputPassword.equals(enteredPassword.substring(1, enteredPassword.length - 1))){
                 onLoginSuccess(selectedAtcOffice, selectedPoOffice, selectedJe)
 
                 Toast.makeText(this@Login, "Successful Login", Toast.LENGTH_SHORT).show()
@@ -142,9 +150,10 @@ class Login : AppCompatActivity(){
                 sessionManager.createLoginSession(selectedAtcOffice, selectedPoOffice, selectedJe)
                 val i = Intent(this@Login, MainActivity::class.java)
                 startActivity(i)
+
+                // Dismiss the progress dialog after starting MainActivity
                 loadingProgressBar.visibility = View.GONE
-            } else {
-                loadingProgressBar.visibility = View.GONE
+            }else{
                 Toast.makeText(
                     this@Login,
                     "Incorrect Password or Incorrect Credentials",

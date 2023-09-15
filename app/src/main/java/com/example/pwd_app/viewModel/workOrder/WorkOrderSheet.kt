@@ -179,7 +179,7 @@ class WorkOrderSheet : Fragment(),AdapterView.OnItemSelectedListener {
         )
         createDynamicTable(view, numRows, numCols, columnHeadings, rowHeadings, checkboxStates)
         return view
-    } 
+    }
 
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
