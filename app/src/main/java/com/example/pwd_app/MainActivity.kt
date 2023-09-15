@@ -1,11 +1,13 @@
 package com.example.pwd_app
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
+import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.LoginRepository
 import com.example.pwd_app.viewModel.home.Home
 import com.example.pwd_app.viewModel.login.LoginViewModel
@@ -49,9 +51,14 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.progress -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, workOrderSheet).commit()
-                    return@OnItemSelectedListener true
+                    if(Credentials.SELECTED_WORKORDER_NUMBER != ""){
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, workOrderSheet).commit()
+                        return@OnItemSelectedListener true
+                    }else{
+                        Toast.makeText(this,"Only Available For Work Order Specific Works/Surveys", Toast.LENGTH_SHORT).show()
+                    }
+
                 }
 //                R.id.analytics -> {
 //                    supportFragmentManager.beginTransaction()
