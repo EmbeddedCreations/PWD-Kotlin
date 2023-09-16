@@ -8,6 +8,7 @@ import androidx.room.RoomDatabase
 import com.example.pwd_app.model.ImageData
 import com.example.pwd_app.model.LoginCredentials
 import com.example.pwd_app.model.RegisteredSchools
+import com.example.pwd_app.model.WorkOrderTimelineModel
 import com.example.pwd_app.model.WorkOrders
 
 @Database(
@@ -17,6 +18,7 @@ import com.example.pwd_app.model.WorkOrders
         SchoolBuildings::class,
         WorkOrders::class,
         ImageData::class,
+        WorkOrderTimelineModel::class
     ],
     version = 2
 )

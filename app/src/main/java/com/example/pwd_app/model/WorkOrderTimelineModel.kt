@@ -1,7 +1,8 @@
 package com.example.pwd_app.model
 
+import androidx.room.Entity
 import androidx.room.PrimaryKey
-
+@Entity(tableName = "TimelineTable")
 data class WorkOrderTimelineModel (
     @PrimaryKey
     var Id            : String? = "",

@@ -8,6 +8,7 @@ import androidx.room.Query
 import com.example.pwd_app.model.ImageData
 import com.example.pwd_app.model.LoginCredentials
 import com.example.pwd_app.model.RegisteredSchools
+import com.example.pwd_app.model.WorkOrderTimelineModel
 import com.example.pwd_app.model.WorkOrders
 
 @Dao
@@ -63,4 +64,7 @@ interface Dao {
     @Query("DELETE FROM ImageDataTable WHERE school_Name = :schoolName AND po_office = :poOffice")
     suspend fun deleteItems(schoolName: String, poOffice: String)
 
+    //Local Data for timeline table
+    @Insert(onConflict = OnConflictStrategy.REPLACE, entity = WorkOrderTimelineModel::class)
+    suspend fun insertTimeLine(timeLineData: List<WorkOrderTimelineModel>): Long
 }
