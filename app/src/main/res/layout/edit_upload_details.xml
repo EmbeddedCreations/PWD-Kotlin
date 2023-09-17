@@ -81,6 +81,20 @@
             app:layout_constraintTop_toBottomOf="@+id/textViewSchoolTitle"
             android:contentDescription="@string/upload_image" />
 
+        <!-- Display the entered text -->
+        <TextView
+            android:id="@+id/displayedText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:text="here the predefined text would be displayed"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@+id/image_view"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_description"
             android:layout_width="0dp"
@@ -89,7 +103,7 @@
             app:counterMaxLength="300"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/image_view">
+            app:layout_constraintTop_toBottomOf="@id/displayedText">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editTextDescription"
@@ -116,43 +130,19 @@
             app:layout_constraintTop_toBottomOf="@+id/til_description"
             app:drawableRightCompat="@android:drawable/arrow_down_float" />
 
-        <Button
-            android:id="@+id/pickimage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="8dp"
-            android:text="@string/select_image"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/buttonUploadImage"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="@+id/image_view"
-            app:layout_constraintTop_toBottomOf="@+id/textViewTags" />
-
-        <Button
-            android:id="@+id/buttonUploadImage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="@string/upload_image_button"
-            android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="@+id/image_view"
-            app:layout_constraintStart_toEndOf="@+id/pickimage"
-            app:layout_constraintTop_toTopOf="@+id/pickimage" />
 
         <!-- Add Save Image Button -->
         <Button
             android:id="@+id/buttonSaveImage"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="8dp"
-            android:text="@string/save_image_to_local_db"
+            android:text="@string/submit_changes"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/image_view"
             app:layout_constraintStart_toStartOf="@+id/image_view"
-            app:layout_constraintTop_toBottomOf="@+id/buttonUploadImage" />
+            app:layout_constraintTop_toBottomOf="@+id/textViewTags" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
-
