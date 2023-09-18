@@ -22,49 +22,59 @@
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="8dp">
 
+            <!-- Add the edit symbol icon button at the top -->
+            <ImageView
+                android:id="@+id/editButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:layout_margin="8dp"
+                android:src="@drawable/edit_icon"
+                android:contentDescription="@string/edit_icon" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="0dp"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/image"
+                    android:scaleType="fitCenter" />
+
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_weight="2"
+                    android:orientation="vertical"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp">
 
-                    <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="0dp"
-                        android:layout_height="80dp"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/image"
-                        android:scaleType="fitCenter" />
-
-                    <LinearLayout
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/buildingNameTextView"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:orientation="vertical"
-                        android:paddingStart="8dp"
-                        android:paddingEnd="8dp">
+                        android:text="@string/building"
+                        android:textStyle="bold" />
 
-                        <TextView
-                            android:id="@+id/buildingNameTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/building"
-                            android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/buildingDateTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/date"
+                        android:textSize="12sp" />
 
-                        <TextView
-                            android:id="@+id/buildingDateTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/date"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/buildingDescTextView"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/desc"
-                            android:textSize="11sp" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/buildingDescTextView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/desc"
+                        android:textSize="11sp" />
                 </LinearLayout>
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
