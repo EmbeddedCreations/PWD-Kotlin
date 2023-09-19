@@ -24,14 +24,17 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
         val currentProgressRow = tableLayout.getChildAt(currentRowIndex) as TableRow
         val previousProgressRow = tableLayout.getChildAt(currentRowIndex - 1) as TableRow
-
         var allMatch = true
 
         for (j in 1 until currentProgressRow.childCount) {
-            val currentCheckBox = currentProgressRow.getChildAt(j) as CheckBox
-            val previousCheckBox = previousProgressRow.getChildAt(j) as CheckBox
-
-            if (currentCheckBox.isChecked != previousCheckBox.isChecked) {
+            if (
+                countCheckedCheckboxes(previousProgressRow) < countCheckedCheckboxes(
+                    currentProgressRow
+                ) ||
+                getLastCheckedCheckboxIndex(currentProgressRow) > getLastCheckedCheckboxIndex(
+                    previousProgressRow
+                )
+            ) {
                 allMatch = false
                 break
             }
@@ -43,6 +46,28 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             currentProgressRow.setBackgroundColor(Color.RED)
         }
     }
+
+    private fun countCheckedCheckboxes(row: TableRow): Int {
+        var checkedCount = 0
+        for (i in 1 until row.childCount) {
+            val checkBox = row.getChildAt(i) as CheckBox
+            if (checkBox.isChecked) {
+                checkedCount++
+            }
+        }
+        return checkedCount
+    }
+
+    private fun getLastCheckedCheckboxIndex(row: TableRow): Int {
+        for (i in row.childCount - 1 downTo 1) {
+            val checkBox = row.getChildAt(i) as CheckBox
+            if (checkBox.isChecked) {
+                return i
+            }
+        }
+        return -1 // Return -1 if no checkbox is checked in the row
+    }
+
 
     private fun createDynamicTable(
         view: View,
