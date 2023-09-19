@@ -16,39 +16,58 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.pwd_app.R
 
-class WorkOrderSheet : Fragment(),AdapterView.OnItemSelectedListener {
+class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var checkboxStates: Array<IntArray>
 
-    private fun checkMatchingScheduleAndProgress() {
+    private fun compareAndSetColor(currentRowIndex: Int) {
         val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
-        val numRows = tableLayout.childCount
-        var i = 1
-        while (i < numRows) {
-            val scheduleRow = tableLayout.getChildAt(i) as TableRow
-            val progressRow = tableLayout.getChildAt(i + 1) as TableRow
-            var allMatch = true // Assume all checkboxes match
-            for (j in 1 until progressRow.childCount) {
-                val scheduleCheckBox = scheduleRow.getChildAt(j) as CheckBox
-                val progressCheckBox = progressRow.getChildAt(j) as CheckBox
-                val scheduleChecked = scheduleCheckBox.isChecked
-                val progressChecked = progressCheckBox.isChecked
-                if (scheduleChecked != progressChecked) {
-                    // If at least one checkbox doesn't match, set allMatch to false and break
-                    allMatch = false
-                    break
-                }
+        val currentProgressRow = tableLayout.getChildAt(currentRowIndex) as TableRow
+        val previousProgressRow = tableLayout.getChildAt(currentRowIndex - 1) as TableRow
+        var allMatch = true
+
+        for (j in 1 until currentProgressRow.childCount) {
+            if (
+                countCheckedCheckboxes(previousProgressRow) < countCheckedCheckboxes(
+                    currentProgressRow
+                ) ||
+                getLastCheckedCheckboxIndex(currentProgressRow) > getLastCheckedCheckboxIndex(
+                    previousProgressRow
+                )
+            ) {
+                allMatch = false
+                break
             }
-            if (allMatch) {
-                // If all checkboxes match, set the background color of progressRow to transparent
-                progressRow.setBackgroundColor(Color.TRANSPARENT)
-            } else {
-                // If any checkbox doesn't match, set the background color of progressRow to red
-                progressRow.setBackgroundColor(Color.RED)
-            }
-            i += 2
+        }
+
+        if (allMatch) {
+            currentProgressRow.setBackgroundColor(Color.TRANSPARENT)
+        } else {
+            currentProgressRow.setBackgroundColor(Color.RED)
         }
     }
+
+    private fun countCheckedCheckboxes(row: TableRow): Int {
+        var checkedCount = 0
+        for (i in 1 until row.childCount) {
+            val checkBox = row.getChildAt(i) as CheckBox
+            if (checkBox.isChecked) {
+                checkedCount++
+            }
+        }
+        return checkedCount
+    }
+
+    private fun getLastCheckedCheckboxIndex(row: TableRow): Int {
+        for (i in row.childCount - 1 downTo 1) {
+            val checkBox = row.getChildAt(i) as CheckBox
+            if (checkBox.isChecked) {
+                return i
+            }
+        }
+        return -1 // Return -1 if no checkbox is checked in the row
+    }
+
 
     private fun createDynamicTable(
         view: View,
@@ -107,7 +126,7 @@ class WorkOrderSheet : Fragment(),AdapterView.OnItemSelectedListener {
                                 ).show()
                                 return@OnCheckedChangeListener
                             }
-                            checkMatchingScheduleAndProgress()
+
                             // Update the corresponding value in the checkboxStates array
                             val rowIndex = tableLayout.indexOfChild(row)
                             val checkboxArrayIndex = (columnIndex - 1) * 4 + k
@@ -116,13 +135,15 @@ class WorkOrderSheet : Fragment(),AdapterView.OnItemSelectedListener {
 
                             // Print the updated array to the console
                             for (i in 0 until numRows) {
-                                for (j in 0 until numCols*4) {
+                                for (j in 0 until numCols * 4) {
                                     print(checkboxStates[i][j].toString() + " ")
                                 }
                                 println() // Move to the next row
                             }
-                        })
 
+                            // Call the function to compare and set the background color for the current row
+                            compareAndSetColor(rowIndex)
+                        })
 
                         // Set checkboxes in even rows to be disabled
                         if ((i - 1) % 2 == 0) {
@@ -180,7 +201,6 @@ class WorkOrderSheet : Fragment(),AdapterView.OnItemSelectedListener {
         createDynamicTable(view, numRows, numCols, columnHeadings, rowHeadings, checkboxStates)
         return view
     }
-
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         TODO("Not yet implemented")
