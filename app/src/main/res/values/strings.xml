@@ -40,4 +40,5 @@
     <string name="edit_icon">edit icon</string>
     <string name="submit_changes">Submit Changes</string>
     <string name="edit_details">Edit details</string>
+    <string name="here_the_predefined_text_would_be_displayed">here the predefined text would be displayed</string>
 </resources>
