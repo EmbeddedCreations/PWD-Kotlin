@@ -14,18 +14,20 @@ import com.example.pwd_app.model.SchoolData
 import com.squareup.picasso.Picasso
 
 class BuildingAdapter(
-    private val buildingList : List<SchoolData>
-) :RecyclerView.Adapter<BuildingAdapter.ViewHolder>() {
+    private val buildingList: List<SchoolData>
+) : RecyclerView.Adapter<BuildingAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var imageView:ImageView = itemView.findViewById<ImageView?>(R.id.imageView)
-        var descriptionTextView: TextView = itemView.findViewById<TextView>(R.id.buildingDescTextView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var imageView: ImageView = itemView.findViewById<ImageView?>(R.id.imageView)
+        var descriptionTextView: TextView =
+            itemView.findViewById<TextView>(R.id.buildingDescTextView)
         var BuildingName: TextView = itemView.findViewById(R.id.buildingNameTextView)
         var Date: TextView = itemView.findViewById(R.id.buildingDateTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_image_description, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_image_description, parent, false)
         return ViewHolder(view)
     }
 

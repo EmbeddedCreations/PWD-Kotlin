@@ -5,14 +5,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.pwd_app.model.ImageData
 import com.example.pwd_app.repository.DataRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class UploadViewModel(
     private val dataRepository: DataRepository
-) : ViewModel(){
+) : ViewModel() {
     private val _uploadStatus = MutableLiveData<Boolean>()
     val uploadStatus: LiveData<Boolean> = _uploadStatus
 
@@ -63,7 +62,7 @@ class UploadViewModel(
                 }
             } catch (e: Exception) {
                 // Handle network or other errors
-                Log.d("ERROR",e.toString())
+                Log.d("ERROR", e.toString())
                 _uploadStatus.postValue(false)
             }
         }

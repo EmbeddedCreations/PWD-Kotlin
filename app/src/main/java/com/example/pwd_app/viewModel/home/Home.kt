@@ -32,14 +32,17 @@ import java.util.Locale
 class Home : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
     val uploadFragment: Fragment = Upload()
+
     // Declare the ProgressBar as a class-level property
     private lateinit var loadingProgressBar: ProgressBar
+
     //Selected variables
-    var selectedSchool="Select School"
-    var selectedBuilding="Select Building"
-    var selectedWorkorder="Select Workorder"
-    var selectedId =""
-    var selectedWorkOrderNumber ="NA"
+    var selectedSchool = "Select School"
+    var selectedBuilding = "Select Building"
+    var selectedWorkorder = "Select Workorder"
+    var selectedId = ""
+    var selectedWorkOrderNumber = "NA"
+
     //Buttons And TextViews
     private lateinit var spinnerSchool: Spinner
     private lateinit var spinnerBuilding: Spinner
@@ -49,7 +52,8 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var textViewLoggedIn: TextView
     private lateinit var textViewAtc: TextView
     private lateinit var textViewPoOffice: TextView
-    private val workorderNames = arrayOf("Select Workorder", "General Inspection", "Workorder related Inspection")
+    private val workorderNames =
+        arrayOf("Select Workorder", "General Inspection", "Workorder related Inspection")
     private var networkStatusUtility: NetworkStatusUtility? = null
 
     @SuppressLint("SetTextI18n")
@@ -71,14 +75,15 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         loadingProgressBar.visibility = View.VISIBLE
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(requireContext())
-        val homeRepository = HomeRepository(apiInterface,database,requireContext())
-        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
+        val homeRepository = HomeRepository(apiInterface, database, requireContext())
+        homeViewModel =
+            ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
 
         // Initialize UI components here
         //Selected variables
-        selectedSchool="Select School"
-        selectedBuilding="Select Building"
-        selectedWorkorder="Select Workorder"
+        selectedSchool = "Select School"
+        selectedBuilding = "Select Building"
+        selectedWorkorder = "Select Workorder"
         selectedId = ""
         spinnerSchool = view.findViewById(R.id.spinnerSchool)
         spinnerBuilding = view.findViewById(R.id.spinnerBuilding)
@@ -97,7 +102,8 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         } else {
             status.setImageResource(R.drawable.offline)
         }
-        networkStatusUtility!!.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
+        networkStatusUtility!!.startMonitoringNetworkStatus(object :
+            NetworkStatusUtility.NetworkStatusListener {
             override fun onNetworkAvailable() {
                 status.setImageResource(R.drawable.online)
                 status.setOnClickListener { showToast("Online") }
@@ -126,10 +132,11 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         textViewPoOffice.text = "PO Office: " + Credentials.DEFAULT_PO
 
         //School Spinner
-        homeViewModel.schools.observe(viewLifecycleOwner){schoolList ->
+        homeViewModel.schools.observe(viewLifecycleOwner) { schoolList ->
             val schools = mutableListOf("Select School")
-            schools.addAll(schoolList.map{it.school_name.toString()})
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item,schools)
+            schools.addAll(schoolList.map { it.school_name.toString() })
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, schools)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerSchool.adapter = adapter
         }
@@ -183,7 +190,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         // Handle item selection here
-        when (parent?.id){
+        when (parent?.id) {
             R.id.spinnerSchool -> {
                 val selectedItem = spinnerSchool.selectedItem as? String
                 selectedSchool = selectedItem ?: ""
@@ -193,15 +200,21 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                     buildings.addAll(buildingList
                         .filter { it.unq_id == selectedId }
                         .map { it.type_building.toString() })
-                    val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, buildings)
+                    val adapter = ArrayAdapter(
+                        requireContext(),
+                        android.R.layout.simple_spinner_item,
+                        buildings
+                    )
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinnerBuilding.adapter = adapter
                 }
             }
+
             R.id.spinnerBuilding -> {
                 val selectedItem = spinnerBuilding.selectedItem as? String
                 selectedBuilding = selectedItem ?: ""
             }
+
             R.id.spinnerWorkorder -> {
                 val selectedItem = spinnerWorkorder.selectedItem as? String
                 selectedWorkorder = selectedItem ?: ""
@@ -217,7 +230,11 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                         workOrders.addAll(workOrderList
                             .filter { it.Unq_ID == selectedId }
                             .map { it.WorkorderNumber.toString() })
-                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
+                        val adapter = ArrayAdapter(
+                            requireContext(),
+                            android.R.layout.simple_spinner_item,
+                            workOrders
+                        )
                         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                         spinnerSecondDropdown.adapter = adapter
 
@@ -247,6 +264,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
     }
+
     private fun showToast(statusText: String) {
         Toast.makeText(requireContext(), statusText, Toast.LENGTH_SHORT).show()
     }

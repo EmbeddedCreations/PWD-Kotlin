@@ -15,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.pwd_app.R
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -77,6 +78,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun enableColumnsBasedOnDate() {
         val currentDate = Date() // Get the current system date
         val differenceInDays = calculateDateDifference(plannedDate, currentDate)
