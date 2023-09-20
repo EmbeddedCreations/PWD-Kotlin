@@ -12,7 +12,7 @@ object UploadObject {
     var LATITUDE = ""
     var LONGITUDE = ""
     var USER_UPLOAD_DATE = ""
-    var INSPECTIONTYPE=""
+    var INSPECTIONTYPE = ""
     var WORKORDERNUMBER = ""
     var DESCRIPTION = ""
     var AGS = ""

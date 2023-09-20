@@ -1,6 +1,5 @@
 package com.example.pwd_app.repository
 
-import com.example.pwd_app.model.SchoolBuildings
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,6 +7,7 @@ import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.model.RegisteredSchools
+import com.example.pwd_app.model.SchoolBuildings
 import com.example.pwd_app.model.WorkOrders
 import com.example.pwd_app.network.NetworkUtil
 
