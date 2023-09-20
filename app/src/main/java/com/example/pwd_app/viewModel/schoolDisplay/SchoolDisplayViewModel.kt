@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class SchoolDisplayViewModel(
     private val apiInterface: ApiInterface
-): ViewModel() {
+) : ViewModel() {
     private val _schoolData = MutableLiveData<List<SchoolData>>()
     val schoolList: LiveData<List<SchoolData>> get() = _schoolData
 

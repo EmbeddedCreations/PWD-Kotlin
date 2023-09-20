@@ -14,8 +14,8 @@ import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Schools
 
-class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener  {
-    private lateinit var schoolDisplayViewModel : SchoolDisplayViewModel
+class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener {
+    private lateinit var schoolDisplayViewModel: SchoolDisplayViewModel
     private lateinit var recyclerView: RecyclerView
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,12 +24,15 @@ class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener  {
         val view = inflater.inflate(R.layout.history_schools, container, false)
 
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
-        schoolDisplayViewModel = ViewModelProvider(this,SchoolDisplayViewModelFactory(apiInterface))[SchoolDisplayViewModel::class.java]
+        schoolDisplayViewModel = ViewModelProvider(
+            this,
+            SchoolDisplayViewModelFactory(apiInterface)
+        )[SchoolDisplayViewModel::class.java]
         recyclerView = view.findViewById(R.id.schoolRecyclerView)
 
         // Set up RecyclerView layout manager and adapter
         val layoutManager = LinearLayoutManager(requireContext())
-         // Initialize with an empty list
+        // Initialize with an empty list
 
         recyclerView.layoutManager = layoutManager
 
@@ -42,7 +45,7 @@ class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener  {
                 val distinctImageNames = schoolDataList.map { it.image_name }.distinct()
                 Schools(schoolName, distinctImageNames.joinToString())
             }
-            recyclerView.adapter= SchoolAdapter(schoolsList)
+            recyclerView.adapter = SchoolAdapter(schoolsList)
         }
 
 
@@ -51,6 +54,7 @@ class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener  {
 
         return view
     }
+
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         TODO("Not yet implemented")
     }

@@ -1,6 +1,5 @@
 package com.example.pwd_app.data.local
 
-import com.example.pwd_app.model.SchoolBuildings
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -8,6 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.pwd_app.model.ImageData
 import com.example.pwd_app.model.LoginCredentials
 import com.example.pwd_app.model.RegisteredSchools
+import com.example.pwd_app.model.SchoolBuildings
 import com.example.pwd_app.model.WorkOrders
 
 @Database(

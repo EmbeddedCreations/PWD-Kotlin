@@ -11,14 +11,15 @@ import kotlinx.coroutines.launch
 
 class LocalDbViewModel(
     private val localDatabaseRepository: LocalDatabaseRepository
-    ): ViewModel() {
-    init{
-        viewModelScope.launch (Dispatchers.IO){
+) : ViewModel() {
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
             localDatabaseRepository.getData()
             localDatabaseRepository.getCount()
         }
     }
-    val surveyData : LiveData<List<ImageData>>
+
+    val surveyData: LiveData<List<ImageData>>
         get() = localDatabaseRepository.images
 //    val count: LiveData<Int>
 //        get() = localDatabaseRepository.dbCount

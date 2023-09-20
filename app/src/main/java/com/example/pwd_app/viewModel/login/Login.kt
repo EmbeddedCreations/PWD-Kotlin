@@ -4,7 +4,13 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.MainActivity
@@ -15,7 +21,7 @@ import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.LoginRepository
 
-class Login : AppCompatActivity(){
+class Login : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var sessionManager: SessionManager
 
@@ -27,7 +33,10 @@ class Login : AppCompatActivity(){
         val loginApiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(applicationContext)
         val loginRepository = LoginRepository(loginApiInterface, database, applicationContext)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository))[LoginViewModel::class.java]
+        loginViewModel = ViewModelProvider(
+            this,
+            LoginViewModelFactory(loginRepository)
+        )[LoginViewModel::class.java]
 
         //Session Manager
         sessionManager = SessionManager(this)
@@ -63,7 +72,8 @@ class Login : AppCompatActivity(){
             selectAtcOfficeSpinner.adapter = adapter
         }
 
-        selectAtcOfficeSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+        selectAtcOfficeSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
                     selectedAtcOffice = selectAtcOfficeSpinner.selectedItem as String
                     //Observe the user and populate poSpinner
@@ -94,7 +104,7 @@ class Login : AppCompatActivity(){
                 loginViewModel.users.observe(this@Login) { userList ->
                     val filteredJe = mutableListOf("Select JE")
                     filteredJe.addAll(userList
-                        .filter { it.atc_office == selectedAtcOffice && it.po_office == selectedPoOffice && it.ErStatus=="Y"}
+                        .filter { it.atc_office == selectedAtcOffice && it.po_office == selectedPoOffice && it.ErStatus == "Y" }
                         .map { it.username })
                     val adapter = ArrayAdapter(
                         this@Login,
@@ -111,38 +121,45 @@ class Login : AppCompatActivity(){
             }
 
         }
-        selectJuniorEngineerSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-                selectedJe = selectJuniorEngineerSpinner.selectedItem as String
-                //Observe the user and populate poSpinner
-                loginViewModel.users.observe(this@Login) { userList ->
-                    val passKey = userList
-                        .filter { it.atc_office == selectedAtcOffice && it.po_office == selectedPoOffice && it.username == selectedJe }
-                        .map { it.password }
+        selectJuniorEngineerSpinner.onItemSelectedListener =
+            object : AdapterView.OnItemSelectedListener {
+                override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+                    selectedJe = selectJuniorEngineerSpinner.selectedItem as String
+                    //Observe the user and populate poSpinner
+                    loginViewModel.users.observe(this@Login) { userList ->
+                        val passKey = userList
+                            .filter { it.atc_office == selectedAtcOffice && it.po_office == selectedPoOffice && it.username == selectedJe }
+                            .map { it.password }
 
-                    enteredPassword = passKey.toString()
+                        enteredPassword = passKey.toString()
+                    }
                 }
+
+                override fun onNothingSelected(p0: AdapterView<*>?) {
+                    TODO("Not yet implemented")
+                }
+
             }
 
-            override fun onNothingSelected(p0: AdapterView<*>?) {
-                TODO("Not yet implemented")
-            }
 
-        }
-
-
-        loginButton.setOnClickListener{
+        loginButton.setOnClickListener {
 
             loadingProgressBar.visibility = View.VISIBLE
             val inputPassword = passwordEditText.text.toString()
             Log.d("password", enteredPassword)
-            if ( inputPassword=="" || selectedAtcOffice=="Select ATC Office" || selectedPoOffice=="Select Po Office"|| selectedJe=="Select JE") {
+            if (inputPassword == "" || selectedAtcOffice == "Select ATC Office" || selectedPoOffice == "Select Po Office" || selectedJe == "Select JE") {
                 Toast.makeText(
                     this@Login,
                     "Incorrect Password or Incorrect Credentials",
                     Toast.LENGTH_SHORT
                 ).show()
-            } else if(inputPassword.equals(enteredPassword.substring(1, enteredPassword.length - 1))){
+            } else if (inputPassword.equals(
+                    enteredPassword.substring(
+                        1,
+                        enteredPassword.length - 1
+                    )
+                )
+            ) {
                 onLoginSuccess(selectedAtcOffice, selectedPoOffice, selectedJe)
 
                 Toast.makeText(this@Login, "Successful Login", Toast.LENGTH_SHORT).show()
@@ -153,7 +170,7 @@ class Login : AppCompatActivity(){
 
                 // Dismiss the progress dialog after starting MainActivity
                 loadingProgressBar.visibility = View.GONE
-            }else{
+            } else {
                 Toast.makeText(
                     this@Login,
                     "Incorrect Password or Incorrect Credentials",
@@ -169,7 +186,11 @@ class Login : AppCompatActivity(){
         Credentials.DEFAULT_JUNIOR_ENGINEER = juniorEngineerValue
     }
 
-    private fun redirectToMainActivity(atcValue: String?, poValue: String?, juniorEngineerValue: String?) {
+    private fun redirectToMainActivity(
+        atcValue: String?,
+        poValue: String?,
+        juniorEngineerValue: String?
+    ) {
         if (atcValue != null && poValue != null && juniorEngineerValue != null) {
             Credentials.DEFAULT_ATC = atcValue
             Credentials.DEFAULT_PO = poValue

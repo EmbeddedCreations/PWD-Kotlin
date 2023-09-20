@@ -16,18 +16,20 @@ import com.example.pwd_app.R
 import com.example.pwd_app.model.ImageData
 
 class LocalDbAdapter(
-    private val buildingList : List<ImageData>
-) :RecyclerView.Adapter<LocalDbAdapter.ViewHolder>() {
+    private val buildingList: List<ImageData>
+) : RecyclerView.Adapter<LocalDbAdapter.ViewHolder>() {
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
-        var imageView:ImageView = itemView.findViewById<ImageView?>(R.id.imageView)
-        var descriptionTextView: TextView = itemView.findViewById<TextView>(R.id.buildingDescTextView)
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var imageView: ImageView = itemView.findViewById<ImageView?>(R.id.imageView)
+        var descriptionTextView: TextView =
+            itemView.findViewById<TextView>(R.id.buildingDescTextView)
         var BuildingName: TextView = itemView.findViewById(R.id.buildingNameTextView)
         var Date: TextView = itemView.findViewById(R.id.buildingDateTextView)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_image_description, parent, false)
+        val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_image_description, parent, false)
         return ViewHolder(view)
     }
 
@@ -38,7 +40,7 @@ class LocalDbAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = buildingList[position]
-        Log.d("Building List",buildingList.toString())
+        Log.d("Building List", buildingList.toString())
         val decodedImage: ByteArray = Base64.decode(currentItem.image_pdf, Base64.DEFAULT)
 
         // Create a Bitmap from the byte array
