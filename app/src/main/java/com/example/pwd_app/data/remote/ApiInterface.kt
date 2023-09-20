@@ -5,6 +5,7 @@ import com.example.pwd_app.model.LoginCredentials
 import com.example.pwd_app.model.RegisteredSchools
 import com.example.pwd_app.model.SchoolBuildings
 import com.example.pwd_app.model.SchoolData
+import com.example.pwd_app.model.WorkOrderTimelineModel
 import com.example.pwd_app.model.WorkOrders
 import retrofit2.Response
 import retrofit2.http.Field
@@ -42,6 +43,12 @@ interface ApiInterface {
         @Query("user") user: String,
         @Query("school") school: String
     ): Response<List<SchoolData>>
+
+    @GET("app_fetch_workOrderTimeline.php")
+    suspend fun getWorkOrderTimeline(
+        @Query("po_office") po_office: String,
+        @Query("workorder_no") workorder_no : String
+    ):Response<WorkOrderTimelineModel>
 
     @FormUrlEncoded
     @POST("app_upload_Image.php")

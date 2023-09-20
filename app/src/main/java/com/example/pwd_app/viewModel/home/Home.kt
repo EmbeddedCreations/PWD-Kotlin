@@ -246,8 +246,8 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                                     position: Int,
                                     id: Long
                                 ) {
-                                    selectedWorkOrderNumber =
-                                        parent.getItemAtPosition(position).toString()
+                                    selectedWorkOrderNumber = parent.getItemAtPosition(position).toString()
+                                    Credentials.SELECTED_WORKORDER_NUMBER = selectedWorkOrderNumber
                                 }
 
                                 override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -258,6 +258,8 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                         requireView().findViewById<TextView>(R.id.textViewSecondDropdownTitle)
                     val spinnerSecondDropdown =
                         requireView().findViewById<Spinner>(R.id.spinnerSecondDropdown)
+                    Credentials.SELECTED_WORKORDER_NUMBER =""
+                    selectedWorkorder = "NA"
                     textViewSecondDropdownTitle.visibility = View.GONE
                     spinnerSecondDropdown.visibility = View.GONE
                 }
