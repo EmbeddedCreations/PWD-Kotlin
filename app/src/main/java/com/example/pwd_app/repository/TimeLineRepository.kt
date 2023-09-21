@@ -13,9 +13,9 @@ class TimeLineRepository(
     private val database : DatabaseHelper,
     private val applicationContext : Context
 ) {
-    private val timelineLiveData = MutableLiveData<WorkOrderTimelineModel>()
+    private val timelineLiveData = MutableLiveData<List<WorkOrderTimelineModel>>()
 
-    val timeLine : LiveData<WorkOrderTimelineModel>
+    val timeLine : LiveData<List<WorkOrderTimelineModel>>
         get() = timelineLiveData
 
     suspend fun getTimeline(po_office :String){
@@ -23,9 +23,11 @@ class TimeLineRepository(
             val result = apiInterface.getWorkOrderTimeline(po_office)
             if(result.body() != null){
                 database.Dao().insertTimeLine(result.body()!!)
+                timelineLiveData.postValue(result.body())
             }
         }else{
-
+            val timeLines = database.Dao().getTimelines(po_office)
+            timelineLiveData.postValue(timeLines)
         }
     }
 }

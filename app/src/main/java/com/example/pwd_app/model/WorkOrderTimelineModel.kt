@@ -6,11 +6,11 @@ import androidx.room.PrimaryKey
 data class WorkOrderTimelineModel (
     @PrimaryKey
     var Id            : String? = "",
-    var schoolName    : String? = "",
-    var poOffice      : String? = "",
-    var workorderNo   : String? = "",
-    var workorderName : String? = "",
-    var workorderTypes: String? = "",
+    var school_name    : String? = "",
+    var po_office      : String? = "",
+    var workorder_no   : String? = "",
+    var workorder_name : String? = "",
+    var workorder_types: String? = "",
     var srno          : String? = "",
     var itemofwork    : String? = "",
     var countofweek   : String? = "",

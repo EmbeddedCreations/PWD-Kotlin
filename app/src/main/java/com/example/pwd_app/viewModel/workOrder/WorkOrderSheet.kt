@@ -7,13 +7,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.Spinner
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.R
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -23,12 +26,25 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import com.example.pwd_app.data.local.DatabaseHelper
+import com.example.pwd_app.data.remote.ApiInterface
+import com.example.pwd_app.data.remote.ApiUtility
+import com.example.pwd_app.model.Credentials
+import com.example.pwd_app.repository.HomeRepository
+import com.example.pwd_app.repository.TimeLineRepository
+import com.example.pwd_app.viewModel.home.HomeViewModel
+import com.example.pwd_app.viewModel.home.HomeViewModelFactory
+
 
 class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var checkboxStates: Array<IntArray>
+
     private lateinit var plannedDate: Date
-    private lateinit var systemDate: Date
+
+    private lateinit var  workOrderDropdown : Spinner
+    private lateinit var workOrderViewModel: WorkOrderViewModel
+
     private fun compareAndSetColor(currentRowIndex: Int) {
         val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
         val currentProgressRow = tableLayout.getChildAt(currentRowIndex) as TableRow
@@ -223,52 +239,96 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     ): View? {
         val view = inflater.inflate(R.layout.workorder_checksheet, container, false)
 
-        // Example values, replace with your actual input values
-        val columnHeadings = arrayOf("Month1", "Month 2", "Month 3", "Month 4")
-        val rowHeadings = arrayOf(
-            "work 1 schedule",
-            "work 1 progress",
-            "work 2 schedule",
-            "work 2 progress",
-            "work 3 schedule",
-            "work 3 progress",
-            "work 4 schedule",
-            "work 4 progress",
-            "work 5 schedule",
-            "work 5 progress",
-            "work 6 schedule",
-            "work 6 progress"
-        )
-        val numRows = rowHeadings.size
-        val numCols = columnHeadings.size
-        checkboxStates = Array(numRows) { IntArray(numCols * 4) }
-        // Example checkboxStates array
-        val checkboxStates = arrayOf(
-            intArrayOf(1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-            intArrayOf(1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0),
-            intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-        )
-        createDynamicTable(view, numRows, numCols, columnHeadings, rowHeadings, checkboxStates)
+        val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
+        val database = DatabaseHelper.getDatabase(requireContext())
+        val homeRepository = HomeRepository(apiInterface, database, requireContext())
+        val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
+        workOrderViewModel = ViewModelProvider(
+            this,
+            WorkOrderViewModelFactory(timeLineRepository, homeRepository)
+        ).get(WorkOrderViewModel::class.java)
+
+
+        workOrderDropdown = requireView().findViewById(R.id.workOrderDropdown)
+
+        workOrderViewModel.workOrders.observe(viewLifecycleOwner) { workOrderList ->
+            val workOrders = mutableListOf("Select Work Order")
+            workOrders.addAll(workOrderList
+                .filter { it.Unq_ID == Credentials.SELECTED_SCHOOL_ID }
+                .map { it.WorkorderNumber.toString() })
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            workOrderDropdown.adapter = adapter
+
+            val workOrderIndex = workOrders.indexOf(Credentials.SELECTED_WORKORDER_NUMBER)
+            if (workOrderIndex != -1) {
+                workOrderDropdown.setSelection(workOrderIndex)
+            }
+            workOrderDropdown.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View,
+                        position: Int,
+                        id: Long
+                    ) {
+                        Credentials.SELECTED_WORKORDER_NUMBER =
+                            parent.getItemAtPosition(position).toString()
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+        }
+
+        workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
+            fun generateRowHeadings(): Array<String> {
+                return timeLines
+                    .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
+                    .flatMap { listOf("${it.itemofwork} Schedule", "${it.itemofwork} progress") }
+                    .toTypedArray()
+            }
+
+            val rowHeadings = generateRowHeadings()
+            
+            // Example values, replace with your actual input values
+            val columnHeadings = arrayOf("Month1", "Month 2", "Month 3", "Month 4")
+
+            val numRows = rowHeadings.size
+            val numCols = columnHeadings.size
+            checkboxStates = Array(numRows) { IntArray(numCols * 4) }
+            // Example checkboxStates array
+            val checkboxStates = arrayOf(
+                intArrayOf(1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                intArrayOf(1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                intArrayOf(1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                intArrayOf(1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1),
+                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                intArrayOf(1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+                intArrayOf(1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0),
+                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+            )
+            createDynamicTable(view, numRows, numCols, columnHeadings, rowHeadings, checkboxStates)
+
+        }
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-        // Initialize plannedDate and systemDate with your date values
-        plannedDate = parseDate("yyyy-MM-dd", "2023-08-10") // Replace with your planned date
-        systemDate = Date() // Get the current system date
-        enableColumnsBasedOnDate()
-    }
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        // Initialize plannedDate and systemDate with your date values
+//        plannedDate = parseDate("yyyy-MM-dd", "2023-08-10") // Replace with your planned date
+//        systemDate = Date() // Get the current system date
+//        enableColumnsBasedOnDate()
+//    }
+
+
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         TODO("Not yet implemented")

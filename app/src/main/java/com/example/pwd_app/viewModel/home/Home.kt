@@ -195,6 +195,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                 val selectedItem = spinnerSchool.selectedItem as? String
                 selectedSchool = selectedItem ?: ""
                 selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
+                Credentials.SELECTED_SCHOOL_ID = selectedId
                 homeViewModel.buildings.observe(viewLifecycleOwner) { buildingList ->
                     val buildings = mutableListOf("Select Building")
                     buildings.addAll(buildingList
