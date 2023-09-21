@@ -38,9 +38,14 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
 
     //Selected variables
     var selectedSchool = "Select School"
-    var selectedBuilding = "Select Building"
     var selectedWorkorder = "Select Workorder"
-    var selectedId = ""
+    class Home {
+        companion object {
+            var selectedId = ""
+            var selectedBuilding = "Select Building"
+        }
+    }
+
     var selectedWorkOrderNumber = "NA"
 
     //Buttons And TextViews
@@ -82,9 +87,9 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         // Initialize UI components here
         //Selected variables
         selectedSchool = "Select School"
-        selectedBuilding = "Select Building"
+        Home.selectedBuilding = "Select Building"
         selectedWorkorder = "Select Workorder"
-        selectedId = ""
+        Home.selectedId = ""
         spinnerSchool = view.findViewById(R.id.spinnerSchool)
         spinnerBuilding = view.findViewById(R.id.spinnerBuilding)
         spinnerWorkorder = view.findViewById(R.id.spinnerWorkorder)
@@ -153,19 +158,19 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                 //var selectedDate = textViewSelectedDate.text.toString()
                 if (selectedSchool == "Select School") {
                     showToast("Please select a school.")
-                } else if (selectedBuilding == "Select Building") {
+                } else if (Home.selectedBuilding == "Select Building") {
                     showToast("Please select a building.")
                 } else if (selectedWorkorder == "Select Workorder") {
                     showToast("Please select a workorder.")
                 } else {
                     //Set Data For Upload
-                    UploadObject.SCHOOL_NAME = selectedId
+                    UploadObject.SCHOOL_NAME = Home.selectedId
                     UploadObject.PO_OFFICE = Credentials.DEFAULT_PO
                     UploadObject.USER_UPLOAD_DATE = currentDate
                     UploadObject.ENTRYBY = Credentials.DEFAULT_JUNIOR_ENGINEER
                     UploadObject.WORKORDERNUMBER = selectedWorkOrderNumber
                     UploadObject.INSPECTIONTYPE = selectedWorkorder
-                    UploadObject.IMAGE_NAME = selectedBuilding
+                    UploadObject.IMAGE_NAME = Home.selectedBuilding
                     val fragmentManager = requireActivity().supportFragmentManager
                     General.replaceFragment(
                         fragmentManager,
@@ -178,7 +183,6 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                         0,  // Pop enter animation (you can specify one if needed)
                         0 // Pop exit animation (you can specify one if needed)
                     )
-
                 }
             }
 
@@ -194,11 +198,11 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
             R.id.spinnerSchool -> {
                 val selectedItem = spinnerSchool.selectedItem as? String
                 selectedSchool = selectedItem ?: ""
-                selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
+                Home.selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
                 homeViewModel.buildings.observe(viewLifecycleOwner) { buildingList ->
                     val buildings = mutableListOf("Select Building")
                     buildings.addAll(buildingList
-                        .filter { it.unq_id == selectedId }
+                        .filter { it.unq_id == Home.selectedId }
                         .map { it.type_building.toString() })
                     val adapter = ArrayAdapter(
                         requireContext(),
@@ -212,7 +216,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
 
             R.id.spinnerBuilding -> {
                 val selectedItem = spinnerBuilding.selectedItem as? String
-                selectedBuilding = selectedItem ?: ""
+                Home.selectedBuilding = selectedItem ?: ""
             }
 
             R.id.spinnerWorkorder -> {
@@ -228,7 +232,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                     homeViewModel.workOrders.observe(viewLifecycleOwner) { workOrderList ->
                         val workOrders = mutableListOf("Select Work Order")
                         workOrders.addAll(workOrderList
-                            .filter { it.Unq_ID == selectedId }
+                            .filter { it.Unq_ID == Home.selectedId }
                             .map { it.WorkorderNumber.toString() })
                         val adapter = ArrayAdapter(
                             requireContext(),
