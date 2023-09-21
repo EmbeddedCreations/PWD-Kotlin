@@ -57,7 +57,6 @@ import java.util.Locale
 class Upload : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var uploadViewModel: UploadViewModel
-    private var selectedBuilding = "Select Building"
     private val RQS_OPEN_IMAGE = 1
     private val INITIAL_IMAGE_RESOURCE = R.drawable.uploadfile
 

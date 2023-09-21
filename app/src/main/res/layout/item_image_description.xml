@@ -22,16 +22,6 @@
             app:cardBackgroundColor="#FFFFFF"
             app:cardCornerRadius="8dp">
 
-            <!-- Add the edit symbol icon button at the top -->
-            <ImageView
-                android:id="@+id/editButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_margin="8dp"
-                android:src="@drawable/edit_icon"
-                android:contentDescription="@string/edit_icon" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -74,6 +64,14 @@
                         android:text="@string/desc"
                         android:textSize="11sp" />
                 </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/editButton"
+                    android:layout_width="30dp"
+                    android:layout_margin="5sp"
+                    android:layout_height="48dp"
+                    android:contentDescription="@string/edit_icon"
+                    android:src="@drawable/edit_icon" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
     </androidx.cardview.widget.CardView>

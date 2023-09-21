@@ -1,4 +1,4 @@
-package com.example.pwd_app.viewModel.buildingDisplay
+package com.example.pwd_app.viewModel.localDbView
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -16,11 +16,13 @@ import com.example.pwd_app.R
 import com.example.pwd_app.model.ImageData
 
 class LocalDbAdapter(
-    private val buildingList: List<ImageData>
+    private val buildingList: List<ImageData>,
+
 ) : RecyclerView.Adapter<LocalDbAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var imageView: ImageView = itemView.findViewById<ImageView?>(R.id.imageView)
+        var editView: ImageView = itemView.findViewById<ImageView?>(R.id.editButton)
         var descriptionTextView: TextView =
             itemView.findViewById<TextView>(R.id.buildingDescTextView)
         var BuildingName: TextView = itemView.findViewById(R.id.buildingNameTextView)
@@ -64,6 +66,10 @@ class LocalDbAdapter(
             closeButton.setOnClickListener { dialog.dismiss() }
 
             dialog.show()
+        }
+        holder.editView.setOnClickListener{
+            println("edit button clicked")
+            // open edit screen here
         }
     }
 }
