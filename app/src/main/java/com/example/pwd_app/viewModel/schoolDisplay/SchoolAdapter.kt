@@ -14,7 +14,7 @@ import com.example.pwd_app.viewModel.buildingDisplay.BuildingDisplay
 
 class SchoolAdapter(
     private val schools: List<Schools>
-) : RecyclerView.Adapter<SchoolAdapter.ViewHolder>(){
+) : RecyclerView.Adapter<SchoolAdapter.ViewHolder>() {
 
 
     // Define the ViewHolder class here
@@ -27,7 +27,8 @@ class SchoolAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view: View = LayoutInflater.from(parent.context).inflate(R.layout.school_card, parent, false)
+        val view: View =
+            LayoutInflater.from(parent.context).inflate(R.layout.school_card, parent, false)
         return ViewHolder(view)
     }
 

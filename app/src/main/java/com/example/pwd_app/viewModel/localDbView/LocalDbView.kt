@@ -29,11 +29,14 @@ class LocalDbView : Fragment() {
 
         val database = DatabaseHelper.getDatabase(requireContext())
         val localDatabaseRepository = LocalDatabaseRepository(database)
-        localDbViewModel = ViewModelProvider(this,LocalDbViewModelFactory(localDatabaseRepository))[LocalDbViewModel::class.java]
+        localDbViewModel = ViewModelProvider(
+            this,
+            LocalDbViewModelFactory(localDatabaseRepository)
+        )[LocalDbViewModel::class.java]
 
         val recyclerView = requireView().findViewById<RecyclerView>(R.id.localDbRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        localDbViewModel.surveyData.observe(viewLifecycleOwner){ savedData->
+        localDbViewModel.surveyData.observe(viewLifecycleOwner) { savedData ->
             recyclerView.adapter = LocalDbAdapter(savedData)
 
         }

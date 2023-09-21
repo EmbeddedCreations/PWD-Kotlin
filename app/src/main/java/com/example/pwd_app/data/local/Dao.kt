@@ -1,6 +1,5 @@
 package com.example.pwd_app.data.local
 
-import com.example.pwd_app.model.SchoolBuildings
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -9,6 +8,7 @@ import com.example.pwd_app.model.ImageData
 import com.example.pwd_app.model.LoginCredentials
 import com.example.pwd_app.model.RegisteredSchools
 import com.example.pwd_app.model.WorkOrderTimelineModel
+import com.example.pwd_app.model.SchoolBuildings
 import com.example.pwd_app.model.WorkOrders
 
 @Dao

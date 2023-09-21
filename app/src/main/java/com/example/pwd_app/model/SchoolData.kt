@@ -3,7 +3,7 @@ package com.example.pwd_app.model
 import androidx.room.PrimaryKey
 
 data class SchoolData(
-    @PrimaryKey val id: String?="",
+    @PrimaryKey val id: String? = "",
     val school_name: String? = "",
     val po_office: String? = "",
     val image_name: String? = "",

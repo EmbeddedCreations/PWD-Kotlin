@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
 class Profile : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var sessionManager: SessionManager
     private lateinit var localDbViewModel: LocalDbViewModel
-    private lateinit var uploadViewModel : UploadViewModel
+    private lateinit var uploadViewModel: UploadViewModel
     private lateinit var atcOfficeText: TextView
     private lateinit var poOfficeText: TextView
     private lateinit var juniorEngineerNameText: TextView
@@ -44,8 +44,8 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var status: ImageView
     private lateinit var networkStatusUtility: NetworkStatusUtility
     private lateinit var viewLocalDBButton: Button
-    private lateinit var uploadDbButton:Button
-    private lateinit var localDbCount : TextView
+    private lateinit var uploadDbButton: Button
+    private lateinit var localDbCount: TextView
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -64,9 +64,15 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(requireContext())
         val localDatabaseRepository = LocalDatabaseRepository(database)
-        localDbViewModel = ViewModelProvider(this, LocalDbViewModelFactory(localDatabaseRepository))[LocalDbViewModel::class.java]
+        localDbViewModel = ViewModelProvider(
+            this,
+            LocalDbViewModelFactory(localDatabaseRepository)
+        )[LocalDbViewModel::class.java]
         val dataRepository = DataRepository(apiInterface)
-        uploadViewModel = ViewModelProvider(this, UploadViewModelFactory(dataRepository))[UploadViewModel::class.java]
+        uploadViewModel = ViewModelProvider(
+            this,
+            UploadViewModelFactory(dataRepository)
+        )[UploadViewModel::class.java]
 
         // Initialize views
         atcOfficeText = view.findViewById(R.id.atc_office_text)
@@ -102,7 +108,8 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         // Set network status listener
-        networkStatusUtility.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
+        networkStatusUtility.startMonitoringNetworkStatus(object :
+            NetworkStatusUtility.NetworkStatusListener {
             override fun onNetworkAvailable() {
 //                updateButtonStatus(true)
                 status.setImageResource(R.drawable.online)
@@ -249,7 +256,11 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
                         failureDialog.show()
                     }
                 } else {
-                    Toast.makeText(requireContext(), "There is no data in the local database", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "There is no data in the local database",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }
@@ -277,7 +288,11 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
                         0                 // Pop exit animation (you can specify one if needed)
                     )
                 } else {
-                    Toast.makeText(requireContext(), "There is No Data in the local database", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "There is No Data in the local database",
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }

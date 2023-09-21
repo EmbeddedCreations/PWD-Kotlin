@@ -11,13 +11,16 @@ import kotlinx.coroutines.launch
 
 class BuildingDisplayViewModel(
     private val apiInterface: ApiInterface
-): ViewModel(){
+) : ViewModel() {
     private val _schoolData = MutableLiveData<List<SchoolData>>()
     val schoolList: LiveData<List<SchoolData>> get() = _schoolData
     fun fetchBuildingData() {
         viewModelScope.launch {
             try {
-                val response = apiInterface.getBuildings(Credentials.DEFAULT_JUNIOR_ENGINEER,Credentials.SELECTED_SCHOOL_FOR_DISPLAY)
+                val response = apiInterface.getBuildings(
+                    Credentials.DEFAULT_JUNIOR_ENGINEER,
+                    Credentials.SELECTED_SCHOOL_FOR_DISPLAY
+                )
                 _schoolData.postValue(response.body())
             } catch (e: Exception) {
                 // Handle errors

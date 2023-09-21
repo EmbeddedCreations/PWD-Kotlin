@@ -8,13 +8,14 @@ import com.example.pwd_app.repository.LoginRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class LoginViewModel(private val loginRepository: LoginRepository):ViewModel() {
+class LoginViewModel(private val loginRepository: LoginRepository) : ViewModel() {
 
-    init{
-        viewModelScope.launch (Dispatchers.IO){
+    init {
+        viewModelScope.launch(Dispatchers.IO) {
             loginRepository.getUsers()
         }
     }
-    val users : LiveData<List<LoginCredentials>>
+
+    val users: LiveData<List<LoginCredentials>>
         get() = loginRepository.users
 }

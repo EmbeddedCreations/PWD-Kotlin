@@ -15,11 +15,20 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.pwd_app.R
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
     private lateinit var checkboxStates: Array<IntArray>
-
+    private lateinit var plannedDate: Date
+    private lateinit var systemDate: Date
     private fun compareAndSetColor(currentRowIndex: Int) {
         val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
         val currentProgressRow = tableLayout.getChildAt(currentRowIndex) as TableRow
@@ -69,6 +78,57 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
 
+    @OptIn(DelicateCoroutinesApi::class)
+    private fun enableColumnsBasedOnDate() {
+        val currentDate = Date() // Get the current system date
+        val differenceInDays = calculateDateDifference(plannedDate, currentDate)
+        println("Difference in days: $differenceInDays")
+
+        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
+        val headerRow = tableLayout.getChildAt(0) as TableRow
+
+        // Determine the number of columns to enable based on the date difference
+        val columnsToEnable = when {
+            differenceInDays <= 7 -> 1
+            differenceInDays <= 45 -> 15
+            else -> 0 // Disable all columns by default
+        }
+
+        GlobalScope.launch(Dispatchers.Default) {
+            // Loop through each column and enable or disable checkboxes in rows as needed
+            for (j in 1 until headerRow.childCount) { // Start from 1 to skip the first column
+                for (i in 1 until tableLayout.childCount) {
+                    val row = tableLayout.getChildAt(i) as TableRow
+                    val columnView = row.getChildAt(j)
+                    if (columnView is CheckBox) {
+                        // Enable checkboxes only for odd rows in this column
+                        if (i % 2 == 0) {
+                            columnView.isEnabled = j <= columnsToEnable
+                        } else {
+                            // Disable checkboxes in even rows for the same column
+                            columnView.isEnabled = false
+                        }
+                    }
+                }
+            }
+            // Update UI on the main thread
+            withContext(Dispatchers.Main) {
+                // Notify the UI thread that the task is complete
+                // You can perform any UI updates or additional tasks here
+            }
+        }
+    }
+
+    private fun calculateDateDifference(startDate: Date, endDate: Date): Long {
+        val difference = endDate.time - startDate.time
+        return difference / (24 * 60 * 60 * 1000) // Convert milliseconds to days
+    }
+
+    private fun parseDate(format: String, dateStr: String): Date {
+        val sdf = SimpleDateFormat(format, Locale.US)
+        return sdf.parse(dateStr) ?: Date()
+    }
+
     private fun createDynamicTable(
         view: View,
         numRows: Int,
@@ -78,7 +138,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         checkboxStates: Array<IntArray>
     ) {
         val tableLayout = view.findViewById<TableLayout>(R.id.tableLayout)
-
         // Create header row with column labels and checkboxes
         val headerRow = TableRow(requireContext())
         for (j in 0..numCols) {
@@ -200,6 +259,15 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         )
         createDynamicTable(view, numRows, numCols, columnHeadings, rowHeadings, checkboxStates)
         return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        // Initialize plannedDate and systemDate with your date values
+        plannedDate = parseDate("yyyy-MM-dd", "2023-08-10") // Replace with your planned date
+        systemDate = Date() // Get the current system date
+        enableColumnsBasedOnDate()
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

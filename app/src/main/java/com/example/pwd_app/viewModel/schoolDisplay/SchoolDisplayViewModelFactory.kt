@@ -4,7 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.data.remote.ApiInterface
 
-class SchoolDisplayViewModelFactory(private val apiInterface: ApiInterface) : ViewModelProvider.Factory {
+class SchoolDisplayViewModelFactory(private val apiInterface: ApiInterface) :
+    ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return SchoolDisplayViewModel(apiInterface) as T
