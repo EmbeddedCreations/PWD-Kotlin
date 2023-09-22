@@ -18,9 +18,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -36,6 +38,10 @@ import com.example.pwd_app.model.ImageData
 import com.example.pwd_app.model.UploadObject
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
+import com.example.pwd_app.repository.HomeRepository
+import com.example.pwd_app.viewModel.home.HomeViewModel
+import com.example.pwd_app.viewModel.home.Home
+import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 import com.github.dhaval2404.imagepicker.ImagePicker
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -49,9 +55,8 @@ import java.util.Locale
 
 
 class Upload : Fragment(), AdapterView.OnItemSelectedListener {
-
+    private lateinit var homeViewModel: HomeViewModel
     private lateinit var uploadViewModel: UploadViewModel
-
     private val RQS_OPEN_IMAGE = 1
     private val INITIAL_IMAGE_RESOURCE = R.drawable.uploadfile
 
@@ -74,6 +79,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
     private var targetUri: Uri? = null
     private var imageChanged = false
     private var textView: TextView? = null
+    private lateinit var spinnerBuilding: Spinner
 
     private val selectedIssuesList: MutableList<String> = mutableListOf()
     private val issueArray = arrayOf(
@@ -118,8 +124,10 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
             this,
             UploadViewModelFactory(dataRepository)
         ).get(UploadViewModel::class.java)
+        val homeRepository = HomeRepository(apiInterface, database, requireContext())
+        homeViewModel =
+            ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
         val mainHandler = Handler(Looper.getMainLooper())
-
         status = requireView().findViewById(R.id.statusIcon)
         iv_imgView = requireView().findViewById(R.id.image_view)
         pickImageButton = requireView().findViewById(R.id.pickimage)
@@ -128,7 +136,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         val textViewLoggedIn = requireView().findViewById<TextView>(R.id.textViewLoggedIn)
         textUri?.setOnClickListener(textUriOnClickListener)
         editTextDescription = requireView().findViewById(R.id.editTextDescription)
-
+        spinnerBuilding = view.findViewById(R.id.spinnerBuilding)
         editTextDescription?.isEnabled = false
         val juniorEngineer: String = Credentials.DEFAULT_JUNIOR_ENGINEER
         textViewLoggedIn.text = "Logged in as: $juniorEngineer"
@@ -166,6 +174,29 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
             }
         })
 
+        spinnerBuilding.onItemSelectedListener = this
+        homeViewModel.buildings.observe(viewLifecycleOwner) { buildingList ->
+            val uniqueBuildings = mutableSetOf<String>() // Use a Set to ensure uniqueness
+
+            // Add the default selected building
+            uniqueBuildings.add(Home.Home.selectedBuilding)
+
+            // Filter and add unique building values from the buildingList
+            buildingList
+                .filter { it.unq_id == Home.Home.selectedId }
+                .map { it.type_building.toString() }
+                .forEach { uniqueBuildings.add(it) }
+
+            // Convert the uniqueBuildings Set back to a List
+            val buildings = uniqueBuildings.toList()
+            val adapter = ArrayAdapter(
+                requireContext(),
+                android.R.layout.simple_spinner_item,
+                buildings
+            )
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerBuilding.adapter = adapter
+        }
 
         buttonUploadImage?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
@@ -211,6 +242,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
 
                     UploadObject.DESCRIPTION = description
                     UploadObject.AGS = finalTags
+                    UploadObject.IMAGE_NAME = Home.Home.selectedBuilding
                     UploadObject.LONGITUDE = gpsLongitude.toString()
                     UploadObject.LATITUDE = gpsLatitude.toString()
                     UploadObject.UPLOAD_DATE = date_today.toString()
@@ -311,6 +343,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                 encodeBitmap(bitmap)
                 UploadObject.DESCRIPTION = description
                 UploadObject.AGS = finalTags
+                UploadObject.IMAGE_NAME = Home.Home.selectedBuilding
                 UploadObject.LONGITUDE = gpsLongitude.toString()
                 UploadObject.LATITUDE = gpsLatitude.toString()
                 UploadObject.UPLOAD_DATE = date_today.toString()
@@ -421,8 +454,17 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         encodedImage = Base64.encodeToString(byteOfImages, Base64.DEFAULT)
     }
 
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        // Not implemented yet
+//    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
+//        // Not implemented yet
+//    }
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    // Handle item selection here
+        when (parent?.id) {
+            R.id.spinnerBuilding -> {
+                val selectedItem = spinnerBuilding.selectedItem as? String
+                Home.Home.selectedBuilding = selectedItem ?: ""
+            }
+        }
     }
 
     override fun onNothingSelected(p0: AdapterView<*>?) {

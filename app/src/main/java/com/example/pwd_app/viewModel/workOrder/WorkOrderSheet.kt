@@ -90,7 +90,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         // Determine the number of columns to enable based on the date difference
         val columnsToEnable = when {
             differenceInDays <= 7 -> 1
-            differenceInDays <= 45 -> 15
+            differenceInDays <= 14 -> 2
             else -> 0 // Disable all columns by default
         }
 
@@ -265,7 +265,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize plannedDate and systemDate with your date values
-        plannedDate = parseDate("yyyy-MM-dd", "2023-08-10") // Replace with your planned date
+        plannedDate = parseDate("yyyy-MM-dd", "2023-09-10") // Replace with your planned date
         systemDate = Date() // Get the current system date
         enableColumnsBasedOnDate()
     }

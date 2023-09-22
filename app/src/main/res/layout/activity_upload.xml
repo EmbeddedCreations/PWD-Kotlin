@@ -42,7 +42,7 @@
 
         <!-- Spinner for selecting the school -->
         <Spinner
-            android:id="@+id/spinnerSchool"
+            android:id="@+id/spinnerBuilding"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -64,7 +64,7 @@
             android:textStyle="bold"
             app:flow_horizontalAlign="center"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/spinnerSchool"
+            app:layout_constraintStart_toEndOf="@id/spinnerBuilding"
             app:layout_constraintTop_toBottomOf="@id/statusIcon" />
 
         <ImageView
