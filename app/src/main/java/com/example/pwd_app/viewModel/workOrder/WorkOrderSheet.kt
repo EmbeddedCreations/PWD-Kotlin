@@ -106,7 +106,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         // Determine the number of columns to enable based on the date difference
         val columnsToEnable = when {
             differenceInDays <= 7 -> 1
-            differenceInDays <= 45 -> 15
+            differenceInDays <= 14 -> 2
             else -> 0 // Disable all columns by default
         }
 

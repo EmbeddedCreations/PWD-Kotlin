@@ -11,10 +11,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.R
 import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.repository.LocalDatabaseRepository
-import com.example.pwd_app.viewModel.buildingDisplay.LocalDbAdapter
 
 class LocalDbView : Fragment() {
     private lateinit var localDbViewModel: LocalDbViewModel
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,7 +23,6 @@ class LocalDbView : Fragment() {
         return inflater.inflate(R.layout.activity_loacaldb, container, false)
     }
 
-    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -38,8 +37,6 @@ class LocalDbView : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         localDbViewModel.surveyData.observe(viewLifecycleOwner) { savedData ->
             recyclerView.adapter = LocalDbAdapter(savedData)
-
         }
-
     }
 }

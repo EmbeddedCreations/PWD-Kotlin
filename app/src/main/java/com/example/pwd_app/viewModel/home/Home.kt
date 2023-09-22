@@ -38,9 +38,10 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
 
     //Selected variables
     var selectedSchool = "Select School"
-    var selectedBuilding = "Select Building"
     var selectedWorkorder = "Select Workorder"
     var selectedId = ""
+    var selectedBuilding = "Select Building"
+
     var selectedWorkOrderNumber = "NA"
 
     //Buttons And TextViews
@@ -80,11 +81,6 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
             ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
 
         // Initialize UI components here
-        //Selected variables
-        selectedSchool = "Select School"
-        selectedBuilding = "Select Building"
-        selectedWorkorder = "Select Workorder"
-        selectedId = ""
         spinnerSchool = view.findViewById(R.id.spinnerSchool)
         spinnerBuilding = view.findViewById(R.id.spinnerBuilding)
         spinnerWorkorder = view.findViewById(R.id.spinnerWorkorder)
@@ -178,7 +174,6 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                         0,  // Pop enter animation (you can specify one if needed)
                         0 // Pop exit animation (you can specify one if needed)
                     )
-
                 }
             }
 
@@ -196,6 +191,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                 selectedSchool = selectedItem ?: ""
                 selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
                 Credentials.SELECTED_SCHOOL_ID = selectedId
+
                 homeViewModel.buildings.observe(viewLifecycleOwner) { buildingList ->
                     val buildings = mutableListOf("Select Building")
                     buildings.addAll(buildingList
@@ -214,6 +210,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
             R.id.spinnerBuilding -> {
                 val selectedItem = spinnerBuilding.selectedItem as? String
                 selectedBuilding = selectedItem ?: ""
+                Credentials.SELECTED_BUILDING = selectedBuilding
             }
 
             R.id.spinnerWorkorder -> {
