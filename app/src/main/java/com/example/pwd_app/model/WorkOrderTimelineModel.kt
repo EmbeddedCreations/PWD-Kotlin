@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "TimelineTable")
 data class WorkOrderTimelineModel (
     @PrimaryKey
-    var Id            : String? = "",
+    var Id            : String,
     var school_name    : String? = "",
     var po_office      : String? = "",
     var workorder_no   : String? = "",

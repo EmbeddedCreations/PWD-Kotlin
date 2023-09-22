@@ -7,5 +7,6 @@ object Credentials {
     var SELECTED_SCHOOL_FOR_DISPLAY =""
     var SELECTED_WORKORDER_NUMBER = ""
     var SELECTED_SCHOOL_ID =""
+    var SELECTED_BUILDING =""
 
 }

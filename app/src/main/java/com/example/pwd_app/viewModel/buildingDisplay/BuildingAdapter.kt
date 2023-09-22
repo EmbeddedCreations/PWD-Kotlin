@@ -2,6 +2,7 @@ package com.example.pwd_app.viewModel.buildingDisplay
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +10,10 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pwd_app.MainActivity
 import com.example.pwd_app.R
 import com.example.pwd_app.model.SchoolData
+import com.example.pwd_app.viewModel.edit.EditScreen
 import com.squareup.picasso.Picasso
 
 class BuildingAdapter(
@@ -18,9 +21,10 @@ class BuildingAdapter(
 ) : RecyclerView.Adapter<BuildingAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var imageView: ImageView = itemView.findViewById<ImageView?>(R.id.imageView)
+        var imageView: ImageView = itemView.findViewById(R.id.imageView)
+        var editButton:ImageView = itemView.findViewById(R.id.editButton)
         var descriptionTextView: TextView =
-            itemView.findViewById<TextView>(R.id.buildingDescTextView)
+            itemView.findViewById(R.id.buildingDescTextView)
         var BuildingName: TextView = itemView.findViewById(R.id.buildingNameTextView)
         var Date: TextView = itemView.findViewById(R.id.buildingDateTextView)
     }
@@ -63,6 +67,12 @@ class BuildingAdapter(
             val closeButton = dialog.findViewById<ImageButton>(R.id.closeImageButton)
             closeButton.setOnClickListener { dialog.dismiss() }
             dialog.show()
+        }
+        holder.editButton.setOnClickListener {
+            val context = holder.itemView.context
+            val i = Intent(context, EditScreen::class.java)
+            context.startActivity(i)
+
         }
     }
 }

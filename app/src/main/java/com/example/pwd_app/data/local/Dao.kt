@@ -66,8 +66,8 @@ interface Dao {
 
     //Local Data for timeline table
     @Insert(onConflict = OnConflictStrategy.REPLACE, entity = WorkOrderTimelineModel::class)
-    suspend fun insertTimeLine(timeLineData: List<WorkOrderTimelineModel>): Long
+    suspend fun insertTimeLine(timeLineData: List<WorkOrderTimelineModel>)
 
-    @Query("SELECT * FROM TimelineTable WHERE poOffice")
+    @Query("SELECT * FROM TimelineTable WHERE po_office =:poOffice")
     suspend fun getTimelines(poOffice: String): List<WorkOrderTimelineModel>
 }
