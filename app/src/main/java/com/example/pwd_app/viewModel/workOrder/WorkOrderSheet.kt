@@ -234,50 +234,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.workorder_checksheet, container, false)
-
-        val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
-        val database = DatabaseHelper.getDatabase(requireContext())
-        val homeRepository = HomeRepository(apiInterface, database, requireContext())
-        val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
-
-        workOrderViewModel = ViewModelProvider(
-            this,
-            WorkOrderViewModelFactory(timeLineRepository, homeRepository)
-        ).get(WorkOrderViewModel::class.java)
-
-
-        workOrderDropdown = requireView().findViewById(R.id.workDropdown)
-
-//        workOrderViewModel.workOrders.observe(viewLifecycleOwner) { workOrderList ->
-//            val workOrders = mutableListOf("Select Work Order")
-//            workOrders.addAll(workOrderList
-//                .filter { it.Unq_ID == Credentials.SELECTED_SCHOOL_ID }
-//                .map { it.WorkorderNumber.toString() })
-//            val adapter =
-//                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//            workOrderDropdown.adapter = adapter
-//
-//            val workOrderIndex = workOrders.indexOf(Credentials.SELECTED_WORKORDER_NUMBER)
-//            if (workOrderIndex != -1) {
-//                workOrderDropdown.setSelection(workOrderIndex)
-//            }
-//            workOrderDropdown.onItemSelectedListener =
-//                object : AdapterView.OnItemSelectedListener {
-//                    override fun onItemSelected(
-//                        parent: AdapterView<*>,
-//                        view: View,
-//                        position: Int,
-//                        id: Long
-//                    ) {
-//                        Credentials.SELECTED_WORKORDER_NUMBER =
-//                            parent.getItemAtPosition(position).toString()
-//                    }
-//
-//                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-//                }
-//        }
-
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
 
             val work = timeLines
@@ -403,31 +359,65 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             }
 
             val rowHeadings = generateRowHeadings()
-            
+
             // Example values, replace with your actual input values
             val columnHeadings = Array(24) { index -> "Month ${index + 1}" }
 
             val numCols = columnHeadings.size
-//            checkboxStates = Array(numRows) { IntArray(numCols * 4) }
-//            // Example checkboxStates array
-//            val checkboxStates = arrayOf(
-//                intArrayOf(1, 0, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0),
-//                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                intArrayOf(1, 0, 1, 0, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1, 0),
-//                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                intArrayOf(1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0),
-//                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                intArrayOf(1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1),
-//                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                intArrayOf(1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0),
-//                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
-//                intArrayOf(1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 1, 0),
-//                intArrayOf(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
-//            )
-            createDynamicTable(view, numRows, numCols, columnHeadings, rowHeadings, checkboxStates)
-//
+
+          createDynamicTable(view, numRows, numCols, columnHeadings, rowHeadings, checkboxStates)
         }
+
         return view
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+
+        val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
+        val database = DatabaseHelper.getDatabase(requireContext())
+        val homeRepository = HomeRepository(apiInterface, database, requireContext())
+        val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
+
+        workOrderViewModel = ViewModelProvider(
+            this,
+            WorkOrderViewModelFactory(timeLineRepository, homeRepository)
+        ).get(WorkOrderViewModel::class.java)
+
+
+        workOrderDropdown = requireView().findViewById(R.id.workOrder)
+
+        workOrderViewModel.workOrders.observe(viewLifecycleOwner) { workOrderList ->
+            val workOrders = mutableListOf("Select Work Order")
+            workOrders.addAll(workOrderList
+                .filter { it.Unq_ID == Credentials.SELECTED_SCHOOL_ID }
+                .map { it.WorkorderNumber.toString() })
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            workOrderDropdown.adapter = adapter
+
+            val workOrderIndex = workOrders.indexOf(Credentials.SELECTED_WORKORDER_NUMBER)
+            if (workOrderIndex != -1) {
+                workOrderDropdown.setSelection(workOrderIndex)
+            }
+            workOrderDropdown.onItemSelectedListener =
+                object : AdapterView.OnItemSelectedListener {
+                    override fun onItemSelected(
+                        parent: AdapterView<*>,
+                        view: View,
+                        position: Int,
+                        id: Long
+                    ) {
+                        Credentials.SELECTED_WORKORDER_NUMBER =
+                            parent.getItemAtPosition(position).toString()
+                    }
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {}
+                }
+        }
+
+
     }
 
 
