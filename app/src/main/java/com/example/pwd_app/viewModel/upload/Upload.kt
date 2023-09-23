@@ -179,11 +179,11 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
             val uniqueBuildings = mutableSetOf<String>() // Use a Set to ensure uniqueness
 
             // Add the default selected building
-            uniqueBuildings.add(Home.Home.selectedBuilding)
+            uniqueBuildings.add(Credentials.SELECTED_BUILDING)
 
             // Filter and add unique building values from the buildingList
             buildingList
-                .filter { it.unq_id == Home.Home.selectedId }
+                .filter { it.unq_id == Credentials.SELECTED_SCHOOL_ID }
                 .map { it.type_building.toString() }
                 .forEach { uniqueBuildings.add(it) }
 
@@ -242,7 +242,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
 
                     UploadObject.DESCRIPTION = description
                     UploadObject.AGS = finalTags
-                    UploadObject.IMAGE_NAME = Home.Home.selectedBuilding
+                    UploadObject.IMAGE_NAME = Credentials.SELECTED_BUILDING
                     UploadObject.LONGITUDE = gpsLongitude.toString()
                     UploadObject.LATITUDE = gpsLatitude.toString()
                     UploadObject.UPLOAD_DATE = date_today.toString()
@@ -343,7 +343,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                 encodeBitmap(bitmap)
                 UploadObject.DESCRIPTION = description
                 UploadObject.AGS = finalTags
-                UploadObject.IMAGE_NAME = Home.Home.selectedBuilding
+                UploadObject.IMAGE_NAME = Credentials.SELECTED_BUILDING
                 UploadObject.LONGITUDE = gpsLongitude.toString()
                 UploadObject.LATITUDE = gpsLatitude.toString()
                 UploadObject.UPLOAD_DATE = date_today.toString()
@@ -462,7 +462,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         when (parent?.id) {
             R.id.spinnerBuilding -> {
                 val selectedItem = spinnerBuilding.selectedItem as? String
-                Home.Home.selectedBuilding = selectedItem ?: ""
+                Credentials.SELECTED_BUILDING = selectedItem ?: ""
             }
         }
     }
