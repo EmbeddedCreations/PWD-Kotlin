@@ -188,6 +188,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         when (parent?.id) {
             R.id.spinnerSchool -> {
                 val selectedItem = spinnerSchool.selectedItem as? String
+                Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
                 selectedSchool = selectedItem ?: ""
                 selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
                 Credentials.SELECTED_SCHOOL_ID = selectedId
