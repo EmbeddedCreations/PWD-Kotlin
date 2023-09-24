@@ -72,7 +72,6 @@ class BuildingAdapter(
             val context = holder.itemView.context
             val i = Intent(context, EditScreen::class.java)
             context.startActivity(i)
-
         }
     }
 }
