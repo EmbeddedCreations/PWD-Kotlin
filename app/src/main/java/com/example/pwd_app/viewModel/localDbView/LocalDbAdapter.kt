@@ -2,6 +2,7 @@ package com.example.pwd_app.viewModel.localDbView
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
@@ -14,6 +15,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.R
 import com.example.pwd_app.model.ImageData
+import com.example.pwd_app.viewModel.edit.EditScreen
 
 class LocalDbAdapter(
     private val buildingList: List<ImageData>,
@@ -67,9 +69,10 @@ class LocalDbAdapter(
 
             dialog.show()
         }
-        holder.editView.setOnClickListener{
-            println("edit button clicked")
-            // open edit screen here
+        holder.editView.setOnClickListener {
+            val context = holder.itemView.context
+            val i = Intent(context, EditScreen::class.java)
+            context.startActivity(i)
         }
     }
 }

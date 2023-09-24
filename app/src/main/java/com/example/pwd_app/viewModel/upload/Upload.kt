@@ -128,7 +128,6 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         homeViewModel =
             ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
         val mainHandler = Handler(Looper.getMainLooper())
-        status = requireView().findViewById(R.id.statusIcon)
         iv_imgView = requireView().findViewById(R.id.image_view)
         pickImageButton = requireView().findViewById(R.id.pickimage)
         buttonSaveImage = requireView().findViewById(R.id.buttonSaveImage)

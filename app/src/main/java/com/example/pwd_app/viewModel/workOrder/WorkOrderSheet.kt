@@ -19,6 +19,12 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.R
+import com.example.pwd_app.data.local.DatabaseHelper
+import com.example.pwd_app.data.remote.ApiInterface
+import com.example.pwd_app.data.remote.ApiUtility
+import com.example.pwd_app.model.Credentials
+import com.example.pwd_app.repository.HomeRepository
+import com.example.pwd_app.repository.TimeLineRepository
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -27,19 +33,12 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import com.example.pwd_app.data.local.DatabaseHelper
-import com.example.pwd_app.data.remote.ApiInterface
-import com.example.pwd_app.data.remote.ApiUtility
-import com.example.pwd_app.model.Credentials
-import com.example.pwd_app.repository.HomeRepository
-import com.example.pwd_app.repository.TimeLineRepository
-import com.example.pwd_app.viewModel.home.HomeViewModel
-import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 
 
 class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var plannedDate: Date
-    private lateinit var  workOrderDropdown : Spinner
+    private lateinit var systemDate: Date
+    private lateinit var workOrderDropdown: Spinner
     private lateinit var workOrderViewModel: WorkOrderViewModel
     private lateinit var tableLayout: TableLayout
 
@@ -230,7 +229,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -270,121 +268,129 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         position: Int,
                         id: Long
                     ) {
-                        Credentials.SELECTED_WORKORDER_NUMBER = parent.getItemAtPosition(position).toString()
+                        Credentials.SELECTED_WORKORDER_NUMBER =
+                            parent.getItemAtPosition(position).toString()
                         val work = timeLines
-                            .flatMap { timeline -> listOf(
-                                timeline.SelWeek1?.toInt(),
-                                timeline.SelWeek2?.toInt(),
-                                timeline.SelWeek3?.toInt(),
-                                timeline.SelWeek4?.toInt(),
-                                timeline.SelWeek5?.toInt(),
-                                timeline.SelWeek6?.toInt(),
-                                timeline.SelWeek7?.toInt(),
-                                timeline.SelWeek8?.toInt(),
-                                timeline.SelWeek9?.toInt(),
-                                timeline.SelWeek10?.toInt(),
-                                timeline.SelWeek11?.toInt(),
-                                timeline.SelWeek12?.toInt(),
-                                timeline.SelWeek13?.toInt(),
-                                timeline.SelWeek14?.toInt(),
-                                timeline.SelWeek15?.toInt(),
-                                timeline.SelWeek16?.toInt(),
-                                timeline.SelWeek17?.toInt(),
-                                timeline.SelWeek18?.toInt(),
-                                timeline.SelWeek19?.toInt(),
-                                timeline.SelWeek20?.toInt(),
-                                timeline.SelWeek21?.toInt(),
-                                timeline.SelWeek22?.toInt(),
-                                timeline.SelWeek23?.toInt(),
-                                timeline.SelWeek24?.toInt(),
-                                timeline.SelWeek25?.toInt(),
-                                timeline.SelWeek26?.toInt(),
-                                timeline.SelWeek27?.toInt(),
-                                timeline.SelWeek28?.toInt(),
-                                timeline.SelWeek29?.toInt(),
-                                timeline.SelWeek30?.toInt(),
-                                timeline.SelWeek31?.toInt(),
-                                timeline.SelWeek32?.toInt(),
-                                timeline.SelWeek33?.toInt(),
-                                timeline.SelWeek34?.toInt(),
-                                timeline.SelWeek35?.toInt(),
-                                timeline.SelWeek36?.toInt(),
-                                timeline.SelWeek37?.toInt(),
-                                timeline.SelWeek38?.toInt(),
-                                timeline.SelWeek39?.toInt(),
-                                timeline.SelWeek40?.toInt(),
-                                timeline.SelWeek41?.toInt(),
-                                timeline.SelWeek42?.toInt(),
-                                timeline.SelWeek43?.toInt(),
-                                timeline.SelWeek44?.toInt(),
-                                timeline.SelWeek45?.toInt(),
-                                timeline.SelWeek46?.toInt(),
-                                timeline.SelWeek47?.toInt(),
-                                timeline.SelWeek48?.toInt(),
-                                timeline.SelWeek49?.toInt(),
-                                timeline.SelWeek50?.toInt(),
-                                timeline.SelWeek51?.toInt(),
-                                timeline.SelWeek52?.toInt(),
-                                timeline.SelWeek53?.toInt(),
-                                timeline.SelWeek54?.toInt(),
-                                timeline.SelWeek55?.toInt(),
-                                timeline.SelWeek56?.toInt(),
-                                timeline.SelWeek57?.toInt(),
-                                timeline.SelWeek58?.toInt(),
-                                timeline.SelWeek59?.toInt(),
-                                timeline.SelWeek60?.toInt(),
-                                timeline.SelWeek61?.toInt(),
-                                timeline.SelWeek62?.toInt(),
-                                timeline.SelWeek63?.toInt(),
-                                timeline.SelWeek64?.toInt(),
-                                timeline.SelWeek65?.toInt(),
-                                timeline.SelWeek66?.toInt(),
-                                timeline.SelWeek67?.toInt(),
-                                timeline.SelWeek68?.toInt(),
-                                timeline.SelWeek69?.toInt(),
-                                timeline.SelWeek70?.toInt(),
-                                timeline.SelWeek71?.toInt(),
-                                timeline.SelWeek72?.toInt(),
-                                timeline.SelWeek73?.toInt(),
-                                timeline.SelWeek74?.toInt(),
-                                timeline.SelWeek75?.toInt(),
-                                timeline.SelWeek76?.toInt(),
-                                timeline.SelWeek77?.toInt(),
-                                timeline.SelWeek78?.toInt(),
-                                timeline.SelWeek79?.toInt(),
-                                timeline.SelWeek80?.toInt(),
-                                timeline.SelWeek81?.toInt(),
-                                timeline.SelWeek82?.toInt(),
-                                timeline.SelWeek83?.toInt(),
-                                timeline.SelWeek84?.toInt(),
-                                timeline.SelWeek85?.toInt(),
-                                timeline.SelWeek86?.toInt(),
-                                timeline.SelWeek87?.toInt(),
-                                timeline.SelWeek88?.toInt(),
-                                timeline.SelWeek89?.toInt(),
-                                timeline.SelWeek90?.toInt(),
-                                timeline.SelWeek91?.toInt(),
-                                timeline.SelWeek92?.toInt(),
-                                timeline.SelWeek93?.toInt(),
-                                timeline.SelWeek94?.toInt(),
-                                timeline.SelWeek95?.toInt(),
-                                timeline.SelWeek96?.toInt()
-                            ) }
+                            .flatMap { timeline ->
+                                listOf(
+                                    timeline.SelWeek1?.toInt(),
+                                    timeline.SelWeek2?.toInt(),
+                                    timeline.SelWeek3?.toInt(),
+                                    timeline.SelWeek4?.toInt(),
+                                    timeline.SelWeek5?.toInt(),
+                                    timeline.SelWeek6?.toInt(),
+                                    timeline.SelWeek7?.toInt(),
+                                    timeline.SelWeek8?.toInt(),
+                                    timeline.SelWeek9?.toInt(),
+                                    timeline.SelWeek10?.toInt(),
+                                    timeline.SelWeek11?.toInt(),
+                                    timeline.SelWeek12?.toInt(),
+                                    timeline.SelWeek13?.toInt(),
+                                    timeline.SelWeek14?.toInt(),
+                                    timeline.SelWeek15?.toInt(),
+                                    timeline.SelWeek16?.toInt(),
+                                    timeline.SelWeek17?.toInt(),
+                                    timeline.SelWeek18?.toInt(),
+                                    timeline.SelWeek19?.toInt(),
+                                    timeline.SelWeek20?.toInt(),
+                                    timeline.SelWeek21?.toInt(),
+                                    timeline.SelWeek22?.toInt(),
+                                    timeline.SelWeek23?.toInt(),
+                                    timeline.SelWeek24?.toInt(),
+                                    timeline.SelWeek25?.toInt(),
+                                    timeline.SelWeek26?.toInt(),
+                                    timeline.SelWeek27?.toInt(),
+                                    timeline.SelWeek28?.toInt(),
+                                    timeline.SelWeek29?.toInt(),
+                                    timeline.SelWeek30?.toInt(),
+                                    timeline.SelWeek31?.toInt(),
+                                    timeline.SelWeek32?.toInt(),
+                                    timeline.SelWeek33?.toInt(),
+                                    timeline.SelWeek34?.toInt(),
+                                    timeline.SelWeek35?.toInt(),
+                                    timeline.SelWeek36?.toInt(),
+                                    timeline.SelWeek37?.toInt(),
+                                    timeline.SelWeek38?.toInt(),
+                                    timeline.SelWeek39?.toInt(),
+                                    timeline.SelWeek40?.toInt(),
+                                    timeline.SelWeek41?.toInt(),
+                                    timeline.SelWeek42?.toInt(),
+                                    timeline.SelWeek43?.toInt(),
+                                    timeline.SelWeek44?.toInt(),
+                                    timeline.SelWeek45?.toInt(),
+                                    timeline.SelWeek46?.toInt(),
+                                    timeline.SelWeek47?.toInt(),
+                                    timeline.SelWeek48?.toInt(),
+                                    timeline.SelWeek49?.toInt(),
+                                    timeline.SelWeek50?.toInt(),
+                                    timeline.SelWeek51?.toInt(),
+                                    timeline.SelWeek52?.toInt(),
+                                    timeline.SelWeek53?.toInt(),
+                                    timeline.SelWeek54?.toInt(),
+                                    timeline.SelWeek55?.toInt(),
+                                    timeline.SelWeek56?.toInt(),
+                                    timeline.SelWeek57?.toInt(),
+                                    timeline.SelWeek58?.toInt(),
+                                    timeline.SelWeek59?.toInt(),
+                                    timeline.SelWeek60?.toInt(),
+                                    timeline.SelWeek61?.toInt(),
+                                    timeline.SelWeek62?.toInt(),
+                                    timeline.SelWeek63?.toInt(),
+                                    timeline.SelWeek64?.toInt(),
+                                    timeline.SelWeek65?.toInt(),
+                                    timeline.SelWeek66?.toInt(),
+                                    timeline.SelWeek67?.toInt(),
+                                    timeline.SelWeek68?.toInt(),
+                                    timeline.SelWeek69?.toInt(),
+                                    timeline.SelWeek70?.toInt(),
+                                    timeline.SelWeek71?.toInt(),
+                                    timeline.SelWeek72?.toInt(),
+                                    timeline.SelWeek73?.toInt(),
+                                    timeline.SelWeek74?.toInt(),
+                                    timeline.SelWeek75?.toInt(),
+                                    timeline.SelWeek76?.toInt(),
+                                    timeline.SelWeek77?.toInt(),
+                                    timeline.SelWeek78?.toInt(),
+                                    timeline.SelWeek79?.toInt(),
+                                    timeline.SelWeek80?.toInt(),
+                                    timeline.SelWeek81?.toInt(),
+                                    timeline.SelWeek82?.toInt(),
+                                    timeline.SelWeek83?.toInt(),
+                                    timeline.SelWeek84?.toInt(),
+                                    timeline.SelWeek85?.toInt(),
+                                    timeline.SelWeek86?.toInt(),
+                                    timeline.SelWeek87?.toInt(),
+                                    timeline.SelWeek88?.toInt(),
+                                    timeline.SelWeek89?.toInt(),
+                                    timeline.SelWeek90?.toInt(),
+                                    timeline.SelWeek91?.toInt(),
+                                    timeline.SelWeek92?.toInt(),
+                                    timeline.SelWeek93?.toInt(),
+                                    timeline.SelWeek94?.toInt(),
+                                    timeline.SelWeek95?.toInt(),
+                                    timeline.SelWeek96?.toInt()
+                                )
+                            }
                             .toTypedArray()
                         // Calculate the number of rows needed
-                        Log.d("CheckSheet->Work",work.toList().toString())
+                        Log.d("CheckSheet->Work", work.toList().toString())
 
                         fun generateRowHeadings(): Array<String> {
                             return timeLines
                                 .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
-                                .flatMap { listOf("${it.itemofwork} Schedule", "${it.itemofwork} progress") }
+                                .flatMap {
+                                    listOf(
+                                        "${it.itemofwork} Schedule",
+                                        "${it.itemofwork} progress"
+                                    )
+                                }
                                 .toTypedArray()
                         }
 
                         val rowHeadings = generateRowHeadings()
-                        Log.d("CheckSheet->rowHeadings",rowHeadings.toList().toString())
+                        Log.d("CheckSheet->rowHeadings", rowHeadings.toList().toString())
                         val numRows = rowHeadings.size
-                        Log.d("CheckSheet->numRows",numRows.toString())
+                        Log.d("CheckSheet->numRows", numRows.toString())
                         // Create a 2D array to store the values
                         val checkboxStates = Array(numRows) { row ->
                             if (row % 2 == 0) {
@@ -397,10 +403,17 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         }
                         // Example values, replace with your actual input values
                         val columnHeadings = Array(24) { index -> "Month ${index + 1}" }
-                        Log.d("CheckSheet->columnHeadings",columnHeadings.toList().toString())
+                        Log.d("CheckSheet->columnHeadings", columnHeadings.toList().toString())
                         val numCols = columnHeadings.size
-                        if(numRows >0 && numCols > 0 && rowHeadings.isNotEmpty()){
-                            createDynamicTable(view, numRows, numCols, columnHeadings, rowHeadings, checkboxStates)
+                        if (numRows > 0 && numCols > 0 && rowHeadings.isNotEmpty()) {
+                            createDynamicTable(
+                                view,
+                                numRows,
+                                numCols,
+                                columnHeadings,
+                                rowHeadings,
+                                checkboxStates
+                            )
                         }
                     }
 
@@ -430,7 +443,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 //        systemDate = Date() // Get the current system date
 //        enableColumnsBasedOnDate()
 //    }
-
 
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
