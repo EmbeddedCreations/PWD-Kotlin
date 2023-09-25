@@ -392,13 +392,20 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         val numRows = rowHeadings.size
                         Log.d("CheckSheet->numRows", numRows.toString())
                         // Create a 2D array to store the values
-                        val checkboxStates = Array(numRows) { row ->
-                            if (row % 2 == 0) {
-                                // If it's an even row, use the work values, handling nulls
-                                work.mapNotNull { it?.toInt() }.toIntArray()
-                            } else {
-                                // If it's an odd row, fill with zeros
-                                IntArray(work.size) { 0 }
+//                        val checkboxStates = Array(numRows) { row ->
+//                            if (row % 2 == 0) {
+//                                // If it's an even row, use the work values, handling nulls
+//                                work.mapNotNull { it?.toInt() }.toIntArray()
+//                            } else {
+//                                // If it's an odd row, fill with zeros
+//                                IntArray(work.size) { 0 }
+//                            }
+//                        }
+                        // Generate random checkbox states
+                        val checkboxStates = Array(numRows) { _ ->
+                            IntArray(24 * 4) { _ ->
+                                // Generate a random 0 or 1
+                                (0..1).random()
                             }
                         }
                         // Example values, replace with your actual input values
