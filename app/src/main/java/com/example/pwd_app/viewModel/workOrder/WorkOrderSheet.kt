@@ -91,56 +91,56 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
 
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun enableColumnsBasedOnDate() {
-        val currentDate = Date() // Get the current system date
-        val differenceInDays = calculateDateDifference(plannedDate, currentDate)
-        println("Difference in days: $differenceInDays")
+//    @OptIn(DelicateCoroutinesApi::class)
+//    private fun enableColumnsBasedOnDate() {
+//        val currentDate = Date() // Get the current system date
+//        val differenceInDays = calculateDateDifference(plannedDate, currentDate)
+//        println("Difference in days: $differenceInDays")
+//
+//        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
+//        val headerRow = tableLayout.getChildAt(0) as TableRow
+//
+//        // Determine the number of columns to enable based on the date difference
+//        val columnsToEnable = when {
+//            differenceInDays <= 7 -> 1
+//            differenceInDays <= 14 -> 2
+//            else -> 0 // Disable all columns by default
+//        }
+//
+//        GlobalScope.launch(Dispatchers.Default) {
+//            // Loop through each column and enable or disable checkboxes in rows as needed
+//            for (j in 1 until headerRow.childCount) { // Start from 1 to skip the first column
+//                for (i in 1 until tableLayout.childCount) {
+//                    val row = tableLayout.getChildAt(i) as TableRow
+//                    val columnView = row.getChildAt(j)
+//                    if (columnView is CheckBox) {
+//                        // Enable checkboxes only for odd rows in this column
+//                        if (i % 2 == 0) {
+//                            columnView.isEnabled = j <= columnsToEnable
+//                        } else {
+//                            // Disable checkboxes in even rows for the same column
+//                            columnView.isEnabled = false
+//                        }
+//                    }
+//                }
+//            }
+//            // Update UI on the main thread
+//            withContext(Dispatchers.Main) {
+//                // Notify the UI thread that the task is complete
+//                // You can perform any UI updates or additional tasks here
+//            }
+//        }
+//    }
 
-        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
-        val headerRow = tableLayout.getChildAt(0) as TableRow
-
-        // Determine the number of columns to enable based on the date difference
-        val columnsToEnable = when {
-            differenceInDays <= 7 -> 1
-            differenceInDays <= 14 -> 2
-            else -> 0 // Disable all columns by default
-        }
-
-        GlobalScope.launch(Dispatchers.Default) {
-            // Loop through each column and enable or disable checkboxes in rows as needed
-            for (j in 1 until headerRow.childCount) { // Start from 1 to skip the first column
-                for (i in 1 until tableLayout.childCount) {
-                    val row = tableLayout.getChildAt(i) as TableRow
-                    val columnView = row.getChildAt(j)
-                    if (columnView is CheckBox) {
-                        // Enable checkboxes only for odd rows in this column
-                        if (i % 2 == 0) {
-                            columnView.isEnabled = j <= columnsToEnable
-                        } else {
-                            // Disable checkboxes in even rows for the same column
-                            columnView.isEnabled = false
-                        }
-                    }
-                }
-            }
-            // Update UI on the main thread
-            withContext(Dispatchers.Main) {
-                // Notify the UI thread that the task is complete
-                // You can perform any UI updates or additional tasks here
-            }
-        }
-    }
-
-    private fun calculateDateDifference(startDate: Date, endDate: Date): Long {
-        val difference = endDate.time - startDate.time
-        return difference / (24 * 60 * 60 * 1000) // Convert milliseconds to days
-    }
-
-    private fun parseDate(format: String, dateStr: String): Date {
-        val sdf = SimpleDateFormat(format, Locale.US)
-        return sdf.parse(dateStr) ?: Date()
-    }
+//    private fun calculateDateDifference(startDate: Date, endDate: Date): Long {
+//        val difference = endDate.time - startDate.time
+//        return difference / (24 * 60 * 60 * 1000) // Convert milliseconds to days
+//    }
+//
+//    private fun parseDate(format: String, dateStr: String): Date {
+//        val sdf = SimpleDateFormat(format, Locale.US)
+//        return sdf.parse(dateStr) ?: Date()
+//    }
 
     private fun createDynamicTable(
         view: View,
@@ -388,24 +388,14 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         Log.d("CheckSheet->rowHeadings", rowHeadings.toList().toString())
                         val numRows = rowHeadings.size
                         Log.d("CheckSheet->numRows", numRows.toString())
-                        // Create a 2D array to store the values
-//                        val checkboxStates = Array(numRows) { row ->
-//                            if (row % 2 == 0) {
-//                                // If it's an even row, use the work values, handling nulls
-//                                work.mapNotNull { it?.toInt() }.toIntArray()
-//                            } else {
-//                                // If it's an odd row, fill with zeros
-//                                IntArray(work.size) { 0 }
-//                            }
-//                        }
-                        // Generate random checkbox states
-                        val checkboxStates = Array(numRows) { _ ->
-                            IntArray(24 * 4) { _ ->
-                                // Generate a random 0 or 1
-                                (0..1).random()
+
+                        // Generate checkbox states based on values from the 'work' array
+                        val checkboxStates = Array(numRows) { rowIndex ->
+                            IntArray(24 * 4) { columnIndex ->
+                                // Use the corresponding value from the 'work' array if it exists, otherwise use 0
+                                work.getOrNull(rowIndex * (24 * 4) + columnIndex) ?: 0
                             }
                         }
-                        // Example values, replace with your actual input values
                         val columnHeadings = Array(24) { index -> "Month ${index + 1}" }
                         Log.d("CheckSheet->columnHeadings", columnHeadings.toList().toString())
                         val numCols = columnHeadings.size
