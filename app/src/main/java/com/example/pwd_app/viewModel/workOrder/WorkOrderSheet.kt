@@ -228,7 +228,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -242,9 +241,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             WorkOrderViewModelFactory(timeLineRepository, homeRepository)
         ).get(WorkOrderViewModel::class.java)
 
-
         workOrderDropdown = requireView().findViewById(R.id.workOrder)
-
 
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
             val workOrders = mutableListOf("Select Work Order")
@@ -441,7 +438,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         return view
     }
 
-
 //    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 //        super.onViewCreated(view, savedInstanceState)
 //
@@ -450,7 +446,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 //        systemDate = Date() // Get the current system date
 //        enableColumnsBasedOnDate()
 //    }
-
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         TODO("Not yet implemented")
