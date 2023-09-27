@@ -25,19 +25,8 @@ import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.TimeLineRepository
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-
 
 class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
-    private lateinit var plannedDate: Date
-    private lateinit var systemDate: Date
     private lateinit var workOrderDropdown: Spinner
     private lateinit var workOrderViewModel: WorkOrderViewModel
     private lateinit var tableLayout: TableLayout
@@ -88,58 +77,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
         return -1 // Return -1 if no checkbox is checked in the row
-    }
-
-
-    @OptIn(DelicateCoroutinesApi::class)
-    private fun enableColumnsBasedOnDate() {
-        val currentDate = Date() // Get the current system date
-        val differenceInDays = calculateDateDifference(plannedDate, currentDate)
-        println("Difference in days: $differenceInDays")
-
-        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
-        val headerRow = tableLayout.getChildAt(0) as TableRow
-
-        // Determine the number of columns to enable based on the date difference
-        val columnsToEnable = when {
-            differenceInDays <= 7 -> 1
-            differenceInDays <= 14 -> 2
-            else -> 0 // Disable all columns by default
-        }
-
-        GlobalScope.launch(Dispatchers.Default) {
-            // Loop through each column and enable or disable checkboxes in rows as needed
-            for (j in 1 until headerRow.childCount) { // Start from 1 to skip the first column
-                for (i in 1 until tableLayout.childCount) {
-                    val row = tableLayout.getChildAt(i) as TableRow
-                    val columnView = row.getChildAt(j)
-                    if (columnView is CheckBox) {
-                        // Enable checkboxes only for odd rows in this column
-                        if (i % 2 == 0) {
-                            columnView.isEnabled = j <= columnsToEnable
-                        } else {
-                            // Disable checkboxes in even rows for the same column
-                            columnView.isEnabled = false
-                        }
-                    }
-                }
-            }
-            // Update UI on the main thread
-            withContext(Dispatchers.Main) {
-                // Notify the UI thread that the task is complete
-                // You can perform any UI updates or additional tasks here
-            }
-        }
-    }
-
-    private fun calculateDateDifference(startDate: Date, endDate: Date): Long {
-        val difference = endDate.time - startDate.time
-        return difference / (24 * 60 * 60 * 1000) // Convert milliseconds to days
-    }
-
-    private fun parseDate(format: String, dateStr: String): Date {
-        val sdf = SimpleDateFormat(format, Locale.US)
-        return sdf.parse(dateStr) ?: Date()
     }
 
     private fun createDynamicTable(
@@ -211,11 +148,9 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                                 }
                                 println() // Move to the next row
                             }
-
                             // Call the function to compare and set the background color for the current row
                             compareAndSetColor(rowIndex)
                         })
-
                         // Set checkboxes in even rows to be disabled
                         if ((i - 1) % 2 == 0) {
                             checkBox.isEnabled = false
@@ -388,24 +323,14 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         Log.d("CheckSheet->rowHeadings", rowHeadings.toList().toString())
                         val numRows = rowHeadings.size
                         Log.d("CheckSheet->numRows", numRows.toString())
-                        // Create a 2D array to store the values
-//                        val checkboxStates = Array(numRows) { row ->
-//                            if (row % 2 == 0) {
-//                                // If it's an even row, use the work values, handling nulls
-//                                work.mapNotNull { it?.toInt() }.toIntArray()
-//                            } else {
-//                                // If it's an odd row, fill with zeros
-//                                IntArray(work.size) { 0 }
-//                            }
-//                        }
-                        // Generate random checkbox states
-                        val checkboxStates = Array(numRows) { _ ->
-                            IntArray(24 * 4) { _ ->
-                                // Generate a random 0 or 1
-                                (0..1).random()
+
+                        // Generate checkbox states based on values from the 'work' array
+                        val checkboxStates = Array(numRows) { rowIndex ->
+                            IntArray(24 * 4) { columnIndex ->
+                                // Use the corresponding value from the 'work' array if it exists, otherwise use 0
+                                work.getOrNull(rowIndex * (24 * 4) + columnIndex) ?: 0
                             }
                         }
-                        // Example values, replace with your actual input values
                         val columnHeadings = Array(24) { index -> "Month ${index + 1}" }
                         Log.d("CheckSheet->columnHeadings", columnHeadings.toList().toString())
                         val numCols = columnHeadings.size
@@ -420,7 +345,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                             )
                         }
                     }
-
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
         }
@@ -437,15 +361,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         tableLayout = view.findViewById(R.id.tableLayout)
         return view
     }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        // Initialize plannedDate and systemDate with your date values
-//        plannedDate = parseDate("yyyy-MM-dd", "2023-08-10") // Replace with your planned date
-//        systemDate = Date() // Get the current system date
-//        enableColumnsBasedOnDate()
-//    }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         TODO("Not yet implemented")
