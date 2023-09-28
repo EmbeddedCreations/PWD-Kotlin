@@ -4,6 +4,7 @@ import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.InputFilter
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -111,6 +112,11 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             .placeholder(R.drawable.uploadfile) // Placeholder image from drawable
             .error(R.drawable.imgnotfound) // Image to show if loading from URL fails
             .into(imageView)
+        val editTextDescription: EditText = findViewById(R.id.editTextDescription)
+        val maxLength = 300 // Set your desired maximum length
+        val filterArray = arrayOfNulls<InputFilter>(1)
+        filterArray[0] = InputFilter.LengthFilter(maxLength)
+        editTextDescription.filters = filterArray
         descriptionTextView.text = "Description: $description"
 
         spinnerBuilding.onItemSelectedListener = this
