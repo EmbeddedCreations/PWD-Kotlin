@@ -10,9 +10,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pwd_app.MainActivity
 import com.example.pwd_app.R
-import com.example.pwd_app.model.EditObject
 import com.example.pwd_app.model.SchoolData
 import com.example.pwd_app.viewModel.edit.EditScreen
 import com.squareup.picasso.Picasso
@@ -43,13 +41,11 @@ class BuildingAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = buildingList[position]
-        EditObject.IMAGE = currentItem.image_pdf
         Picasso.get()
             .load(currentItem.image_pdf)
             .placeholder(R.drawable.uploadfile) // Placeholder image from drawable
             .error(R.drawable.imgnotfound) // Image to show if loading from URL fails
             .into(holder.imageView)
-        // holder.Picasso.get().load(model.getImageUrl()).into(holder.imageView);
         holder.descriptionTextView.text = "Description: " + currentItem.Description
         holder.Date.text = "Upload Date: " + currentItem.user_upload_date
         holder.BuildingName.text = "Building Name: " + currentItem.image_name

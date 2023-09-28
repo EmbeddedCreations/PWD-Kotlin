@@ -64,12 +64,6 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         textViewLoggedIn.text = "Logged in as: $juniorEngineer"
         spinnerBuilding = findViewById(R.id.spinnerBuilding) // Replace with your actual spinner ID
 
-        Picasso.get()
-            .load(EditObject.IMAGE)
-            .placeholder(R.drawable.uploadfile) // Placeholder image from drawable
-            .error(R.drawable.imgnotfound) // Image to show if loading from URL fails
-            .into(iv_imgView)
-
         networkStatusUtility = NetworkStatusUtility(this)
         if (networkStatusUtility!!.isNetworkAvailable) {
             status?.setImageResource(R.drawable.online)
