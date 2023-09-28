@@ -71,7 +71,13 @@ class BuildingAdapter(
         holder.editButton.setOnClickListener {
             val context = holder.itemView.context
             val i = Intent(context, EditScreen::class.java)
+            // Pass the image URL, description, and building name to the EditScreen
+            i.putExtra("image_url", currentItem.image_pdf)
+            i.putExtra("description", currentItem.Description)
+            i.putExtra("building_name", currentItem.image_name)
             context.startActivity(i)
         }
+
+
     }
 }

@@ -28,6 +28,7 @@ import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 import com.example.pwd_app.viewModel.upload.UploadViewModel
 import com.example.pwd_app.viewModel.upload.UploadViewModelFactory
+import com.squareup.picasso.Picasso
 
 class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
@@ -89,13 +90,30 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 }
             }
         })
+        // Retrieve the image URL or resource identifier from the intent
+        val imageUrl = intent.getStringExtra("image_url")
+        val description = intent.getStringExtra("description")
+        val buildingName = intent.getStringExtra("building_name")
+        // Find the ImageView in your EditScreen layout
+        val imageView = findViewById<ImageView>(R.id.image_view)
+        val descriptionTextView = findViewById<TextView>(R.id.displayedText)
+
+        // Load and display the image using Picasso or another image loading library
+        Picasso.get()
+            .load(imageUrl)
+            .placeholder(R.drawable.uploadfile) // Placeholder image from drawable
+            .error(R.drawable.imgnotfound) // Image to show if loading from URL fails
+            .into(imageView)
+        descriptionTextView.text = "Description: $description"
 
         spinnerBuilding.onItemSelectedListener = this
         homeViewModel.buildings.observe(this) { buildingList ->
             val uniqueBuildings = mutableSetOf<String>() // Use a Set to ensure uniqueness
 
             // Add the default selected building
-            uniqueBuildings.add(Credentials.SELECTED_BUILDING)
+            if (buildingName != null) {
+                uniqueBuildings.add(buildingName)
+            }
 
             // Filter and add unique building values from the buildingList
             buildingList
