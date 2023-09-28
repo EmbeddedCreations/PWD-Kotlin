@@ -12,6 +12,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.MainActivity
 import com.example.pwd_app.R
+import com.example.pwd_app.model.EditObject
 import com.example.pwd_app.model.SchoolData
 import com.example.pwd_app.viewModel.edit.EditScreen
 import com.squareup.picasso.Picasso
@@ -42,6 +43,7 @@ class BuildingAdapter(
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = buildingList[position]
+        EditObject.IMAGE = currentItem.image_pdf
         Picasso.get()
             .load(currentItem.image_pdf)
             .placeholder(R.drawable.uploadfile) // Placeholder image from drawable

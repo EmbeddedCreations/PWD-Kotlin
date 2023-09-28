@@ -20,6 +20,7 @@ import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
+import com.example.pwd_app.model.EditObject
 import com.example.pwd_app.model.UploadObject
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
@@ -61,6 +62,12 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val juniorEngineer: String = Credentials.DEFAULT_JUNIOR_ENGINEER
         textViewLoggedIn.text = "Logged in as: $juniorEngineer"
         spinnerBuilding = findViewById(R.id.spinnerBuilding) // Replace with your actual spinner ID
+
+        Picasso.get()
+            .load(EditObject.IMAGE)
+            .placeholder(R.drawable.uploadfile) // Placeholder image from drawable
+            .error(R.drawable.imgnotfound) // Image to show if loading from URL fails
+            .into(iv_imgView)
 
         networkStatusUtility = NetworkStatusUtility(this)
         if (networkStatusUtility!!.isNetworkAvailable) {
