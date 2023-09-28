@@ -6,4 +6,5 @@ object EditObject {
     var E_IMAGE_NAME = ""
     var E_ENTRY_BY = ""
     var E_DESCRIPTION = ""
+    var IMAGE:String? = ""
 }
