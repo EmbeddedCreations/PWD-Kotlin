@@ -12,6 +12,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.text.InputFilter
+import android.text.InputFilter.LengthFilter
 import android.text.TextUtils
 import android.util.Base64
 import android.view.LayoutInflater
@@ -40,7 +42,6 @@ import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
 import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
-import com.example.pwd_app.viewModel.home.Home
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 import com.github.dhaval2404.imagepicker.ImagePicker
 import kotlinx.coroutines.launch
@@ -172,6 +173,11 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                 }
             }
         })
+        val editTextDescription: EditText = requireView().findViewById(R.id.editTextDescription)
+        val maxLength = 300 // Set your desired maximum length
+        val filterArray = arrayOfNulls<InputFilter>(1)
+        filterArray[0] = LengthFilter(maxLength)
+        editTextDescription.filters = filterArray
 
         spinnerBuilding.onItemSelectedListener = this
         homeViewModel.buildings.observe(viewLifecycleOwner) { buildingList ->

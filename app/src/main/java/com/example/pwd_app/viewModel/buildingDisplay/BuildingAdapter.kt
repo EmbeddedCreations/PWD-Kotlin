@@ -10,7 +10,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.pwd_app.MainActivity
 import com.example.pwd_app.R
 import com.example.pwd_app.model.SchoolData
 import com.example.pwd_app.viewModel.edit.EditScreen
@@ -47,7 +46,6 @@ class BuildingAdapter(
             .placeholder(R.drawable.uploadfile) // Placeholder image from drawable
             .error(R.drawable.imgnotfound) // Image to show if loading from URL fails
             .into(holder.imageView)
-        // holder.Picasso.get().load(model.getImageUrl()).into(holder.imageView);
         holder.descriptionTextView.text = "Description: " + currentItem.Description
         holder.Date.text = "Upload Date: " + currentItem.user_upload_date
         holder.BuildingName.text = "Building Name: " + currentItem.image_name
@@ -71,7 +69,13 @@ class BuildingAdapter(
         holder.editButton.setOnClickListener {
             val context = holder.itemView.context
             val i = Intent(context, EditScreen::class.java)
+            // Pass the image URL, description, and building name to the EditScreen
+            i.putExtra("image_url", currentItem.image_pdf)
+            i.putExtra("description", currentItem.Description)
+            i.putExtra("building_name", currentItem.image_name)
             context.startActivity(i)
         }
+
+
     }
 }
