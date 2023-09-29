@@ -38,7 +38,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
 
     //Selected variables
     var selectedSchool = "Select School"
-    var selectedWorkorder = "Select Workorder"
+    var selectedWorkorder = "Select Visit Type"
     var selectedId = ""
     var selectedBuilding = "Select Building"
 
@@ -54,7 +54,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var textViewAtc: TextView
     private lateinit var textViewPoOffice: TextView
     private val workorderNames =
-        arrayOf("Select Workorder", "General Inspection", "Workorder related Inspection")
+        arrayOf("Select Visit Type", "General Inspection", "Workorder related Inspection")
     private var networkStatusUtility: NetworkStatusUtility? = null
 
     @SuppressLint("SetTextI18n")
@@ -111,8 +111,6 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
             }
         })
 
-
-
         spinnerSchool.onItemSelectedListener = this
         spinnerBuilding.onItemSelectedListener = this
         spinnerWorkorder.onItemSelectedListener = this
@@ -151,8 +149,8 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                     showToast("Please select a school.")
                 } else if (selectedBuilding == "Select Building") {
                     showToast("Please select a building.")
-                } else if (selectedWorkorder == "Select Workorder") {
-                    showToast("Please select a workorder.")
+                } else if (selectedWorkorder == "Select Visit Type") {
+                    showToast("Please select a visit type.")
                 } else {
                     //Set Data For Upload
                     UploadObject.SCHOOL_NAME = selectedId
@@ -225,7 +223,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                     textViewSecondDropdownTitle.visibility = View.VISIBLE
                     spinnerSecondDropdown.visibility = View.VISIBLE
                     homeViewModel.workOrders.observe(viewLifecycleOwner) { workOrderList ->
-                        val workOrders = mutableListOf("Select Work Order")
+                        val workOrders = mutableListOf("Select Visit Type")
                         workOrders.addAll(workOrderList
                             .filter { it.Unq_ID == selectedId }
                             .map { it.WorkorderNumber.toString() })
