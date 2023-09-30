@@ -1,5 +1,7 @@
 package com.example.pwd_app.model
 
+import android.graphics.Bitmap
+
 object EditObject {
     var E_SCHOOL_NAME = ""
     var E_PO_OFFICE = ""

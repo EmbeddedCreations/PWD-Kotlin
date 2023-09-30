@@ -3,6 +3,7 @@ package com.example.pwd_app.viewModel.buildingDisplay
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,9 +12,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.R
+import com.example.pwd_app.model.Credentials
+import com.example.pwd_app.model.EditObject
 import com.example.pwd_app.model.SchoolData
 import com.example.pwd_app.viewModel.edit.EditScreen
 import com.squareup.picasso.Picasso
+
 
 class BuildingAdapter(
     private val buildingList: List<SchoolData>
@@ -46,7 +50,9 @@ class BuildingAdapter(
             .placeholder(R.drawable.uploadfile) // Placeholder image from drawable
             .error(R.drawable.imgnotfound) // Image to show if loading from URL fails
             .into(holder.imageView)
+
         holder.descriptionTextView.text = "Description: " + currentItem.Description
+
         holder.Date.text = "Upload Date: " + currentItem.user_upload_date
         holder.BuildingName.text = "Building Name: " + currentItem.image_name
         holder.imageView.setOnClickListener {
@@ -68,6 +74,11 @@ class BuildingAdapter(
         }
         holder.editButton.setOnClickListener {
             val context = holder.itemView.context
+            EditObject.E_ENTRY_BY = Credentials.DEFAULT_JUNIOR_ENGINEER
+            EditObject.E_PO_OFFICE = Credentials.DEFAULT_PO
+            EditObject.E_DESCRIPTION = currentItem.Description.toString()
+            EditObject.E_IMAGE_NAME = currentItem.image_name.toString()
+            EditObject.E_SCHOOL_NAME = Credentials.SELECTED_SCHOOL_FOR_DISPLAY
             val i = Intent(context, EditScreen::class.java)
             // Pass the image URL, description, and building name to the EditScreen
             i.putExtra("image_url", currentItem.image_pdf)

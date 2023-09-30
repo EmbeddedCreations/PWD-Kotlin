@@ -26,6 +26,7 @@ import com.example.pwd_app.model.UploadObject
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
 import com.example.pwd_app.repository.HomeRepository
+import com.example.pwd_app.repository.UploadRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 import com.example.pwd_app.viewModel.upload.UploadViewModel
@@ -34,7 +35,9 @@ import com.squareup.picasso.Picasso
 
 class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var uploadViewModel: UploadViewModel
+    private lateinit var editScreenViewModel: EditScreenViewModel
+//    private lateinit var uploadViewModel: UploadViewModel
+    private lateinit var uploadRepository: UploadRepository
     private var buttonSaveImage: Button? = null
     private var editTextDescription: EditText? = null
     private var progressDialog: ProgressDialog? = null
@@ -43,18 +46,16 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private var status: ImageView? = null
     private var imageChanged = false
     private lateinit var spinnerBuilding: Spinner
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(this)
-        val dataRepository = DataRepository(apiInterface)
-        uploadViewModel = ViewModelProvider(
-            this,
-            UploadViewModelFactory(dataRepository)
-        ).get(UploadViewModel::class.java)
         val homeRepository = HomeRepository(apiInterface, database, this)
-        homeViewModel =
-            ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
+        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
+        editScreenViewModel = ViewModelProvider(this, EditScreenViewModelFactory(uploadRepository))[EditScreenViewModel::class.java]
+
         val mainHandler = Handler(Looper.getMainLooper())
         setContentView(R.layout.edit_upload_details)
         status = findViewById(R.id.statusIcon)
@@ -72,6 +73,8 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         // Capture a reference to networkStatusUtility in a local variable
         val utility = networkStatusUtility
+
+//        iv_imgView?.setImageBitmap(EditObject.E_IMAGE)
 
         utility?.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
             override fun onNetworkAvailable() {
@@ -96,6 +99,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val imageUrl = intent.getStringExtra("image_url")
         val description = intent.getStringExtra("description")
         val buildingName = intent.getStringExtra("building_name")
+        EditObject.E_IMAGE_NAME = buildingName.toString()
         // Find the ImageView in your EditScreen layout
         val imageView = findViewById<ImageView>(R.id.image_view)
         val descriptionTextView = findViewById<TextView>(R.id.displayedText)
@@ -138,6 +142,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerBuilding.adapter = adapter
         }
+
         buttonSaveImage?.setOnClickListener(object : View.OnClickListener {
             override fun onClick(v: View?) {
                 if (!networkStatusUtility!!.isNetworkAvailable) {
@@ -175,27 +180,17 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     progressDialog?.show()
                     buttonSaveImage!!.isEnabled = false
 
-                    UploadObject.DESCRIPTION = description
-                    UploadObject.IMAGE_NAME = Credentials.SELECTED_BUILDING
-                    UploadObject.IMAGE_TYPE = "jpg"
-                    uploadViewModel.uploadData(
-                        UploadObject.SCHOOL_NAME,
-                        UploadObject.PO_OFFICE,
-                        UploadObject.IMAGE_NAME,
-                        UploadObject.IMAGE_TYPE,
-                        UploadObject.IMAGE_PDF,
-                        UploadObject.UPLOAD_DATE,
-                        UploadObject.UPLOAD_TIME,
-                        UploadObject.ENTRYBY,
-                        UploadObject.LATITUDE,
-                        UploadObject.LONGITUDE,
-                        UploadObject.USER_UPLOAD_DATE,
-                        UploadObject.INSPECTIONTYPE,
-                        UploadObject.WORKORDERNUMBER,
-                        UploadObject.DESCRIPTION,
-                        UploadObject.AGS
+                    EditObject.E_DESCRIPTION = description
+                    EditObject.E_PO_OFFICE =Credentials.DEFAULT_PO
+                    EditObject.E_ENTRY_BY = Credentials.DEFAULT_JUNIOR_ENGINEER
+                    editScreenViewModel.editData(
+                        EditObject.E_SCHOOL_NAME,
+                        EditObject.E_PO_OFFICE,
+                        EditObject.E_IMAGE_NAME,
+                        EditObject.E_ENTRY_BY,
+                        EditObject.E_DESCRIPTION,
                     )
-                    uploadViewModel.uploadStatus.observe(this@EditScreen) { isUploaded ->
+                    editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
 
                         progressDialog!!.dismiss()
                         // Re-enable the "Upload" button after the upload is completed
@@ -245,7 +240,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         when (parent?.id) {
             R.id.spinnerBuilding -> {
                 val selectedItem = spinnerBuilding.selectedItem as? String
-                Credentials.SELECTED_BUILDING = selectedItem ?: ""
+                EditObject.E_SCHOOL_NAME = selectedItem ?: ""
             }
         }
     }
