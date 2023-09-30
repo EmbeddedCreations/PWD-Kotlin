@@ -68,4 +68,13 @@ interface ApiInterface {
         @Field("Description") description: String,
         @Field("Tags") tags: String
     ): Response<ImageData>
+    @FormUrlEncoded
+    @POST("AppUpdateBuilding.php")
+    suspend fun EditData(
+        @Field("school_Name") schoolName: String,
+        @Field("po_office") poOffice: String,
+        @Field("image_name") imageName: String,
+        @Field("EntryBy") entryBy: String,
+        @Field("Description") description: String,
+    ): Response<ImageData>
 }

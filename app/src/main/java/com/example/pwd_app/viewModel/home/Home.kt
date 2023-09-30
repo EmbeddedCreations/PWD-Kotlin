@@ -2,6 +2,7 @@ package com.example.pwd_app.viewModel.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -129,8 +130,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
 
         //School Spinner
         homeViewModel.schools.observe(viewLifecycleOwner) { schoolList ->
-            val schools = mutableListOf("Select School")
-            schools.addAll(schoolList.map { it.school_name.toString() })
+            val schools = schoolList.map { it.school_name.toString() }
             val adapter =
                 ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, schools)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -181,6 +181,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                 Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
             }
         })
+
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -190,8 +191,10 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                 val selectedItem = spinnerSchool.selectedItem as? String
                 Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
                 selectedSchool = selectedItem ?: ""
+
                 selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
                 Credentials.SELECTED_SCHOOL_ID = selectedId
+                Log.d("ID",selectedId)
 
                 homeViewModel.buildings.observe(viewLifecycleOwner) { buildingList ->
                     val buildings = mutableListOf("Select Building")
