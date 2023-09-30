@@ -42,4 +42,7 @@
     <string name="edit_details">Edit details</string>
     <string name="here_the_predefined_text_would_be_displayed">here the predefined text would be displayed</string>
     <string name="please_update_the_description">Please update the description</string>
+    <string name="workorder_no">Workorder No</string>
+    <string name="schools">School</string>
+    <string name="fetch_workorder">fetch workorder</string>
 </resources>
