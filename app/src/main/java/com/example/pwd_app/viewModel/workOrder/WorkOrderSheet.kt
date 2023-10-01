@@ -25,11 +25,17 @@ import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.TimeLineRepository
+import com.example.pwd_app.viewModel.home.HomeViewModel
+import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 
 class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var workOrderDropdown: Spinner
     private lateinit var workOrderViewModel: WorkOrderViewModel
     private lateinit var tableLayout: TableLayout
+    private lateinit var spinnerSchool: Spinner
+    private lateinit var homeViewModel: HomeViewModel
+    private var selectedSchool = "Select School"
+    private var selectedId = ""
 
     private fun compareAndSetColor(currentRowIndex: Int) {
         val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
@@ -80,7 +86,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     private fun createDynamicTable(
-        view: View,
         numRows: Int,
         numCols: Int,
         colLabels: Array<String>,
@@ -163,6 +168,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
@@ -170,13 +176,21 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val database = DatabaseHelper.getDatabase(requireContext())
         val homeRepository = HomeRepository(apiInterface, database, requireContext())
         val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
-
+        homeViewModel =
+            ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
         workOrderViewModel = ViewModelProvider(
             this,
             WorkOrderViewModelFactory(timeLineRepository, homeRepository)
-        ).get(WorkOrderViewModel::class.java)
-
+        )[WorkOrderViewModel::class.java]
         workOrderDropdown = requireView().findViewById(R.id.workOrder)
+        spinnerSchool = requireView().findViewById(R.id.SelectedSchool)
+        homeViewModel.schools.observe(viewLifecycleOwner) { schoolList ->
+            val schools = schoolList.map { it.school_name.toString() }
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, schools)
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerSchool.adapter = adapter
+        }
 
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
             val workOrders = mutableListOf("Select Work Order")
@@ -336,7 +350,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         val numCols = columnHeadings.size
                         if (numRows > 0 && numCols > 0 && rowHeadings.isNotEmpty()) {
                             createDynamicTable(
-                                view,
                                 numRows,
                                 numCols,
                                 columnHeadings,
@@ -362,11 +375,18 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         return view
     }
 
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-        TODO("Not yet implemented")
+    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
+        val selectedItem = spinnerSchool.selectedItem as? String
+        Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
+        selectedSchool = selectedItem ?: ""
+
+        selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
+        Credentials.SELECTED_SCHOOL_ID = selectedId
+        Log.d("ID",selectedId)
+
     }
 
-    override fun onNothingSelected(p0: AdapterView<*>?) {
+    override fun onNothingSelected(parent: AdapterView<*>?) {
         TODO("Not yet implemented")
     }
 }
