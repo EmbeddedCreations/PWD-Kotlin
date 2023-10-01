@@ -250,6 +250,9 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
     }
+    fun submit(view: View) {
+        println("Hello")
+    }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         TODO("Not yet implemented")
