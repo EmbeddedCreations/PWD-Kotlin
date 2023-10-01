@@ -1,11 +1,11 @@
 package com.example.pwd_app.viewModel.edit
 
+import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -16,33 +16,33 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.R
+import com.example.pwd_app.Utilities.General
 import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.model.EditObject
-import com.example.pwd_app.model.UploadObject
 import com.example.pwd_app.network.NetworkStatusUtility
-import com.example.pwd_app.repository.DataRepository
 import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.UploadRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
-import com.example.pwd_app.viewModel.upload.UploadViewModel
-import com.example.pwd_app.viewModel.upload.UploadViewModelFactory
+import com.example.pwd_app.viewModel.schoolDisplay.SchoolDisplay
 import com.squareup.picasso.Picasso
 
 class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var editScreenViewModel: EditScreenViewModel
-    //private lateinit var uploadViewModel: UploadViewModel
+
     private var buttonSaveImage: Button? = null
     private var editTextDescription: EditText? = null
     private var progressDialog: ProgressDialog? = null
     private var networkStatusUtility: NetworkStatusUtility? = null
     private var status: ImageView? = null
+    private var imageView: ImageView? = null
     private lateinit var spinnerBuilding: Spinner
 
 
@@ -52,8 +52,12 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val database = DatabaseHelper.getDatabase(this)
         val homeRepository = HomeRepository(apiInterface, database, this)
         val uploadRepository = UploadRepository(apiInterface)
-        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
-        editScreenViewModel = ViewModelProvider(this, EditScreenViewModelFactory(uploadRepository))[EditScreenViewModel::class.java]
+        homeViewModel =
+            ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
+        editScreenViewModel = ViewModelProvider(
+            this,
+            EditScreenViewModelFactory(uploadRepository)
+        )[EditScreenViewModel::class.java]
         buttonSaveImage = findViewById(R.id.buttonEditEntry)
         val mainHandler = Handler(Looper.getMainLooper())
         setContentView(R.layout.edit_upload_details)
@@ -72,8 +76,6 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
         // Capture a reference to networkStatusUtility in a local variable
         val utility = networkStatusUtility
-
-//        iv_imgView?.setImageBitmap(EditObject.E_IMAGE)
 
         utility?.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
             override fun onNetworkAvailable() {
@@ -100,7 +102,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val buildingName = intent.getStringExtra("building_name")
         EditObject.E_IMAGE_NAME = buildingName.toString()
         // Find the ImageView in your EditScreen layout
-        val imageView = findViewById<ImageView>(R.id.image_view)
+        imageView = findViewById(R.id.image_view)
         val descriptionTextView = findViewById<TextView>(R.id.displayedText)
 
         // Load and display the image using Picasso or another image loading library
@@ -142,100 +144,6 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             spinnerBuilding.adapter = adapter
         }
 
-        buttonSaveImage?.setOnClickListener {
-            Log.d("Button Clicked","Hello")
-        }
-
-
-//        buttonSaveImage?.setOnClickListener(object : View.OnClickListener {
-//            override fun onClick(v: View?) {
-//                Log.d("ButtonClicked","Hello")
-//                if (!networkStatusUtility!!.isNetworkAvailable) {
-//                    Toast.makeText(
-//                        this@EditScreen,
-//                        "No internet connection available",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                    return
-//                }
-//                val description = editTextDescription?.text.toString().trim()
-//                if (description.isEmpty()) {
-//                    Toast.makeText(
-//                        this@EditScreen,
-//                        "Please enter a description.",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                } else if (iv_imgView?.drawable == null) {
-//                    Toast.makeText(
-//                        this@EditScreen,
-//                        "Please select an image first.",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                } else if (!imageChanged) {
-//                    Toast.makeText(
-//                        this@EditScreen,
-//                        "Please select an image first",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-//                } else {
-//                    //Initiase Values
-//                    progressDialog = ProgressDialog(this@EditScreen)
-//                    progressDialog?.setTitle("Uploading Image")
-//                    progressDialog?.setMessage("Please wait...")
-//                    progressDialog?.show()
-//                    buttonSaveImage!!.isEnabled = false
-//                    Log.d("EDit Credentials",EditObject.E_PO_OFFICE+ ","+EditObject.E_IMAGE_NAME+","+EditObject.E_DESCRIPTION
-//                    +","+EditObject.E_ENTRY_BY+","+ EditObject.E_SCHOOL_NAME)
-//                    EditObject.E_DESCRIPTION = description
-//                    EditObject.E_PO_OFFICE =Credentials.DEFAULT_PO
-//                    EditObject.E_ENTRY_BY = Credentials.DEFAULT_JUNIOR_ENGINEER
-//                    editScreenViewModel.editData(
-//                        EditObject.E_SCHOOL_NAME,
-//                        EditObject.E_PO_OFFICE,
-//                        EditObject.E_IMAGE_NAME,
-//                        EditObject.E_ENTRY_BY,
-//                        EditObject.E_DESCRIPTION,
-//                    )
-//                    editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
-//
-//                        progressDialog!!.dismiss()
-//                        // Re-enable the "Upload" button after the upload is completed
-//                        buttonSaveImage!!.isEnabled = true
-//                        editTextDescription?.setText("")
-//
-//                        Toast.makeText(
-//                            this@EditScreen,
-//                            "Uploaded Successfull",
-//                            Toast.LENGTH_SHORT
-//                        ).show()
-//                        if (isUploaded) {
-//                            // Dismiss the progress dialog
-//                            progressDialog!!.dismiss()
-//                            // Re-enable the "Upload" button after the upload is completed
-//                            buttonSaveImage!!.isEnabled = true
-//
-//                            Toast.makeText(
-//                                this@EditScreen,
-//                                "Uploaded Successfull",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//                            // redirect to the school list view history
-//                        } else {
-//                            progressDialog!!.dismiss()
-//                            // Re-enable the "Upload" button after the upload is completed
-//                            buttonSaveImage!!.isEnabled = true
-//                            Toast.makeText(
-//                                this@EditScreen,
-//                                "Uploaded Failed",
-//                                Toast.LENGTH_SHORT
-//                            ).show()
-//
-//                        }
-//                    }
-//                }
-//            }
-//        })
-
     }
 
     private fun showToast(statusText: String) {
@@ -250,8 +158,118 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
     }
+
+    private var isProgressDialogShowing = false
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("progressDialogShowing", isProgressDialogShowing)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        isProgressDialogShowing = savedInstanceState.getBoolean("progressDialogShowing", false)
+        if (isProgressDialogShowing) {
+            showProgressDialog()
+        }
+    }
+
     fun submit(view: View) {
-        println("Hello")
+        if (networkStatusUtility == null || !networkStatusUtility!!.isNetworkAvailable) {
+            showToast("No internet connection available")
+            return
+        }
+
+        val description = editTextDescription?.text?.toString()?.trim()
+        val imageViewDrawable = imageView?.drawable
+
+        when {
+            description.isNullOrEmpty() -> showToast("Please enter a description.")
+            imageViewDrawable == null -> showToast("Please select an image first.")
+            imageViewDrawable.constantState == ContextCompat.getDrawable(
+                this,
+                R.drawable.uploadfile
+            )?.constantState -> showToast("Please select an image first.")
+
+            else -> {
+                // Initialize Values
+                showProgressDialog()
+                buttonSaveImage?.isEnabled = false
+
+                // Set EditObject values
+                EditObject.E_DESCRIPTION = description
+                EditObject.E_PO_OFFICE = Credentials.DEFAULT_PO
+                EditObject.E_ENTRY_BY = Credentials.DEFAULT_JUNIOR_ENGINEER
+
+                // Perform the upload
+                editScreenViewModel.editData(
+                    EditObject.E_SCHOOL_NAME,
+                    EditObject.E_PO_OFFICE,
+                    EditObject.E_IMAGE_NAME,
+                    EditObject.E_ENTRY_BY,
+                    EditObject.E_DESCRIPTION,
+                )
+                editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
+                    // Dismiss the progress dialog in any case (success or failure)
+                    dismissProgressDialog()
+                    buttonSaveImage?.isEnabled = true
+                    editTextDescription?.setText("")
+
+                    if (isUploaded) {
+                        Toast.makeText(this@EditScreen, "Uploaded Successfully", Toast.LENGTH_SHORT)
+                            .show()
+                        // Redirect to the SchoolDisplay fragment
+                        val fragmentManager = supportFragmentManager
+                        val schoolDisplayFragment =
+                            SchoolDisplay() // Replace with the actual fragment class name
+                        General.replaceFragment(
+                            fragmentManager,
+                            R.id.container,
+                            schoolDisplayFragment,
+                            false,
+                            "SchoolDisplayFragmentTag",
+                            R.anim.slide_in,
+                            R.anim.slide_out,
+                            0,
+                            0
+                        )
+                    } else {
+                        Toast.makeText(this@EditScreen, "Upload Failed", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    private fun showProgressDialog() {
+        progressDialog = ProgressDialog(this@EditScreen)
+        progressDialog?.setTitle("Uploading Image")
+        progressDialog?.setMessage("Please wait...")
+        progressDialog?.setCancelable(false) // Prevent users from dismissing the dialog
+        progressDialog?.show()
+        isProgressDialogShowing = true
+    }
+
+    private fun dismissProgressDialog() {
+        progressDialog?.dismiss()
+        isProgressDialogShowing = false
+    }
+
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Data will be lost, plz complete editing then go back")
+            .setMessage("Are you sure?")
+            .setPositiveButton(
+                "OK"
+            ) { dialogInterface, i -> super@EditScreen.onBackPressed() }
+            .setNegativeButton(
+                "Cancel"
+            ) { dialogInterface, i ->
+                // Do nothing or add specific handling for cancel
+            }
+            .setCancelable(false)
+        val alert = builder.create()
+        alert.show()
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
