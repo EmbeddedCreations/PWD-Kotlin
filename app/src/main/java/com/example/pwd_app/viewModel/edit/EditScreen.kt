@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -36,15 +37,12 @@ import com.squareup.picasso.Picasso
 class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var editScreenViewModel: EditScreenViewModel
-//    private lateinit var uploadViewModel: UploadViewModel
-    private lateinit var uploadRepository: UploadRepository
+    //private lateinit var uploadViewModel: UploadViewModel
     private var buttonSaveImage: Button? = null
     private var editTextDescription: EditText? = null
     private var progressDialog: ProgressDialog? = null
     private var networkStatusUtility: NetworkStatusUtility? = null
-    private var iv_imgView: ImageView? = null
     private var status: ImageView? = null
-    private var imageChanged = false
     private lateinit var spinnerBuilding: Spinner
 
 
@@ -53,9 +51,10 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(this)
         val homeRepository = HomeRepository(apiInterface, database, this)
+        val uploadRepository = UploadRepository(apiInterface)
         homeViewModel = ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
         editScreenViewModel = ViewModelProvider(this, EditScreenViewModelFactory(uploadRepository))[EditScreenViewModel::class.java]
-
+        buttonSaveImage = findViewById(R.id.buttonEditEntry)
         val mainHandler = Handler(Looper.getMainLooper())
         setContentView(R.layout.edit_upload_details)
         status = findViewById(R.id.statusIcon)
@@ -143,92 +142,99 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             spinnerBuilding.adapter = adapter
         }
 
-        buttonSaveImage?.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                if (!networkStatusUtility!!.isNetworkAvailable) {
-                    Toast.makeText(
-                        this@EditScreen,
-                        "No internet connection available",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    return
-                }
-                val description = editTextDescription?.text.toString().trim()
-                if (description.isEmpty()) {
-                    Toast.makeText(
-                        this@EditScreen,
-                        "Please enter a description.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else if (iv_imgView?.drawable == null) {
-                    Toast.makeText(
-                        this@EditScreen,
-                        "Please select an image first.",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else if (!imageChanged) {
-                    Toast.makeText(
-                        this@EditScreen,
-                        "Please select an image first",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } else {
-                    //Initiase Values
-                    progressDialog = ProgressDialog(this@EditScreen)
-                    progressDialog?.setTitle("Uploading Image")
-                    progressDialog?.setMessage("Please wait...")
-                    progressDialog?.show()
-                    buttonSaveImage!!.isEnabled = false
+        buttonSaveImage?.setOnClickListener {
+            Log.d("Button Clicked","Hello")
+        }
 
-                    EditObject.E_DESCRIPTION = description
-                    EditObject.E_PO_OFFICE =Credentials.DEFAULT_PO
-                    EditObject.E_ENTRY_BY = Credentials.DEFAULT_JUNIOR_ENGINEER
-                    editScreenViewModel.editData(
-                        EditObject.E_SCHOOL_NAME,
-                        EditObject.E_PO_OFFICE,
-                        EditObject.E_IMAGE_NAME,
-                        EditObject.E_ENTRY_BY,
-                        EditObject.E_DESCRIPTION,
-                    )
-                    editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
 
-                        progressDialog!!.dismiss()
-                        // Re-enable the "Upload" button after the upload is completed
-                        buttonSaveImage!!.isEnabled = true
-                        editTextDescription?.setText("")
-
-                        Toast.makeText(
-                            this@EditScreen,
-                            "Uploaded Successfull",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        if (isUploaded) {
-                            // Dismiss the progress dialog
-                            progressDialog!!.dismiss()
-                            // Re-enable the "Upload" button after the upload is completed
-                            buttonSaveImage!!.isEnabled = true
-
-                            Toast.makeText(
-                                this@EditScreen,
-                                "Uploaded Successfull",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                            // redirect to the school list view history
-                        } else {
-                            progressDialog!!.dismiss()
-                            // Re-enable the "Upload" button after the upload is completed
-                            buttonSaveImage!!.isEnabled = true
-                            Toast.makeText(
-                                this@EditScreen,
-                                "Uploaded Failed",
-                                Toast.LENGTH_SHORT
-                            ).show()
-
-                        }
-                    }
-                }
-            }
-        })
+//        buttonSaveImage?.setOnClickListener(object : View.OnClickListener {
+//            override fun onClick(v: View?) {
+//                Log.d("ButtonClicked","Hello")
+//                if (!networkStatusUtility!!.isNetworkAvailable) {
+//                    Toast.makeText(
+//                        this@EditScreen,
+//                        "No internet connection available",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                    return
+//                }
+//                val description = editTextDescription?.text.toString().trim()
+//                if (description.isEmpty()) {
+//                    Toast.makeText(
+//                        this@EditScreen,
+//                        "Please enter a description.",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                } else if (iv_imgView?.drawable == null) {
+//                    Toast.makeText(
+//                        this@EditScreen,
+//                        "Please select an image first.",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                } else if (!imageChanged) {
+//                    Toast.makeText(
+//                        this@EditScreen,
+//                        "Please select an image first",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+//                } else {
+//                    //Initiase Values
+//                    progressDialog = ProgressDialog(this@EditScreen)
+//                    progressDialog?.setTitle("Uploading Image")
+//                    progressDialog?.setMessage("Please wait...")
+//                    progressDialog?.show()
+//                    buttonSaveImage!!.isEnabled = false
+//                    Log.d("EDit Credentials",EditObject.E_PO_OFFICE+ ","+EditObject.E_IMAGE_NAME+","+EditObject.E_DESCRIPTION
+//                    +","+EditObject.E_ENTRY_BY+","+ EditObject.E_SCHOOL_NAME)
+//                    EditObject.E_DESCRIPTION = description
+//                    EditObject.E_PO_OFFICE =Credentials.DEFAULT_PO
+//                    EditObject.E_ENTRY_BY = Credentials.DEFAULT_JUNIOR_ENGINEER
+//                    editScreenViewModel.editData(
+//                        EditObject.E_SCHOOL_NAME,
+//                        EditObject.E_PO_OFFICE,
+//                        EditObject.E_IMAGE_NAME,
+//                        EditObject.E_ENTRY_BY,
+//                        EditObject.E_DESCRIPTION,
+//                    )
+//                    editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
+//
+//                        progressDialog!!.dismiss()
+//                        // Re-enable the "Upload" button after the upload is completed
+//                        buttonSaveImage!!.isEnabled = true
+//                        editTextDescription?.setText("")
+//
+//                        Toast.makeText(
+//                            this@EditScreen,
+//                            "Uploaded Successfull",
+//                            Toast.LENGTH_SHORT
+//                        ).show()
+//                        if (isUploaded) {
+//                            // Dismiss the progress dialog
+//                            progressDialog!!.dismiss()
+//                            // Re-enable the "Upload" button after the upload is completed
+//                            buttonSaveImage!!.isEnabled = true
+//
+//                            Toast.makeText(
+//                                this@EditScreen,
+//                                "Uploaded Successfull",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//                            // redirect to the school list view history
+//                        } else {
+//                            progressDialog!!.dismiss()
+//                            // Re-enable the "Upload" button after the upload is completed
+//                            buttonSaveImage!!.isEnabled = true
+//                            Toast.makeText(
+//                                this@EditScreen,
+//                                "Uploaded Failed",
+//                                Toast.LENGTH_SHORT
+//                            ).show()
+//
+//                        }
+//                    }
+//                }
+//            }
+//        })
 
     }
 

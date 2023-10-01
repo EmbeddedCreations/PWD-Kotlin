@@ -68,6 +68,7 @@ interface ApiInterface {
         @Field("Description") description: String,
         @Field("Tags") tags: String
     ): Response<ImageData>
+
     @FormUrlEncoded
     @POST("AppUpdateBuilding.php")
     suspend fun EditData(
