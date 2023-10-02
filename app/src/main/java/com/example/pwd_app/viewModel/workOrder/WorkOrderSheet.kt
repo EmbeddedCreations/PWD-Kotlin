@@ -37,137 +37,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private var selectedSchool = "Select School"
     private var selectedId = ""
 
-    private fun compareAndSetColor(currentRowIndex: Int) {
-        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
-        val currentProgressRow = tableLayout.getChildAt(currentRowIndex) as TableRow
-        val previousProgressRow = tableLayout.getChildAt(currentRowIndex - 1) as TableRow
-        var allMatch = true
-
-        for (j in 1 until currentProgressRow.childCount) {
-            if (
-                countCheckedCheckboxes(previousProgressRow) < countCheckedCheckboxes(
-                    currentProgressRow
-                ) ||
-                getLastCheckedCheckboxIndex(currentProgressRow) > getLastCheckedCheckboxIndex(
-                    previousProgressRow
-                )
-            ) {
-                allMatch = false
-                break
-            }
-        }
-
-        if (allMatch) {
-            currentProgressRow.setBackgroundColor(Color.TRANSPARENT)
-        } else {
-            currentProgressRow.setBackgroundColor(Color.RED)
-        }
-    }
-
-    private fun countCheckedCheckboxes(row: TableRow): Int {
-        var checkedCount = 0
-        for (i in 1 until row.childCount) {
-            val checkBox = row.getChildAt(i) as CheckBox
-            if (checkBox.isChecked) {
-                checkedCount++
-            }
-        }
-        return checkedCount
-    }
-
-    private fun getLastCheckedCheckboxIndex(row: TableRow): Int {
-        for (i in row.childCount - 1 downTo 1) {
-            val checkBox = row.getChildAt(i) as CheckBox
-            if (checkBox.isChecked) {
-                return i
-            }
-        }
-        return -1 // Return -1 if no checkbox is checked in the row
-    }
-
-    private fun createDynamicTable(
-        numRows: Int,
-        numCols: Int,
-        colLabels: Array<String>,
-        rowLabels: Array<String>,
-        checkboxStates: Array<IntArray>
-    ) {
-        // Create header row with column labels and checkboxes
-        val headerRow = TableRow(requireContext())
-        for (j in 0..numCols) {
-            val textView = TextView(requireContext())
-            textView.text = if (j == 0) "" else colLabels[j - 1]
-            headerRow.addView(textView)
-
-            // Add three more checkboxes under each column in the header
-            for (k in 0..2) {
-                val checkBox = CheckBox(requireContext())
-                checkBox.visibility = View.INVISIBLE
-                headerRow.addView(checkBox)
-            }
-        }
-        tableLayout.addView(headerRow)
-
-        // Create rows with labels and checkboxes
-        for (i in 1..numRows) {
-            val row = TableRow(requireContext())
-            for (j in 0..numCols) {
-                if (j == 0) {
-                    // Add row label (without checkbox)
-                    val textView = TextView(requireContext())
-                    textView.text = rowLabels[i - 1]
-                    row.addView(textView)
-                } else {
-                    // Add four checkboxes in the data cells (including the new row)
-                    for (k in 0..3) {
-                        val checkboxIndex = (j - 1) * 4 + k // Make 'j' effectively final
-                        val columnIndex = j // Make 'j' effectively final
-                        val checkBox = CheckBox(requireContext())
-
-                        // Check if the checkbox should be checked based on the checkboxStates array
-                        checkBox.isChecked = checkboxStates[i - 1][checkboxIndex] == 1
-
-                        // Add an OnCheckedChangeListener to prevent unchecking and update the array
-                        checkBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
-                            if (!isChecked) {
-                                // If the checkbox is unchecked, force it to be checked
-                                checkBox.isChecked = true
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Checkbox is now checked and cannot be unchecked.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                return@OnCheckedChangeListener
-                            }
-
-                            // Update the corresponding value in the checkboxStates array
-                            val rowIndex = tableLayout.indexOfChild(row)
-                            val checkboxArrayIndex = (columnIndex - 1) * 4 + k
-                            checkboxStates[rowIndex - 1][checkboxArrayIndex] =
-                                if (isChecked) 1 else 0
-
-                            // Print the updated array to the console
-                            for (i in 0 until numRows) {
-                                for (j in 0 until numCols * 4) {
-                                    print(checkboxStates[i][j].toString() + " ")
-                                }
-                                println() // Move to the next row
-                            }
-                            // Call the function to compare and set the background color for the current row
-                            compareAndSetColor(rowIndex)
-                        })
-                        // Set checkboxes in even rows to be disabled
-                        if ((i - 1) % 2 == 0) {
-                            checkBox.isEnabled = false
-                        }
-                        row.addView(checkBox)
-                    }
-                }
-            }
-            tableLayout.addView(row)
-        }
-    }
-
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -358,6 +227,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                             )
                         }
                     }
+
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
         }
@@ -375,6 +245,138 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         return view
     }
 
+    private fun compareAndSetColor(currentRowIndex: Int) {
+        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
+        val currentProgressRow = tableLayout.getChildAt(currentRowIndex) as TableRow
+        val previousProgressRow = tableLayout.getChildAt(currentRowIndex - 1) as TableRow
+        var allMatch = true
+
+        for (j in 1 until currentProgressRow.childCount) {
+            if (
+                countCheckedCheckboxes(previousProgressRow) < countCheckedCheckboxes(
+                    currentProgressRow
+                ) ||
+                getLastCheckedCheckboxIndex(currentProgressRow) > getLastCheckedCheckboxIndex(
+                    previousProgressRow
+                )
+            ) {
+                allMatch = false
+                break
+            }
+        }
+
+        if (allMatch) {
+            currentProgressRow.setBackgroundColor(Color.TRANSPARENT)
+        } else {
+            currentProgressRow.setBackgroundColor(Color.RED)
+        }
+    }
+
+    private fun countCheckedCheckboxes(row: TableRow): Int {
+        var checkedCount = 0
+        for (i in 1 until row.childCount) {
+            val checkBox = row.getChildAt(i) as CheckBox
+            if (checkBox.isChecked) {
+                checkedCount++
+            }
+        }
+        return checkedCount
+    }
+
+    private fun getLastCheckedCheckboxIndex(row: TableRow): Int {
+        for (i in row.childCount - 1 downTo 1) {
+            val checkBox = row.getChildAt(i) as CheckBox
+            if (checkBox.isChecked) {
+                return i
+            }
+        }
+        return -1 // Return -1 if no checkbox is checked in the row
+    }
+
+    private fun createDynamicTable(
+        numRows: Int,
+        numCols: Int,
+        colLabels: Array<String>,
+        rowLabels: Array<String>,
+        checkboxStates: Array<IntArray>
+    ) {
+        // Create header row with column labels and checkboxes
+        val headerRow = TableRow(requireContext())
+        for (j in 0..numCols) {
+            val textView = TextView(requireContext())
+            textView.text = if (j == 0) "" else colLabels[j - 1]
+            headerRow.addView(textView)
+
+            // Add three more checkboxes under each column in the header
+            for (k in 0..2) {
+                val checkBox = CheckBox(requireContext())
+                checkBox.visibility = View.INVISIBLE
+                headerRow.addView(checkBox)
+            }
+        }
+        tableLayout.addView(headerRow)
+
+        // Create rows with labels and checkboxes
+        for (i in 1..numRows) {
+            val row = TableRow(requireContext())
+            for (j in 0..numCols) {
+                if (j == 0) {
+                    // Add row label (without checkbox)
+                    val textView = TextView(requireContext())
+                    textView.text = rowLabels[i - 1]
+                    row.addView(textView)
+                } else {
+                    // Add four checkboxes in the data cells (including the new row)
+                    for (k in 0..3) {
+                        val checkboxIndex = (j - 1) * 4 + k // Make 'j' effectively final
+                        val columnIndex = j // Make 'j' effectively final
+                        val checkBox = CheckBox(requireContext())
+
+                        // Check if the checkbox should be checked based on the checkboxStates array
+                        checkBox.isChecked = checkboxStates[i - 1][checkboxIndex] == 1
+
+                        // Add an OnCheckedChangeListener to prevent unchecking and update the array
+                        checkBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
+                            if (!isChecked) {
+                                // If the checkbox is unchecked, force it to be checked
+                                checkBox.isChecked = true
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Checkbox is now checked and cannot be unchecked.",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@OnCheckedChangeListener
+                            }
+
+                            // Update the corresponding value in the checkboxStates array
+                            val rowIndex = tableLayout.indexOfChild(row)
+                            val checkboxArrayIndex = (columnIndex - 1) * 4 + k
+                            checkboxStates[rowIndex - 1][checkboxArrayIndex] =
+                                if (isChecked) 1 else 0
+
+                            // Print the updated array to the console
+                            for (i in 0 until numRows) {
+                                for (j in 0 until numCols * 4) {
+                                    print(checkboxStates[i][j].toString() + " ")
+                                }
+                                println() // Move to the next row
+                            }
+                            // Call the function to compare and set the background color for the current row
+                            compareAndSetColor(rowIndex)
+                        })
+                        // Set checkboxes in even rows to be disabled
+                        if ((i - 1) % 2 == 0) {
+                            checkBox.isEnabled = false
+                        }
+                        row.addView(checkBox)
+                    }
+                }
+            }
+            tableLayout.addView(row)
+        }
+    }
+
+
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
         val selectedItem = spinnerSchool.selectedItem as? String
         Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
@@ -382,7 +384,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
         selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
         Credentials.SELECTED_SCHOOL_ID = selectedId
-        Log.d("ID",selectedId)
+        Log.d("ID", selectedId)
 
     }
 

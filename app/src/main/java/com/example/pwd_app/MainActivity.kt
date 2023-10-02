@@ -1,5 +1,6 @@
 package com.example.pwd_app
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -32,8 +33,11 @@ class MainActivity : AppCompatActivity() {
 
         val loginApiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(applicationContext)
-        val loginRepository = LoginRepository(loginApiInterface,database,applicationContext)
-        loginViewModel = ViewModelProvider(this, LoginViewModelFactory(loginRepository))[LoginViewModel::class.java]
+        val loginRepository = LoginRepository(loginApiInterface, database, applicationContext)
+        loginViewModel = ViewModelProvider(
+            this,
+            LoginViewModelFactory(loginRepository)
+        )[LoginViewModel::class.java]
 
         supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
         bottomNavigationView = findViewById(R.id.bottom_navigation)
@@ -44,6 +48,7 @@ class MainActivity : AppCompatActivity() {
                         .commit()
                     return@OnItemSelectedListener true
                 }
+
                 R.id.profile -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.container, profile).commit()
@@ -51,14 +56,17 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.progress -> {
-                    if(Credentials.SELECTED_WORKORDER_NUMBER != ""){
+                    if (Credentials.SELECTED_WORKORDER_NUMBER != "") {
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, workOrderSheet).commit()
                         return@OnItemSelectedListener true
-                    }else{
-                        Toast.makeText(this,"Only Available For Work Order Specific Works/Surveys", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Only Available For Work Order Specific Works/Surveys",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
-
                 }
 //                R.id.analytics -> {
 //                    supportFragmentManager.beginTransaction()
@@ -68,5 +76,19 @@ class MainActivity : AppCompatActivity() {
             }
             false
         })
+    }
+
+    override fun onBackPressed() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Exit App")
+            .setMessage("Are you sure you want to exit the app?")
+            .setPositiveButton("Exit") { dialogInterface, i ->
+                super@MainActivity.onBackPressed()
+            }
+            .setNegativeButton("Cancel") { dialogInterface, i ->
+                // Do nothing or add specific handling for cancel
+            }
+            .setCancelable(false)
+            .show()
     }
 }
