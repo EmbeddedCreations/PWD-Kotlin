@@ -213,7 +213,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                     ).show()
                     return
                 }
-                val description = editTextDescription?.text.toString().trim()
+                val description = editTextDescription.text.toString().trim()
                 if (description.isEmpty()) {
                     Toast.makeText(
                         requireContext(),
@@ -239,7 +239,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                     progressDialog?.setMessage("Please wait...")
                     progressDialog?.show()
                     buttonUploadImage!!.isEnabled = false
-                    var Tags = Arrays.toString(selectedIssuesList.toTypedArray())
+                    var Tags = selectedIssuesList.toTypedArray().contentToString()
                     Tags = Tags.substring(1, Tags.length - 1)
                     val finalTags = Tags
                     val bitmap = (iv_imgView!!.drawable as BitmapDrawable).bitmap
@@ -277,7 +277,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                         progressDialog!!.dismiss()
                         // Re-enable the "Upload" button after the upload is completed
                         buttonUploadImage!!.isEnabled = true
-                        editTextDescription?.setText("")
+                        editTextDescription.setText("")
                         iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
                         selectedIssuesList.clear()
                         textView?.text = ""
@@ -294,7 +294,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                             progressDialog!!.dismiss()
                             // Re-enable the "Upload" button after the upload is completed
                             buttonUploadImage!!.isEnabled = true
-                            editTextDescription?.setText("")
+                            editTextDescription.setText("")
                             iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
                             selectedIssuesList.clear()
                             textView?.text = ""
@@ -321,7 +321,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         })
 
         buttonSaveImage?.setOnClickListener {
-            val description = editTextDescription?.text.toString().trim()
+            val description = editTextDescription.text.toString().trim()
             if (description.isEmpty()) {
                 Toast.makeText(
                     requireContext(),
@@ -377,7 +377,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                     val insertedRowId = database.Dao().insertIntoLocalDb(imagedata)
 
                     if (insertedRowId != -1L) {
-                        editTextDescription?.setText("")
+                        editTextDescription.setText("")
                         iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
                         selectedIssuesList.clear()
                         textView?.text = ""
@@ -402,7 +402,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         textView = requireView().findViewById<TextView>(R.id.textViewTags)
-        textView?.setOnClickListener(View.OnClickListener {
+        textView?.setOnClickListener {
             val builder = AlertDialog.Builder(requireContext())
             builder.setTitle("Select Major Problems")
             builder.setCancelable(false)
@@ -426,7 +426,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                 textView?.text = ""
             }
             builder.show()
-        })
+        }
 
         pickImageButton?.setOnClickListener { showImageOptionsDialog() }
         iv_imgView?.setOnClickListener { showImageOptionsDialog() }
@@ -459,9 +459,6 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
         encodedImage = Base64.encodeToString(byteOfImages, Base64.DEFAULT)
     }
 
-//    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
-//        // Not implemented yet
-//    }
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
     // Handle item selection here
         when (parent?.id) {
