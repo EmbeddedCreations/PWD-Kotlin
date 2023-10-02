@@ -45,6 +45,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val database = DatabaseHelper.getDatabase(requireContext())
         val homeRepository = HomeRepository(apiInterface, database, requireContext())
         val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
+        
         homeViewModel =
             ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
         workOrderViewModel = ViewModelProvider(

@@ -190,7 +190,6 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
 
                 if (imageData.isNotEmpty()) { // Check if there is data to upload
                     try {
-                        for (item in imageData) {
                             for (item in imageData) {
                                 val schoolName = item.school_Name ?: ""
                                 val poOffice = item.po_office ?: ""
@@ -243,7 +242,6 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
                                 }
                                 .create()
                             successDialog.show()
-                        }
                     } catch (e: Exception) {
                         // Show a failure AlertDialog
                         val failureDialog = AlertDialog.Builder(requireContext())
