@@ -2,13 +2,11 @@ package com.example.pwd_app
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
-import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.LoginRepository
 import com.example.pwd_app.viewModel.Analytics.Analytics
 import com.example.pwd_app.viewModel.home.Home
