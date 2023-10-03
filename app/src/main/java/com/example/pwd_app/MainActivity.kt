@@ -10,6 +10,7 @@ import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.LoginRepository
+import com.example.pwd_app.viewModel.Analytics.Analytics
 import com.example.pwd_app.viewModel.home.Home
 import com.example.pwd_app.viewModel.login.LoginViewModel
 import com.example.pwd_app.viewModel.login.LoginViewModelFactory
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
     private var homeFragment: Home = Home()
     private var profile: Profile = Profile()
     private var workOrderSheet: WorkOrderSheet = WorkOrderSheet()
+    private var analytics: Analytics = Analytics()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,23 +58,15 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.progress -> {
-                    if (Credentials.SELECTED_WORKORDER_NUMBER != "") {
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, workOrderSheet).commit()
                         return@OnItemSelectedListener true
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "Only Available For Work Order Specific Works/Surveys",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
                 }
-//                R.id.analytics -> {
-//                    supportFragmentManager.beginTransaction()
-//                        .replace(R.id.container, AnalyticsFragment).commit()
-//                    return@OnItemSelectedListener true
-//                }
+                R.id.analytics -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, analytics).commit()
+                    return@OnItemSelectedListener true
+                }
             }
             false
         })

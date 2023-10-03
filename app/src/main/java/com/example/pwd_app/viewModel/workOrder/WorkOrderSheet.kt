@@ -36,7 +36,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
     private var selectedSchool = "Select School"
     private var selectedId = ""
-    var selectedWorkOrderNumber = "NA"
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -61,34 +60,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerSchool.adapter = adapter
         }
-//        homeViewModel.workOrders.observe(viewLifecycleOwner) { workOrderList ->
-//            val workOrders = mutableListOf("Select Workorder")
-//            workOrders.addAll(workOrderList
-//                .filter { it.Unq_ID == selectedId }
-//                .map { it.WorkorderNumber.toString() })
-//            val adapter = ArrayAdapter(
-//                requireContext(),
-//                android.R.layout.simple_spinner_item,
-//                workOrders
-//            )
-//            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-//            workOrderDropdown.adapter = adapter
-//
-//            workOrderDropdown.onItemSelectedListener =
-//                object : AdapterView.OnItemSelectedListener {
-//                    override fun onItemSelected(
-//                        parent: AdapterView<*>,
-//                        view: View,
-//                        position: Int,
-//                        id: Long
-//                    ) {
-//                        selectedWorkOrderNumber = parent.getItemAtPosition(position).toString()
-//                        Credentials.SELECTED_WORKORDER_NUMBER = selectedWorkOrderNumber
-//                    }
-//
-//                    override fun onNothingSelected(parent: AdapterView<*>?) {}
-//                }
-//        }
+
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
             val workOrders = mutableListOf("Select Work Order")
             workOrders.addAll(timeLines
