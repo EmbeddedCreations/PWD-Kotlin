@@ -2,10 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/purple_500"
     android:orientation="vertical">
 
-    <!--on below line we are adding an image view-->
+    <ImageView
+        android:foreground="@drawable/foreground"
+        android:id="@+id/imageView2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/background"
+        android:scaleType="centerCrop"/>
+
     <ImageView
         android:id="@+id/idIVLogo"
         android:layout_width="wrap_content"
@@ -15,7 +21,6 @@
         android:src="@drawable/logom"
         android:contentDescription="@string/launch_logo" />
 
-    <!--on below line we are creating progress bar-->
     <ProgressBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
