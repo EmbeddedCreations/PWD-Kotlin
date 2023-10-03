@@ -42,7 +42,6 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
     var selectedWorkorder = "Select Visit Type"
     var selectedId = ""
     var selectedBuilding = "Select Building"
-
     var selectedWorkOrderNumber = "NA"
 
     //Buttons And TextViews
@@ -226,7 +225,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                     textViewSecondDropdownTitle.visibility = View.VISIBLE
                     spinnerSecondDropdown.visibility = View.VISIBLE
                     homeViewModel.workOrders.observe(viewLifecycleOwner) { workOrderList ->
-                        val workOrders = mutableListOf("Select Visit Type")
+                        val workOrders = mutableListOf("Select Workorder")
                         workOrders.addAll(workOrderList
                             .filter { it.Unq_ID == selectedId }
                             .map { it.WorkorderNumber.toString() })
