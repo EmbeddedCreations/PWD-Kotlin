@@ -36,7 +36,6 @@ import com.squareup.picasso.Picasso
 class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var editScreenViewModel: EditScreenViewModel
-
     private var buttonSaveImage: Button? = null
     private var editTextDescription: EditText? = null
     private var progressDialog: ProgressDialog? = null
@@ -193,7 +192,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
             else -> {
                 // Initialize Values
-                showProgressDialog()
+                //showProgressDialog()
                 buttonSaveImage?.isEnabled = false
 
                 // Set EditObject values
@@ -211,7 +210,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 )
                 editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
                     // Dismiss the progress dialog in any case (success or failure)
-                    dismissProgressDialog()
+                    //dismissProgressDialog()
                     buttonSaveImage?.isEnabled = true
                     editTextDescription?.setText("")
 
