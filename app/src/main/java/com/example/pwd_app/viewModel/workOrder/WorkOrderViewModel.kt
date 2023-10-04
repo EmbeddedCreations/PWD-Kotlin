@@ -15,6 +15,13 @@ class WorkOrderViewModel(
     private val homeRepository: HomeRepository
 ):ViewModel() {
 
+    fun fetchTimeline(){
+        viewModelScope.launch{
+            timeLineRepository.getTimeline(Credentials.DEFAULT_PO)
+            homeRepository.getWorkOrders()
+        }
+    }
+
     init{
         viewModelScope.launch{
             timeLineRepository.getTimeline(Credentials.DEFAULT_PO)

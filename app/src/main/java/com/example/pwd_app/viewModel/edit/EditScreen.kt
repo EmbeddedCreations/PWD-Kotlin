@@ -7,17 +7,11 @@ import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
 import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageView
-import android.widget.Spinner
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import com.squareup.picasso.Picasso
 import com.example.pwd_app.R
 import com.example.pwd_app.Utilities.General
 import com.example.pwd_app.data.local.DatabaseHelper
@@ -31,19 +25,18 @@ import com.example.pwd_app.repository.UploadRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 import com.example.pwd_app.viewModel.schoolDisplay.SchoolDisplay
-import com.squareup.picasso.Picasso
 
 class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
+
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var editScreenViewModel: EditScreenViewModel
-    private var buttonSaveImage: Button? = null
-    private var editTextDescription: EditText? = null
-    private var progressDialog: ProgressDialog? = null
-    private var networkStatusUtility: NetworkStatusUtility? = null
-    private var status: ImageView? = null
-    private var imageView: ImageView? = null
+    private lateinit var buttonSaveImage: Button
+    private lateinit var editTextDescription: EditText
+    private lateinit var progressDialog: ProgressDialog
+    private lateinit var networkStatusUtility: NetworkStatusUtility
+    private lateinit var status: ImageView
+    private lateinit var imageView: ImageView
     private lateinit var spinnerBuilding: Spinner
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,38 +61,41 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinnerBuilding = findViewById(R.id.spinnerBuilding) // Replace with your actual spinner ID
 
         networkStatusUtility = NetworkStatusUtility(this)
-        if (networkStatusUtility!!.isNetworkAvailable) {
-            status?.setImageResource(R.drawable.online)
+        if (networkStatusUtility.isNetworkAvailable) {
+            status.setImageResource(R.drawable.online)
         } else {
-            status?.setImageResource(R.drawable.offline)
+            status.setImageResource(R.drawable.offline)
         }
+
         // Capture a reference to networkStatusUtility in a local variable
         val utility = networkStatusUtility
 
-        utility?.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
+        utility.startMonitoringNetworkStatus(object : NetworkStatusUtility.NetworkStatusListener {
             override fun onNetworkAvailable() {
                 mainHandler.post {
-                    status?.setImageResource(R.drawable.online)
-                    buttonSaveImage?.isEnabled = true
-                    buttonSaveImage?.alpha = 1.0f
-                    status?.setOnClickListener { showToast("Online") }
+                    status.setImageResource(R.drawable.online)
+                    buttonSaveImage.isEnabled = true
+                    buttonSaveImage.alpha = 1.0f
+                    status.setOnClickListener { showToast("Online") }
                 }
             }
 
             override fun onNetworkLost() {
                 mainHandler.post {
-                    status?.setImageResource(R.drawable.offline)
-                    buttonSaveImage?.isEnabled = false
-                    buttonSaveImage?.alpha = 0.5f
-                    status?.setOnClickListener { showToast("Offline") }
+                    status.setImageResource(R.drawable.offline)
+                    buttonSaveImage.isEnabled = false
+                    buttonSaveImage.alpha = 0.5f
+                    status.setOnClickListener { showToast("Offline") }
                 }
             }
         })
+
         // Retrieve the image URL or resource identifier from the intent
         val imageUrl = intent.getStringExtra("image_url")
         val description = intent.getStringExtra("description")
         val buildingName = intent.getStringExtra("building_name")
         EditObject.E_IMAGE_NAME = buildingName.toString()
+
         // Find the ImageView in your EditScreen layout
         imageView = findViewById(R.id.image_view)
         val descriptionTextView = findViewById<TextView>(R.id.displayedText)
@@ -110,7 +106,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             .placeholder(R.drawable.uploadfile) // Placeholder image from drawable
             .error(R.drawable.imgnotfound) // Image to show if loading from URL fails
             .into(imageView)
-        val editTextDescription: EditText = findViewById(R.id.editTextDescription)
+
         val maxLength = 300 // Set your desired maximum length
         val filterArray = arrayOfNulls<InputFilter>(1)
         filterArray[0] = InputFilter.LengthFilter(maxLength)
@@ -142,7 +138,6 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerBuilding.adapter = adapter
         }
-
     }
 
     private fun showToast(statusText: String) {
@@ -174,16 +169,16 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     fun submit(view: View) {
-        if (networkStatusUtility == null || !networkStatusUtility!!.isNetworkAvailable) {
+        if (networkStatusUtility == null || !networkStatusUtility.isNetworkAvailable) {
             showToast("No internet connection available")
             return
         }
 
-        val description = editTextDescription?.text?.toString()?.trim()
-        val imageViewDrawable = imageView?.drawable
+        val description = editTextDescription.text.toString().trim()
+        val imageViewDrawable = imageView.drawable
 
         when {
-            description.isNullOrEmpty() -> showToast("Please enter a description.")
+            description.isEmpty() -> showToast("Please enter a description.")
             imageViewDrawable == null -> showToast("Please select an image first.")
             imageViewDrawable.constantState == ContextCompat.getDrawable(
                 this,
@@ -193,7 +188,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             else -> {
                 // Initialize Values
                 //showProgressDialog()
-                buttonSaveImage?.isEnabled = false
+                buttonSaveImage.isEnabled = false
 
                 // Set EditObject values
                 EditObject.E_DESCRIPTION = description
@@ -211,8 +206,8 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
                     // Dismiss the progress dialog in any case (success or failure)
                     //dismissProgressDialog()
-                    buttonSaveImage?.isEnabled = true
-                    editTextDescription?.setText("")
+                    buttonSaveImage.isEnabled = true
+                    editTextDescription.text.clear()
 
                     if (isUploaded) {
                         Toast.makeText(this@EditScreen, "Uploaded Successfully", Toast.LENGTH_SHORT)
@@ -242,21 +237,21 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private fun showProgressDialog() {
         progressDialog = ProgressDialog(this@EditScreen)
-        progressDialog?.setTitle("Uploading Image")
-        progressDialog?.setMessage("Please wait...")
-        progressDialog?.setCancelable(false) // Prevent users from dismissing the dialog
-        progressDialog?.show()
+        progressDialog.setTitle("Uploading Image")
+        progressDialog.setMessage("Please wait...")
+        progressDialog.setCancelable(false) // Prevent users from dismissing the dialog
+        progressDialog.show()
         isProgressDialogShowing = true
     }
 
     private fun dismissProgressDialog() {
-        progressDialog?.dismiss()
+        progressDialog.dismiss()
         isProgressDialogShowing = false
     }
 
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(this)
-        builder.setTitle("Data will be lost, plz complete editing then go back")
+        builder.setTitle("Data will be lost, please complete editing then go back")
             .setMessage("Are you sure?")
             .setPositiveButton(
                 "OK"
@@ -272,7 +267,6 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        TODO("Not yet implemented")
+        // Handle nothing selected if needed
     }
-
 }

@@ -46,14 +46,15 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val homeRepository = HomeRepository(apiInterface, database, requireContext())
         val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
         
-        homeViewModel =
-            ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
+        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
+
         workOrderViewModel = ViewModelProvider(
             this,
             WorkOrderViewModelFactory(timeLineRepository, homeRepository)
         )[WorkOrderViewModel::class.java]
         workOrderDropdown = requireView().findViewById(R.id.workOrder)
         spinnerSchool = requireView().findViewById(R.id.SelectedSchool)
+        spinnerSchool.onItemSelectedListener = this
         homeViewModel.schools.observe(viewLifecycleOwner) { schoolList ->
             val schools = schoolList.map { it.school_name.toString() }
             val adapter =
@@ -61,17 +62,18 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             spinnerSchool.adapter = adapter
         }
-
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
+            Log.d("timelines", timeLines.filter { it.school_name.toString().trim() != "Doma"}.toString())
+            Log.d("selected",Credentials.SELECTED_SCHOOL_FOR_WO)
             val workOrders = mutableListOf("Select Work Order")
             workOrders.addAll(timeLines
-                .filter { it.school_name == Credentials.SELECTED_SCHOOL_FOR_WO }
-                .map { it.workorder_no.toString() })
-            println(workOrders.toString())
-            println(Credentials.SELECTED_SCHOOL_FOR_WO)
-            println(Credentials.SELECTED_WORKORDER_NUMBER)
-            val adapter =
-                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
+                .filter { it.school_name.toString().trim() == Credentials.SELECTED_SCHOOL_FOR_WO.trim() }
+                .map { it.workorder_no.toString() }
+                .distinct())
+
+
+
+            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             workOrderDropdown.adapter = adapter
 
@@ -198,9 +200,8 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                             return timeLines
                                 .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
                                 .flatMap {
-                                    listOf(
-                                        "${it.itemofwork} Schedule",
-                                        "${it.itemofwork} progress"
+                                    listOfNotNull(
+                                        it.itemofwork
                                     )
                                 }
                                 .toTypedArray()
@@ -235,6 +236,9 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
         }
+
+
+
     }
 
     override fun onCreateView(
@@ -246,6 +250,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val view = inflater.inflate(R.layout.workorder_checksheet, container, false)
 
         tableLayout = view.findViewById(R.id.tableLayout)
+
         return view
     }
 
@@ -381,16 +386,23 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
 
-    override fun onItemSelected(p0: AdapterView<*>?, p1: View?, position: Int, id: Long) {
-        val selectedItem = spinnerSchool.selectedItem as? String
-        Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
-        selectedSchool = selectedItem ?: ""
+    override fun onItemSelected(parent: AdapterView<*>?, p1: View?, position: Int, id: Long) {
+        when (parent?.id) {
+            R.id.SelectedSchool->{
+                val selectedItem = spinnerSchool.selectedItem as? String
+                Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
+                selectedSchool = selectedItem ?: ""
 
-        selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
-        Credentials.SELECTED_SCHOOL_ID = selectedId
-        Log.d("ID", selectedId)
+                selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
+                workOrderViewModel.fetchTimeline()
+                Credentials.SELECTED_SCHOOL_FOR_WO = selectedSchool
+                Log.d("selected School",Credentials.SELECTED_SCHOOL_FOR_WO)
+            }
 
+        }
     }
+
+
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         TODO("Not yet implemented")
