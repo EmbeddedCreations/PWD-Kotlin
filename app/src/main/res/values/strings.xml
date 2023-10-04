@@ -45,4 +45,7 @@
     <string name="workorder_no">Workorder No</string>
     <string name="schools">School</string>
     <string name="fetch_workorder">fetch workorder</string>
+    <string name="select_workorder">Select Workorder:</string>
+    <string name="view_progress">view progress</string>
+    <string name="workorder_progress_check">Workorder Progress Check</string>
 </resources>

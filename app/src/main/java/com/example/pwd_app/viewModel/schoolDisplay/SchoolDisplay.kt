@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +19,8 @@ import com.example.pwd_app.model.Schools
 class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var schoolDisplayViewModel: SchoolDisplayViewModel
     private lateinit var recyclerView: RecyclerView
+    private lateinit var record: ImageView
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -29,6 +33,8 @@ class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener {
             SchoolDisplayViewModelFactory(apiInterface)
         )[SchoolDisplayViewModel::class.java]
         recyclerView = view.findViewById(R.id.schoolRecyclerView)
+        record = view.findViewById(R.id.noDataImageView)
+
 
         // Set up RecyclerView layout manager and adapter
         val layoutManager = LinearLayoutManager(requireContext())
@@ -36,7 +42,8 @@ class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener {
 
         recyclerView.layoutManager = layoutManager
 
-        // Observe the LiveData and update the adapter
+
+// Observe the LiveData and update the adapter
         schoolDisplayViewModel.schoolList.observe(viewLifecycleOwner) { data ->
             val groupedData = data.groupBy { it.school_name }
 
@@ -45,9 +52,18 @@ class SchoolDisplay : Fragment(), AdapterView.OnItemSelectedListener {
                 val distinctImageNames = schoolDataList.map { it.image_name }.distinct()
                 Schools(schoolName, distinctImageNames.joinToString())
             }
-            recyclerView.adapter = SchoolAdapter(schoolsList)
-        }
 
+            if (schoolsList.isEmpty()) {
+                // If the list is empty, show the "Nothing to show" message
+                recyclerView.visibility = View.GONE
+                record.visibility = View.VISIBLE
+            } else {
+                // If the list is not empty, display the RecyclerView and hide the message
+                recyclerView.visibility = View.VISIBLE
+                record.visibility = View.GONE
+                recyclerView.adapter = SchoolAdapter(schoolsList)
+            }
+        }
 
         // Fetch data when the fragment is created or as needed
         schoolDisplayViewModel.fetchSchoolData()

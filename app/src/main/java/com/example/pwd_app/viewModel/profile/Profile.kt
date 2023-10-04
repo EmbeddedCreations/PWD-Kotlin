@@ -21,6 +21,7 @@ import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
 import com.example.pwd_app.repository.LocalDatabaseRepository
+import com.example.pwd_app.viewModel.Progress.WorkProgress
 import com.example.pwd_app.viewModel.localDbView.LocalDbView
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModel
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModelFactory
@@ -41,6 +42,7 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var juniorEngineerNameText: TextView
     private lateinit var viewHistoryButton: Button
     private lateinit var logOutButton: Button
+    private lateinit var workorderProgress: Button
     private lateinit var status: ImageView
     private lateinit var networkStatusUtility: NetworkStatusUtility
     private lateinit var viewLocalDBButton: Button
@@ -80,6 +82,7 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
         juniorEngineerNameText = view.findViewById(R.id.junior_engineer_name_text)
         viewHistoryButton = view.findViewById(R.id.view_history_button)
         logOutButton = view.findViewById(R.id.logOutButton)
+        workorderProgress = view.findViewById(R.id.progressButton)
         status = view.findViewById(R.id.statusIcon)
         viewLocalDBButton = view.findViewById(R.id.view_db_button)
         uploadDbButton = requireView().findViewById(R.id.upload_db_button)
@@ -298,6 +301,10 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
         logOutButton.setOnClickListener {
             // Show a logout confirmation dialog
             showLogoutConfirmationDialog()
+        }
+        workorderProgress.setOnClickListener {
+            val intent = Intent(context, WorkProgress::class.java)
+            context?.startActivity(intent)
         }
 
     }

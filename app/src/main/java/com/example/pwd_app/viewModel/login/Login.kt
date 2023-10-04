@@ -8,6 +8,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.Toast
@@ -20,6 +21,7 @@ import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.LoginRepository
+
 
 class Login : AppCompatActivity() {
     private lateinit var loginViewModel: LoginViewModel
@@ -53,6 +55,11 @@ class Login : AppCompatActivity() {
         val selectJuniorEngineerSpinner = findViewById<Spinner>(R.id.select_junior_engineer)
         val passwordEditText = findViewById<EditText>(R.id.password)
         val loginButton = findViewById<Button>(R.id.login_button)
+        // Eye button for password visibility
+
+        // Eye button for password visibility
+        val eyeButton = findViewById<ImageView>(R.id.eye_button)
+        eyeButton.setOnClickListener { togglePasswordVisibility() }
 
         // Check if the user is already logged in, and if so, redirect them to MainActivity
         if (sessionManager.isLoggedIn()) {
@@ -199,5 +206,14 @@ class Login : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+    private fun togglePasswordVisibility() {
+        val passwordEditText = findViewById<EditText>(com.example.pwd_app.R.id.password)
+        if (passwordEditText.inputType == 129) { // 129 corresponds to InputType.TYPE_TEXT_VARIATION_PASSWORD
+            passwordEditText.inputType = 1 // InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+        } else {
+            passwordEditText.inputType = 129
+        }
+        passwordEditText.setSelection(passwordEditText.text.length) // Move cursor to the end of the text
     }
 }
