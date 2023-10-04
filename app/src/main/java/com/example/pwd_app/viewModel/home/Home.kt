@@ -207,7 +207,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinnerBuilding.adapter = adapter
                     homeViewModel.getWorkOrder()
-                    
+
                 }
             }
 
