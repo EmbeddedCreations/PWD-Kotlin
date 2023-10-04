@@ -296,6 +296,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
         return view
     }
+
     private fun disableColumns(count: Int) {
         val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
 
@@ -467,7 +468,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         }
         saveWorkorder.visibility = View.VISIBLE
     }
-
 
     override fun onItemSelected(parent: AdapterView<*>?, p1: View?, position: Int, id: Long) {
         when (parent?.id) {
