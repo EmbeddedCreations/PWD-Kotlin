@@ -47,6 +47,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
     //Buttons And TextViews
     private lateinit var spinnerSchool: Spinner
     private lateinit var spinnerBuilding: Spinner
+    private lateinit var spinnerSecondDropdown : Spinner
     private lateinit var spinnerWorkorder: Spinner
     private lateinit var textViewSelectedDate: TextView
     private lateinit var buttonSurvey: Button
@@ -88,6 +89,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         buttonSurvey = view.findViewById(R.id.buttonSurvey)
         textViewLoggedIn = view.findViewById(R.id.textViewLoggedIn)
         textViewAtc = view.findViewById(R.id.atc)
+        spinnerSecondDropdown = view.findViewById(R.id.spinnerSecondDropdown)
         textViewPoOffice = view.findViewById(R.id.po)
 
         //NetworkStatus
@@ -191,7 +193,6 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
 
                 selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
                 Credentials.SELECTED_SCHOOL_ID = selectedId
-                Log.d("ID",selectedId)
 
                 homeViewModel.buildings.observe(viewLifecycleOwner) { buildingList ->
                     val buildings = mutableListOf("Select Building")
@@ -205,6 +206,8 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                     )
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     spinnerBuilding.adapter = adapter
+                    homeViewModel.getWorkOrder()
+                    
                 }
             }
 
@@ -220,8 +223,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                 if (selectedWorkorder == "Workorder related Inspection") {
                     val textViewSecondDropdownTitle =
                         requireView().findViewById<TextView>(R.id.textViewSecondDropdownTitle)
-                    val spinnerSecondDropdown =
-                        requireView().findViewById<Spinner>(R.id.spinnerSecondDropdown)
+
                     textViewSecondDropdownTitle.visibility = View.VISIBLE
                     spinnerSecondDropdown.visibility = View.VISIBLE
                     homeViewModel.workOrders.observe(viewLifecycleOwner) { workOrderList ->

@@ -63,7 +63,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             spinnerSchool.adapter = adapter
         }
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
-            Log.d("timelines", timeLines.toString())
+            Log.d("timelines", timeLines.filter { it.school_name.toString().trim() != "Doma"}.toString())
             Log.d("selected",Credentials.SELECTED_SCHOOL_FOR_WO)
             val workOrders = mutableListOf("Select Work Order")
             workOrders.addAll(timeLines
@@ -71,7 +71,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                 .map { it.workorder_no.toString() }
                 .distinct())
 
-            Log.d("workOrders",workOrders.toString())
+
 
             val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
