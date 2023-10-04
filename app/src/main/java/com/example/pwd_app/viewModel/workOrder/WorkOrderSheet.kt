@@ -43,6 +43,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private var selectedId = ""
     private lateinit var progressBar: ProgressBar
     private var loadingDialog: Dialog? = null
+    private var disableColumnCounter = 0
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -74,6 +75,25 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                 dismissLoadingDialog()
             }
         }
+
+        // Set an OnClickListener for the saveWorkorder button
+        saveWorkorder.setOnClickListener {
+            // Increment the counter
+            disableColumnCounter++
+
+            // Disable columns based on the counter value (up to a maximum of 96 columns)
+            if (disableColumnCounter <= 96) {
+                disableColumns(disableColumnCounter)
+            } else {
+                // Show a message when the maximum limit is reached
+                Toast.makeText(
+                    requireContext(),
+                    "Maximum limit of 96 columns reached.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
         spinnerSchool.onItemSelectedListener = this
         homeViewModel.schools.observe(viewLifecycleOwner) { schoolList ->
             val schools = schoolList.map { it.school_name.toString() }
@@ -275,6 +295,26 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         tableLayout = view.findViewById(R.id.tableLayout)
 
         return view
+    }
+    private fun disableColumns(count: Int) {
+        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
+
+        // Disable the specified number of columns
+        for (rowIndex in 0 until tableLayout.childCount) {
+            val row = tableLayout.getChildAt(rowIndex) as TableRow
+            for (columnIndex in 0 until count) {
+                if (rowIndex == 0) {
+                    // Skip the first row (header row) as it contains TextViews
+                    continue
+                }
+
+                // Disable the checkbox in the current row and column
+                val child = row.getChildAt(columnIndex)
+                if (child is CheckBox) {
+                    child.isEnabled = false
+                }
+            }
+        }
     }
 
     private fun showLoadingDialog() {
