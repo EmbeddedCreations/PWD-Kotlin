@@ -2,6 +2,7 @@ package com.example.pwd_app.viewModel.workOrder
 
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -43,7 +44,8 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private var selectedId = ""
     private lateinit var progressBar: ProgressBar
     private var loadingDialog: Dialog? = null
-    private var disableColumnCounter = 0
+    private var counter = 0
+    private var activeColumnIndex=3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -76,19 +78,24 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
 
-        // Set an OnClickListener for the saveWorkorder button
         saveWorkorder.setOnClickListener {
             // Increment the counter
-            disableColumnCounter++
+            counter=activeColumnIndex
+            counter++
 
-            // Disable columns based on the counter value (up to a maximum of 96 columns)
-            if (disableColumnCounter <= 96) {
-                disableColumns(disableColumnCounter)
-            } else {
-                // Show a message when the maximum limit is reached
+            // Determine the active column index based on the counter
+            activeColumnIndex = counter % 97
+
+            // Disable columns based on the activeColumnIndex
+            disableColumns(activeColumnIndex)
+
+
+            // Show a message when the maximum limit is reached and reset the counter
+            if (counter > 96) {
+                counter = 0
                 Toast.makeText(
                     requireContext(),
-                    "Maximum limit of 96 columns reached.",
+                    "Maximum limit of 96 columns reached. Columns have been reset.",
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -293,26 +300,29 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val view = inflater.inflate(R.layout.workorder_checksheet, container, false)
 
         tableLayout = view.findViewById(R.id.tableLayout)
-
         return view
     }
 
-    private fun disableColumns(count: Int) {
+    private fun disableColumns(activeIndex: Int) {
         val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
 
-        // Disable the specified number of columns
+        // Disable all columns except the one with activeIndex
         for (rowIndex in 0 until tableLayout.childCount) {
             val row = tableLayout.getChildAt(rowIndex) as TableRow
-            for (columnIndex in 0 until count) {
-                if (rowIndex == 0) {
-                    // Skip the first row (header row) as it contains TextViews
-                    continue
-                }
-
-                // Disable the checkbox in the current row and column
+            for (columnIndex in 1 until row.childCount) {
                 val child = row.getChildAt(columnIndex)
                 if (child is CheckBox) {
-                    child.isEnabled = false
+                    // Disable all checkboxes except the one with activeIndex
+                    child.isEnabled = columnIndex == activeIndex
+                }
+            }
+            // Disable odd rows
+            if (rowIndex % 2 != 0) {
+                for (columnIndex in 1 until row.childCount) {
+                    val child = row.getChildAt(columnIndex)
+                    if (child is CheckBox) {
+                        child.isEnabled = false
+                    }
                 }
             }
         }
@@ -353,7 +363,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         if (allMatch) {
-            currentProgressRow.setBackgroundColor(Color.TRANSPARENT)
+            currentProgressRow.setBackgroundColor(Color.GREEN)
         } else {
             currentProgressRow.setBackgroundColor(Color.RED)
         }
@@ -467,6 +477,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             tableLayout.addView(row)
         }
         saveWorkorder.visibility = View.VISIBLE
+        disableColumns(activeColumnIndex)
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, p1: View?, position: Int, id: Long) {
@@ -484,7 +495,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                 Log.d("selected School", Credentials.SELECTED_SCHOOL_FOR_WO)
 
             }
-
         }
     }
 
