@@ -48,4 +48,5 @@
     <string name="select_workorder">Select Workorder:</string>
     <string name="view_progress">view progress</string>
     <string name="workorder_progress_check">Workorder Progress Check</string>
+    <string name="save_progress">save progress</string>
 </resources>

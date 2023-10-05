@@ -21,7 +21,6 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var loginViewModel: LoginViewModel
     private lateinit var bottomNavigationView: BottomNavigationView
-
     private var homeFragment: Home = Home()
     private var profile: Profile = Profile()
     private var workOrderSheet: WorkOrderSheet = WorkOrderSheet()
@@ -44,30 +43,50 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment)
-                        .commit()
+                    showConfirmationDialog { // Callback when user confirms
+                        supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
+                    }
                     return@OnItemSelectedListener true
                 }
 
                 R.id.profile -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, profile).commit()
+                    showConfirmationDialog {
+                        supportFragmentManager.beginTransaction().replace(R.id.container, profile).commit()
+                    }
                     return@OnItemSelectedListener true
                 }
 
                 R.id.progress -> {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.container, workOrderSheet).commit()
-                        return@OnItemSelectedListener true
+
+                        showConfirmationDialog {
+                            supportFragmentManager.beginTransaction().replace(R.id.container, workOrderSheet).commit()
+                        }
+                    return@OnItemSelectedListener true
                 }
+
                 R.id.analytics -> {
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.container, analytics).commit()
+                    showConfirmationDialog {
+                        supportFragmentManager.beginTransaction().replace(R.id.container, analytics).commit()
+                    }
                     return@OnItemSelectedListener true
                 }
             }
             false
         })
+    }
+
+    private fun showConfirmationDialog(confirmationAction: () -> Unit) {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Unsaved Progress")
+            .setMessage("Have you completed your work on this page? Progress may be lost.")
+            .setPositiveButton("Continue") { dialogInterface, _ ->
+                confirmationAction.invoke() // Invoke the provided action when user confirms
+            }
+            .setNegativeButton("Cancel") { dialogInterface, _ ->
+                // Do nothing or add specific handling for cancel
+            }
+            .setCancelable(false)
+            .show()
     }
 
     override fun onBackPressed() {

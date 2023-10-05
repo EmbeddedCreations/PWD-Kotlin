@@ -1,7 +1,9 @@
 package com.example.pwd_app.viewModel.workOrder
 
 
+import android.app.Dialog
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,8 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TableLayout
 import android.widget.TableRow
@@ -33,9 +37,13 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var workOrderViewModel: WorkOrderViewModel
     private lateinit var tableLayout: TableLayout
     private lateinit var spinnerSchool: Spinner
+    private lateinit var saveWorkorder: Button
     private lateinit var homeViewModel: HomeViewModel
     private var selectedSchool = "Select School"
     private var selectedId = ""
+    private lateinit var progressBar: ProgressBar
+    private var loadingDialog: Dialog? = null
+    private var disableColumnCounter = 0
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -45,15 +53,47 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val database = DatabaseHelper.getDatabase(requireContext())
         val homeRepository = HomeRepository(apiInterface, database, requireContext())
         val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
-        
-        homeViewModel = ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
+
+        homeViewModel =
+            ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
 
         workOrderViewModel = ViewModelProvider(
             this,
             WorkOrderViewModelFactory(timeLineRepository, homeRepository)
         )[WorkOrderViewModel::class.java]
+
+
         workOrderDropdown = requireView().findViewById(R.id.workOrder)
+        saveWorkorder = requireView().findViewById(R.id.saveWorkorder)
         spinnerSchool = requireView().findViewById(R.id.SelectedSchool)
+        progressBar = requireView().findViewById(R.id.progressbar)
+        // Observe the loading state from ViewModel
+        workOrderViewModel.loading.observe(viewLifecycleOwner) { isLoading ->
+            if (isLoading) {
+                showLoadingDialog()
+            } else {
+                dismissLoadingDialog()
+            }
+        }
+
+        // Set an OnClickListener for the saveWorkorder button
+        saveWorkorder.setOnClickListener {
+            // Increment the counter
+            disableColumnCounter++
+
+            // Disable columns based on the counter value (up to a maximum of 96 columns)
+            if (disableColumnCounter <= 96) {
+                disableColumns(disableColumnCounter)
+            } else {
+                // Show a message when the maximum limit is reached
+                Toast.makeText(
+                    requireContext(),
+                    "Maximum limit of 96 columns reached.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
         spinnerSchool.onItemSelectedListener = this
         homeViewModel.schools.observe(viewLifecycleOwner) { schoolList ->
             val schools = schoolList.map { it.school_name.toString() }
@@ -63,17 +103,22 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             spinnerSchool.adapter = adapter
         }
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
-            Log.d("timelines", timeLines.filter { it.school_name.toString().trim() != "Doma"}.toString())
-            Log.d("selected",Credentials.SELECTED_SCHOOL_FOR_WO)
+            Log.d(
+                "timelines",
+                timeLines.filter { it.school_name.toString().trim() != "Doma" }.toString()
+            )
+            Log.d("selected", Credentials.SELECTED_SCHOOL_FOR_WO)
             val workOrders = mutableListOf("Select Work Order")
             workOrders.addAll(timeLines
-                .filter { it.school_name.toString().trim() == Credentials.SELECTED_SCHOOL_FOR_WO.trim() }
+                .filter {
+                    it.school_name.toString().trim() == Credentials.SELECTED_SCHOOL_FOR_WO.trim()
+                }
                 .map { it.workorder_no.toString() }
                 .distinct())
 
 
-
-            val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
+            val adapter =
+                ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, workOrders)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             workOrderDropdown.adapter = adapter
 
@@ -237,8 +282,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                 }
         }
 
-
-
     }
 
     override fun onCreateView(
@@ -252,6 +295,41 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         tableLayout = view.findViewById(R.id.tableLayout)
 
         return view
+    }
+
+    private fun disableColumns(count: Int) {
+        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
+
+        // Disable the specified number of columns
+        for (rowIndex in 0 until tableLayout.childCount) {
+            val row = tableLayout.getChildAt(rowIndex) as TableRow
+            for (columnIndex in 0 until count) {
+                if (rowIndex == 0) {
+                    // Skip the first row (header row) as it contains TextViews
+                    continue
+                }
+
+                // Disable the checkbox in the current row and column
+                val child = row.getChildAt(columnIndex)
+                if (child is CheckBox) {
+                    child.isEnabled = false
+                }
+            }
+        }
+    }
+
+    private fun showLoadingDialog() {
+        if (loadingDialog == null) {
+            loadingDialog = Dialog(requireContext())
+            loadingDialog?.setContentView(R.layout.progress_dialog)
+            loadingDialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            loadingDialog?.setCancelable(false)
+        }
+        loadingDialog?.show()
+    }
+
+    private fun dismissLoadingDialog() {
+        loadingDialog?.dismiss()
     }
 
     private fun compareAndSetColor(currentRowIndex: Int) {
@@ -309,6 +387,11 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         rowLabels: Array<String>,
         checkboxStates: Array<IntArray>
     ) {
+        // Check if the tableLayout already has child views (i.e., if the table exists)
+        if (tableLayout.childCount > 0) {
+            // If the table already exists, clear it by removing all child views
+            tableLayout.removeAllViews()
+        }
         // Create header row with column labels and checkboxes
         val headerRow = TableRow(requireContext())
         for (j in 0..numCols) {
@@ -383,12 +466,14 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             }
             tableLayout.addView(row)
         }
+        saveWorkorder.visibility = View.VISIBLE
     }
-
 
     override fun onItemSelected(parent: AdapterView<*>?, p1: View?, position: Int, id: Long) {
         when (parent?.id) {
-            R.id.SelectedSchool->{
+            R.id.SelectedSchool -> {
+                tableLayout.removeAllViews()
+                saveWorkorder.visibility = View.INVISIBLE
                 val selectedItem = spinnerSchool.selectedItem as? String
                 Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
                 selectedSchool = selectedItem ?: ""
@@ -396,13 +481,12 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                 selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
                 workOrderViewModel.fetchTimeline()
                 Credentials.SELECTED_SCHOOL_FOR_WO = selectedSchool
-                Log.d("selected School",Credentials.SELECTED_SCHOOL_FOR_WO)
+                Log.d("selected School", Credentials.SELECTED_SCHOOL_FOR_WO)
+
             }
 
         }
     }
-
-
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         TODO("Not yet implemented")
