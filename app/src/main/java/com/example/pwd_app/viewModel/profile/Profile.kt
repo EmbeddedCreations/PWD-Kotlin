@@ -21,7 +21,7 @@ import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
 import com.example.pwd_app.repository.LocalDatabaseRepository
-import com.example.pwd_app.viewModel.Progress.WorkProgress
+import com.example.pwd_app.viewModel.progress.WorkProgress
 import com.example.pwd_app.viewModel.localDbView.LocalDbView
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModel
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModelFactory
@@ -303,8 +303,19 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
             showLogoutConfirmationDialog()
         }
         workorderProgress.setOnClickListener {
-            val intent = Intent(context, WorkProgress::class.java)
-            context?.startActivity(intent)
+            val progressFragment: Fragment = WorkProgress()
+            val fragmentManager = requireActivity().supportFragmentManager
+            General.replaceFragment(
+                fragmentManager,
+                R.id.container,
+                progressFragment,
+                true,
+                "progressFragmentTag",
+                R.anim.slide_in,  // Enter animation
+                R.anim.slide_out, // Exit animation
+                0,                // Pop enter animation (you can specify one if needed)
+                0                 // Pop exit animation (you can specify one if needed)
+            )
         }
 
     }

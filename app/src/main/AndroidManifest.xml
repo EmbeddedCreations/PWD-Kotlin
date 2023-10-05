@@ -20,7 +20,7 @@
         android:theme="@style/Theme.Pwd_app"
         tools:targetApi="31">
         <activity
-            android:name=".viewModel.Progress.WorkProgress"
+            android:name=".viewModel.progress.WorkProgress"
             android:exported="false" />
         <activity
             android:name=".viewModel.splashScreen.SplashScreenActivity"
