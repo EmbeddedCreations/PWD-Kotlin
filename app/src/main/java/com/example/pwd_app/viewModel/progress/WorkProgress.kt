@@ -1,5 +1,7 @@
-package com.example.pwd_app.viewModel.workOrder
+package com.example.pwd_app.viewModel.progress
 
+import com.example.pwd_app.viewModel.workOrder.WorkOrderViewModel
+import com.example.pwd_app.viewModel.workOrder.WorkOrderViewModelFactory
 
 import android.app.Dialog
 import android.graphics.Color
@@ -32,7 +34,7 @@ import com.example.pwd_app.repository.TimeLineRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 
-class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
+class WorkProgress : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var workOrderDropdown: Spinner
     private lateinit var workOrderViewModel: WorkOrderViewModel
     private lateinit var tableLayout: TableLayout
@@ -43,8 +45,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private var selectedId = ""
     private lateinit var progressBar: ProgressBar
     private var loadingDialog: Dialog? = null
-    private var counter = 0
-    private var activeColumnIndex=3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -65,7 +65,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
 
         workOrderDropdown = requireView().findViewById(R.id.workOrder)
-        saveWorkorder = requireView().findViewById(R.id.saveWorkorder)
         spinnerSchool = requireView().findViewById(R.id.SelectedSchool)
         progressBar = requireView().findViewById(R.id.progressbar)
         // Observe the loading state from ViewModel
@@ -74,29 +73,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                 showLoadingDialog()
             } else {
                 dismissLoadingDialog()
-            }
-        }
-
-        saveWorkorder.setOnClickListener {
-            // Increment the counter
-            counter=activeColumnIndex
-            counter++
-
-            // Determine the active column index based on the counter
-            activeColumnIndex = counter % 97
-
-            // Disable columns based on the activeColumnIndex
-            disableColumns(activeColumnIndex)
-
-
-            // Show a message when the maximum limit is reached and reset the counter
-            if (counter > 96) {
-                counter = 0
-                Toast.makeText(
-                    requireContext(),
-                    "Maximum limit of 96 columns reached. Columns have been reset.",
-                    Toast.LENGTH_SHORT
-                ).show()
             }
         }
 
@@ -281,13 +257,14 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                                 rowHeadings,
                                 checkboxStates
                             )
+                            // Call setRowColors after creating the table
+                            setRowColors()
                         }
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
         }
-
     }
 
     override fun onCreateView(
@@ -296,35 +273,10 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view = inflater.inflate(R.layout.workorder_checksheet, container, false)
+        val view = inflater.inflate(R.layout.activity_work_progress, container, false)
 
         tableLayout = view.findViewById(R.id.tableLayout)
         return view
-    }
-
-    private fun disableColumns(activeIndex: Int) {
-        val tableLayout = requireView().findViewById<TableLayout>(R.id.tableLayout)
-
-        // Disable all columns except the one with activeIndex
-        for (rowIndex in 0 until tableLayout.childCount) {
-            val row = tableLayout.getChildAt(rowIndex) as TableRow
-            for (columnIndex in 1 until row.childCount) {
-                val child = row.getChildAt(columnIndex)
-                if (child is CheckBox) {
-                    // Disable all checkboxes except the one with activeIndex
-                    child.isEnabled = columnIndex == activeIndex
-                }
-            }
-            // Disable odd rows
-            if (rowIndex % 2 != 0) {
-                for (columnIndex in 1 until row.childCount) {
-                    val child = row.getChildAt(columnIndex)
-                    if (child is CheckBox) {
-                        child.isEnabled = false
-                    }
-                }
-            }
-        }
     }
 
     private fun showLoadingDialog() {
@@ -371,13 +323,14 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private fun countCheckedCheckboxes(row: TableRow): Int {
         var checkedCount = 0
         for (i in 1 until row.childCount) {
-            val checkBox = row.getChildAt(i) as CheckBox
-            if (checkBox.isChecked) {
+            val view = row.getChildAt(i)
+            if (view is CheckBox && view.isChecked) {
                 checkedCount++
             }
         }
         return checkedCount
     }
+
 
     private fun getLastCheckedCheckboxIndex(row: TableRow): Int {
         for (i in row.childCount - 1 downTo 1) {
@@ -430,70 +383,41 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                     // Add four checkboxes in the data cells (including the new row)
                     for (k in 0..3) {
                         val checkboxIndex = (j - 1) * 4 + k // Make 'j' effectively final
-                        val columnIndex = j // Make 'j' effectively final
                         val checkBox = CheckBox(requireContext())
 
                         // Check if the checkbox should be checked based on the checkboxStates array
                         checkBox.isChecked = checkboxStates[i - 1][checkboxIndex] == 1
-
-                        // Add an OnCheckedChangeListener to prevent unchecking and update the array
-                        checkBox.setOnCheckedChangeListener(CompoundButton.OnCheckedChangeListener { _, isChecked ->
-                            if (!isChecked) {
-                                // If the checkbox is unchecked, force it to be checked
-                                checkBox.isChecked = true
-                                Toast.makeText(
-                                    requireContext(),
-                                    "Checkbox is now checked and cannot be unchecked.",
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                return@OnCheckedChangeListener
-                            }
-
-                            // Update the corresponding value in the checkboxStates array
-                            val rowIndex = tableLayout.indexOfChild(row)
-                            val checkboxArrayIndex = (columnIndex - 1) * 4 + k
-                            checkboxStates[rowIndex - 1][checkboxArrayIndex] =
-                                if (isChecked) 1 else 0
-
-                            // Print the updated array to the console
-                            for (i in 0 until numRows) {
-                                for (j in 0 until numCols * 4) {
-                                    print(checkboxStates[i][j].toString() + " ")
-                                }
-                                println() // Move to the next row
-                            }
-                            // Call the function to compare and set the background color for the current row
-                            compareAndSetColor(rowIndex)
-                        })
-                        // Set checkboxes in even rows to be disabled
-                        if ((i - 1) % 2 == 0) {
-                            checkBox.isEnabled = false
-                        }
+                        checkBox.isEnabled = false
                         row.addView(checkBox)
                     }
                 }
             }
             tableLayout.addView(row)
         }
-        saveWorkorder.visibility = View.VISIBLE
-        disableColumns(activeColumnIndex)
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, p1: View?, position: Int, id: Long) {
         when (parent?.id) {
             R.id.SelectedSchool -> {
                 tableLayout.removeAllViews()
-                saveWorkorder.visibility = View.INVISIBLE
                 val selectedItem = spinnerSchool.selectedItem as? String
                 Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
                 selectedSchool = selectedItem ?: ""
-
                 selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
                 workOrderViewModel.fetchTimeline()
                 Credentials.SELECTED_SCHOOL_FOR_WO = selectedSchool
                 Log.d("selected School", Credentials.SELECTED_SCHOOL_FOR_WO)
-
             }
+        }
+    }
+
+    // Add this function to set the colors after the table is created
+    private fun setRowColors() {
+        val numRows = tableLayout.childCount
+
+        for (rowIndex in 2 until numRows step 2) {
+            // Call compareAndSetColor function for odd rows (1-based index)
+            compareAndSetColor(rowIndex)
         }
     }
 
