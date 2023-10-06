@@ -1,8 +1,5 @@
 package com.example.pwd_app.viewModel.progress
 
-import com.example.pwd_app.viewModel.workOrder.WorkOrderViewModel
-import com.example.pwd_app.viewModel.workOrder.WorkOrderViewModelFactory
-
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -15,13 +12,11 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.R
@@ -33,6 +28,8 @@ import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.TimeLineRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
+import com.example.pwd_app.viewModel.workOrder.WorkOrderViewModel
+import com.example.pwd_app.viewModel.workOrder.WorkOrderViewModelFactory
 
 class WorkProgress : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var workOrderDropdown: Spinner

@@ -207,8 +207,9 @@ class Login : AppCompatActivity() {
             finish()
         }
     }
+
     private fun togglePasswordVisibility() {
-        val passwordEditText = findViewById<EditText>(com.example.pwd_app.R.id.password)
+        val passwordEditText = findViewById<EditText>(R.id.password)
         if (passwordEditText.inputType == 129) { // 129 corresponds to InputType.TYPE_TEXT_VARIATION_PASSWORD
             passwordEditText.inputType = 1 // InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
         } else {

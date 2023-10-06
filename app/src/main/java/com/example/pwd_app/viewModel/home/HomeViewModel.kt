@@ -19,7 +19,8 @@ class HomeViewModel(private val homeRepository: HomeRepository) : ViewModel() {
 
         }
     }
-    fun getWorkOrder(){
+
+    fun getWorkOrder() {
         viewModelScope.launch(Dispatchers.IO) {
             homeRepository.getWorkOrders()
         }

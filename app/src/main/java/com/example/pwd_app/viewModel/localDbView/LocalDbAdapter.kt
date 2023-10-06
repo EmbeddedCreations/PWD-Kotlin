@@ -20,7 +20,7 @@ import com.example.pwd_app.viewModel.edit.EditScreen
 class LocalDbAdapter(
     private val buildingList: List<ImageData>,
 
-) : RecyclerView.Adapter<LocalDbAdapter.ViewHolder>() {
+    ) : RecyclerView.Adapter<LocalDbAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var imageView: ImageView = itemView.findViewById<ImageView?>(R.id.imageView)

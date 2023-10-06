@@ -68,8 +68,8 @@
                 <ImageView
                     android:id="@+id/editButton"
                     android:layout_width="30dp"
-                    android:layout_margin="5sp"
                     android:layout_height="48dp"
+                    android:layout_margin="5sp"
                     android:contentDescription="@string/edit_icon"
                     android:src="@drawable/edit_icon" />
             </LinearLayout>

@@ -21,12 +21,12 @@ import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
 import com.example.pwd_app.repository.LocalDatabaseRepository
-import com.example.pwd_app.viewModel.progress.WorkProgress
 import com.example.pwd_app.viewModel.localDbView.LocalDbView
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModel
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModelFactory
 import com.example.pwd_app.viewModel.login.Login
 import com.example.pwd_app.viewModel.login.SessionManager
+import com.example.pwd_app.viewModel.progress.WorkProgress
 import com.example.pwd_app.viewModel.schoolDisplay.SchoolDisplay
 import com.example.pwd_app.viewModel.upload.UploadViewModel
 import com.example.pwd_app.viewModel.upload.UploadViewModelFactory
@@ -193,58 +193,58 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
 
                 if (imageData.isNotEmpty()) { // Check if there is data to upload
                     try {
-                            for (item in imageData) {
-                                val schoolName = item.school_Name ?: ""
-                                val poOffice = item.po_office ?: ""
-                                val imageName = item.image_name ?: ""
-                                val imageType = item.image_type ?: ""
-                                val imagePdf = item.image_pdf ?: ""
-                                val uploadDate = item.upload_date ?: ""
-                                val uploadTime = item.upload_time ?: ""
-                                val entryBy = item.EntryBy ?: ""
-                                val latitude = item.Latitude ?: ""
-                                val longitude = item.Longitude ?: ""
-                                val userUploadDate = item.user_upload_date ?: ""
-                                val inspectionType = item.InspectionType ?: ""
-                                val workorderNumber = item.WorkorderNumber ?: ""
-                                val description = item.Description ?: ""
-                                val ags = item.ags ?: ""
+                        for (item in imageData) {
+                            val schoolName = item.school_Name ?: ""
+                            val poOffice = item.po_office ?: ""
+                            val imageName = item.image_name ?: ""
+                            val imageType = item.image_type ?: ""
+                            val imagePdf = item.image_pdf ?: ""
+                            val uploadDate = item.upload_date ?: ""
+                            val uploadTime = item.upload_time ?: ""
+                            val entryBy = item.EntryBy ?: ""
+                            val latitude = item.Latitude ?: ""
+                            val longitude = item.Longitude ?: ""
+                            val userUploadDate = item.user_upload_date ?: ""
+                            val inspectionType = item.InspectionType ?: ""
+                            val workorderNumber = item.WorkorderNumber ?: ""
+                            val description = item.Description ?: ""
+                            val ags = item.ags ?: ""
 
-                                // Call the uploadData function with extracted data
-                                uploadViewModel.uploadData(
-                                    schoolName,
-                                    poOffice,
-                                    imageName,
-                                    imageType,
-                                    imagePdf,
-                                    uploadDate,
-                                    uploadTime,
-                                    entryBy,
-                                    latitude,
-                                    longitude,
-                                    userUploadDate,
-                                    inspectionType,
-                                    workorderNumber,
-                                    description,
-                                    ags
-                                )
-                                // Delete item from the database
-                                lifecycleScope.launch {
-                                    database.Dao().deleteItems(schoolName, poOffice)
-                                    localDatabaseRepository.getCount()
-                                    localDbCount.text =
-                                        "items in Local DB : " + database.Dao().getDbCount()
-                                }
+                            // Call the uploadData function with extracted data
+                            uploadViewModel.uploadData(
+                                schoolName,
+                                poOffice,
+                                imageName,
+                                imageType,
+                                imagePdf,
+                                uploadDate,
+                                uploadTime,
+                                entryBy,
+                                latitude,
+                                longitude,
+                                userUploadDate,
+                                inspectionType,
+                                workorderNumber,
+                                description,
+                                ags
+                            )
+                            // Delete item from the database
+                            lifecycleScope.launch {
+                                database.Dao().deleteItems(schoolName, poOffice)
+                                localDatabaseRepository.getCount()
+                                localDbCount.text =
+                                    "items in Local DB : " + database.Dao().getDbCount()
                             }
-                            // Show a success AlertDialog
-                            val successDialog = AlertDialog.Builder(requireContext())
-                                .setTitle("Success")
-                                .setMessage("Local Database Upload Successful")
-                                .setPositiveButton("OK") { _, _ ->
+                        }
+                        // Show a success AlertDialog
+                        val successDialog = AlertDialog.Builder(requireContext())
+                            .setTitle("Success")
+                            .setMessage("Local Database Upload Successful")
+                            .setPositiveButton("OK") { _, _ ->
 
-                                }
-                                .create()
-                            successDialog.show()
+                            }
+                            .create()
+                        successDialog.show()
                     } catch (e: Exception) {
                         // Show a failure AlertDialog
                         val failureDialog = AlertDialog.Builder(requireContext())

@@ -3,7 +3,6 @@ package com.example.pwd_app.viewModel.buildingDisplay
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,7 @@ class BuildingAdapter(
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var imageView: ImageView = itemView.findViewById(R.id.imageView)
-        var editButton:ImageView = itemView.findViewById(R.id.editButton)
+        var editButton: ImageView = itemView.findViewById(R.id.editButton)
         var descriptionTextView: TextView =
             itemView.findViewById(R.id.buildingDescTextView)
         var BuildingName: TextView = itemView.findViewById(R.id.buildingNameTextView)

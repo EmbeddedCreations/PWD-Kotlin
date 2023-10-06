@@ -22,7 +22,7 @@ class EditScreenViewModel(
         EntryBy: String,
         Description: String,
 
-    ) {
+        ) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = uploadRepository.editData(

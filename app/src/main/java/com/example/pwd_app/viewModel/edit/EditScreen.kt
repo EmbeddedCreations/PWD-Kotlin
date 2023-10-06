@@ -7,11 +7,17 @@ import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.Spinner
+import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import com.squareup.picasso.Picasso
 import com.example.pwd_app.R
 import com.example.pwd_app.Utilities.General
 import com.example.pwd_app.data.local.DatabaseHelper
@@ -25,6 +31,7 @@ import com.example.pwd_app.repository.UploadRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 import com.example.pwd_app.viewModel.schoolDisplay.SchoolDisplay
+import com.squareup.picasso.Picasso
 
 class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 

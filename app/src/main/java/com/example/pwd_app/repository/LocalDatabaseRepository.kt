@@ -9,16 +9,17 @@ class LocalDatabaseRepository(
     private val database: DatabaseHelper
 ) {
     private val imageData = MutableLiveData<List<ImageData>>()
-    val images : LiveData<List<ImageData>>
+    val images: LiveData<List<ImageData>>
         get() = imageData
     private val imageCount = MutableLiveData<Int>()
-    val dbCount : LiveData<Int>
+    val dbCount: LiveData<Int>
         get() = imageCount
 
-    suspend fun getCount(){
+    suspend fun getCount() {
         imageCount.postValue(database.Dao().getDbCount())
     }
-    suspend fun getData(){
+
+    suspend fun getData() {
         imageData.postValue(database.Dao().getAllImages())
     }
 

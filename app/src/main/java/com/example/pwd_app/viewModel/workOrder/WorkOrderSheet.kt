@@ -44,7 +44,8 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var progressBar: ProgressBar
     private var loadingDialog: Dialog? = null
     private var counter = 0
-    private var activeColumnIndex=3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
+    private var activeColumnIndex =
+        3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -79,7 +80,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
         saveWorkorder.setOnClickListener {
             // Increment the counter
-            counter=activeColumnIndex
+            counter = activeColumnIndex
             counter++
 
             // Determine the active column index based on the counter
