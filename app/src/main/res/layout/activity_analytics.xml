@@ -1,32 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <!-- Text View for "Under development" -->
     <TextView
         android:id="@+id/underDevelopmentTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Under development \n come back soon"
-        android:textSize="24sp"
-        android:textColor="#000"
         android:layout_marginTop="50sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Under development \n come back soon"
+        android:textColor="#000"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-    />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- ImageView in the center -->
     <ImageView
-        android:id="@+id/centerImageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/development"
         android:layout_marginTop="50sp"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/underDevelopmentTextView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/underDevelopmentTextView"
+        app:srcCompat="@drawable/development" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

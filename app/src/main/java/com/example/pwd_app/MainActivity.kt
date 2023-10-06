@@ -44,29 +44,33 @@ class MainActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.home -> {
                     showConfirmationDialog { // Callback when user confirms
-                        supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, homeFragment).commit()
                     }
                     return@OnItemSelectedListener true
                 }
 
                 R.id.profile -> {
                     showConfirmationDialog {
-                        supportFragmentManager.beginTransaction().replace(R.id.container, profile).commit()
+                        supportFragmentManager.beginTransaction().replace(R.id.container, profile)
+                            .commit()
                     }
                     return@OnItemSelectedListener true
                 }
 
                 R.id.progress -> {
 
-                        showConfirmationDialog {
-                            supportFragmentManager.beginTransaction().replace(R.id.container, workOrderSheet).commit()
-                        }
+                    showConfirmationDialog {
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.container, workOrderSheet).commit()
+                    }
                     return@OnItemSelectedListener true
                 }
 
                 R.id.analytics -> {
                     showConfirmationDialog {
-                        supportFragmentManager.beginTransaction().replace(R.id.container, analytics).commit()
+                        supportFragmentManager.beginTransaction().replace(R.id.container, analytics)
+                            .commit()
                     }
                     return@OnItemSelectedListener true
                 }

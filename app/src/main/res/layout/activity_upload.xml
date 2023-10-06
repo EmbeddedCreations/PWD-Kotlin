@@ -46,8 +46,8 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/textViewLoggedIn"
             app:layout_constraintBottom_toTopOf="@+id/textViewSchoolTitle"
+            app:layout_constraintTop_toBottomOf="@+id/textViewLoggedIn"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -70,24 +70,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
-            android:textSize="22sp"
             android:hint="@string/select_school"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textSize="22sp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewSchoolTitle" />
+
         <ImageView
             android:id="@+id/image_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_marginTop="20dp"
             android:background="#000"
+            android:contentDescription="@string/upload_image"
             android:src="@drawable/uploadfile"
             app:layout_constraintDimensionRatio="1:0.75"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.4"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/spinnerBuilding"
-            android:contentDescription="@string/upload_image" />
+            app:layout_constraintTop_toBottomOf="@+id/spinnerBuilding" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_description"
@@ -121,8 +122,8 @@
             android:drawablePadding="16dp"
             android:hint="@string/select_tags"
             android:padding="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/til_description"
-            app:drawableRightCompat="@android:drawable/arrow_down_float" />
+            app:drawableRightCompat="@android:drawable/arrow_down_float"
+            app:layout_constraintTop_toBottomOf="@+id/til_description" />
 
         <Button
             android:id="@+id/pickimage"

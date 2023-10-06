@@ -50,7 +50,6 @@ import java.io.FileNotFoundException
 import java.io.IOException
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.util.Arrays
 import java.util.Date
 import java.util.Locale
 
@@ -460,7 +459,7 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-    // Handle item selection here
+        // Handle item selection here
         when (parent?.id) {
             R.id.spinnerBuilding -> {
                 val selectedItem = spinnerBuilding.selectedItem as? String

@@ -2,7 +2,6 @@ package com.example.pwd_app.viewModel.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,7 +46,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
     //Buttons And TextViews
     private lateinit var spinnerSchool: Spinner
     private lateinit var spinnerBuilding: Spinner
-    private lateinit var spinnerSecondDropdown : Spinner
+    private lateinit var spinnerSecondDropdown: Spinner
     private lateinit var spinnerWorkorder: Spinner
     private lateinit var textViewSelectedDate: TextView
     private lateinit var buttonSurvey: Button
@@ -247,7 +246,8 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                                     position: Int,
                                     id: Long
                                 ) {
-                                    selectedWorkOrderNumber = parent.getItemAtPosition(position).toString()
+                                    selectedWorkOrderNumber =
+                                        parent.getItemAtPosition(position).toString()
                                     Credentials.SELECTED_WORKORDER_NUMBER = selectedWorkOrderNumber
                                 }
 
@@ -259,7 +259,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                         requireView().findViewById<TextView>(R.id.textViewSecondDropdownTitle)
                     val spinnerSecondDropdown =
                         requireView().findViewById<Spinner>(R.id.spinnerSecondDropdown)
-                    Credentials.SELECTED_WORKORDER_NUMBER =""
+                    Credentials.SELECTED_WORKORDER_NUMBER = ""
                     selectedWorkorder = "NA"
                     textViewSecondDropdownTitle.visibility = View.GONE
                     spinnerSecondDropdown.visibility = View.GONE
