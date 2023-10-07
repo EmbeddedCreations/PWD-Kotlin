@@ -131,7 +131,7 @@
 
         <!-- Add Save Image Button -->
         <Button
-            android:id="@+id/buttonEditEntry"
+            android:id="@+id/editEntry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
