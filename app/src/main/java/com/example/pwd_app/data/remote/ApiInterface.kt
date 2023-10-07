@@ -77,6 +77,7 @@ interface ApiInterface {
     @FormUrlEncoded
     @POST("AppUpdateBuilding.php")
     suspend fun EditData(
+        @Field("id") id: String,
         @Field("school_Name") schoolName: String,
         @Field("po_office") poOffice: String,
         @Field("image_name") imageName: String,

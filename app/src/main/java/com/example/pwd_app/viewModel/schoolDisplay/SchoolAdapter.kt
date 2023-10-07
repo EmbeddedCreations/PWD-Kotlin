@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.R
 import com.example.pwd_app.model.Credentials
+import com.example.pwd_app.model.EditObject
 import com.example.pwd_app.model.Schools
 import com.example.pwd_app.viewModel.buildingDisplay.BuildingDisplay
 
@@ -44,7 +45,7 @@ class SchoolAdapter(
             //Intent to Start a New Activity
             //i want to get the context and startActivity
             Credentials.SELECTED_SCHOOL_FOR_DISPLAY = currentItem.school_name.toString()
-
+            EditObject.E_SCHOOL_NAME = currentItem.school_name.toString()
             val context = holder.itemView.context
             // Create and start the intent
             val intent = Intent(context, BuildingDisplay::class.java)

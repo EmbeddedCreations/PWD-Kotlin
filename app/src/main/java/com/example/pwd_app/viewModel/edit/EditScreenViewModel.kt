@@ -16,6 +16,7 @@ class EditScreenViewModel(
     val editStatus: LiveData<Boolean> = _editStatus
 
     fun editData(
+        id: String,
         school_Name: String,
         po_office: String,
         image_name: String,
@@ -26,6 +27,7 @@ class EditScreenViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 val response = uploadRepository.editData(
+                    id,
                     school_Name,
                     po_office,
                     image_name,
@@ -33,17 +35,17 @@ class EditScreenViewModel(
                     Description,
                 )
                 // Handle the response as needed
-                if (response.isSuccessful) {
+                if (response.code() == 200) {
                     // Handle a successful response
                     _editStatus.postValue(true)
                 } else {
                     // Handle an unsuccessful response
-//                    _uploadStatus.postValue(false)
+                    _editStatus.postValue(false)
                 }
             } catch (e: Exception) {
                 // Handle network or other errors
                 Log.d("ERROR", e.toString())
-                _editStatus.postValue(false)
+                //_editStatus.postValue(false)
             }
         }
     }
