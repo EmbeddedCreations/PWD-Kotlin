@@ -5,14 +5,19 @@ import com.example.pwd_app.model.LoginCredentials
 import com.example.pwd_app.model.RegisteredSchools
 import com.example.pwd_app.model.SchoolBuildings
 import com.example.pwd_app.model.SchoolData
+import com.example.pwd_app.model.UploadTimelineModel
 import com.example.pwd_app.model.WorkOrderTimelineModel
 import com.example.pwd_app.model.WorkOrders
+import okhttp3.ResponseBody
+import retrofit2.Call
 import retrofit2.Response
+import retrofit2.http.Body
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
+
 
 interface ApiInterface {
 
@@ -78,4 +83,7 @@ interface ApiInterface {
         @Field("EntryBy") entryBy: String,
         @Field("Description") description: String,
     ): Response<ImageData>
+
+    @POST("your_php_script.php")
+    suspend fun updateWorkOrder(@Body workOrderData: UploadTimelineModel?): Call<ResponseBody?>?
 }
