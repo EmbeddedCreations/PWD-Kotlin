@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.text.InputFilter
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -19,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.R
-import com.example.pwd_app.Utilities.General
 import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
@@ -30,14 +30,13 @@ import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.UploadRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
-import com.example.pwd_app.viewModel.schoolDisplay.SchoolDisplay
 import com.squareup.picasso.Picasso
 
 class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var editScreenViewModel: EditScreenViewModel
-    private lateinit var buttonSaveImage: Button
+    var buttonSaveImage: Button? = null
     private lateinit var editTextDescription: EditText
     private lateinit var progressDialog: ProgressDialog
     private lateinit var networkStatusUtility: NetworkStatusUtility
@@ -57,10 +56,10 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             this,
             EditScreenViewModelFactory(uploadRepository)
         )[EditScreenViewModel::class.java]
-        buttonSaveImage = findViewById(R.id.buttonEditEntry)
         val mainHandler = Handler(Looper.getMainLooper())
         setContentView(R.layout.edit_upload_details)
         status = findViewById(R.id.statusIcon)
+        buttonSaveImage = findViewById(R.id.editEntry)
         val textViewLoggedIn = findViewById<TextView>(R.id.textViewLoggedIn)
         editTextDescription = findViewById(R.id.editTextDescription)
         val juniorEngineer: String = Credentials.DEFAULT_JUNIOR_ENGINEER
@@ -81,8 +80,8 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             override fun onNetworkAvailable() {
                 mainHandler.post {
                     status.setImageResource(R.drawable.online)
-                    buttonSaveImage.isEnabled = true
-                    buttonSaveImage.alpha = 1.0f
+//                    buttonSaveImage.isEnabled = true
+//                    buttonSaveImage.alpha = 1.0f
                     status.setOnClickListener { showToast("Online") }
                 }
             }
@@ -90,8 +89,8 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             override fun onNetworkLost() {
                 mainHandler.post {
                     status.setImageResource(R.drawable.offline)
-                    buttonSaveImage.isEnabled = false
-                    buttonSaveImage.alpha = 0.5f
+//                    buttonSaveImage.isEnabled = false
+//                    buttonSaveImage.alpha = 0.5f
                     status.setOnClickListener { showToast("Offline") }
                 }
             }
@@ -195,7 +194,7 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             else -> {
                 // Initialize Values
                 //showProgressDialog()
-                buttonSaveImage.isEnabled = false
+                buttonSaveImage?.isEnabled ?:false
 
                 // Set EditObject values
                 EditObject.E_DESCRIPTION = description
@@ -210,34 +209,39 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     EditObject.E_ENTRY_BY,
                     EditObject.E_DESCRIPTION,
                 )
-                editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
-                    // Dismiss the progress dialog in any case (success or failure)
-                    //dismissProgressDialog()
-                    buttonSaveImage.isEnabled = true
-                    editTextDescription.text.clear()
-
-                    if (isUploaded) {
-                        Toast.makeText(this@EditScreen, "Uploaded Successfully", Toast.LENGTH_SHORT)
-                            .show()
-                        // Redirect to the SchoolDisplay fragment
-                        val fragmentManager = supportFragmentManager
-                        val schoolDisplayFragment =
-                            SchoolDisplay() // Replace with the actual fragment class name
-                        General.replaceFragment(
-                            fragmentManager,
-                            R.id.container,
-                            schoolDisplayFragment,
-                            false,
-                            "SchoolDisplayFragmentTag",
-                            R.anim.slide_in,
-                            R.anim.slide_out,
-                            0,
-                            0
-                        )
-                    } else {
-                        Toast.makeText(this@EditScreen, "Upload Failed", Toast.LENGTH_SHORT).show()
-                    }
-                }
+                Log.d("upload",EditObject.E_SCHOOL_NAME+
+                    EditObject.E_PO_OFFICE+
+                    EditObject.E_IMAGE_NAME+
+                    EditObject.E_ENTRY_BY+
+                    EditObject.E_DESCRIPTION)
+//                editScreenViewModel.editStatus.observe(this@EditScreen) { isUploaded ->
+//                    // Dismiss the progress dialog in any case (success or failure)
+//                    //dismissProgressDialog()
+//                    buttonSaveImage.isEnabled = true
+//                    editTextDescription.text.clear()
+//
+//                    if (isUploaded) {
+//                        Toast.makeText(this@EditScreen, "Uploaded Successfully", Toast.LENGTH_SHORT)
+//                            .show()
+//                        // Redirect to the SchoolDisplay fragment
+//                        val fragmentManager = supportFragmentManager
+//                        val schoolDisplayFragment =
+//                            SchoolDisplay() // Replace with the actual fragment class name
+//                        General.replaceFragment(
+//                            fragmentManager,
+//                            R.id.container,
+//                            schoolDisplayFragment,
+//                            false,
+//                            "SchoolDisplayFragmentTag",
+//                            R.anim.slide_in,
+//                            R.anim.slide_out,
+//                            0,
+//                            0
+//                        )
+//                    } else {
+//                        Toast.makeText(this@EditScreen, "Upload Failed", Toast.LENGTH_SHORT).show()
+//                    }
+//                }
             }
         }
     }
