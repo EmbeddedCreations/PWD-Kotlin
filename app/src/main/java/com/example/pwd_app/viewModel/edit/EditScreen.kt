@@ -82,8 +82,8 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             override fun onNetworkAvailable() {
                 mainHandler.post {
                     status.setImageResource(R.drawable.online)
-//                    buttonSaveImage.isEnabled = true
-//                    buttonSaveImage.alpha = 1.0f
+                    buttonSaveImage?.isEnabled = true
+                    buttonSaveImage?.alpha = 1.0f
                     status.setOnClickListener { showToast("Online") }
                 }
             }
@@ -91,8 +91,8 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             override fun onNetworkLost() {
                 mainHandler.post {
                     status.setImageResource(R.drawable.offline)
-//                    buttonSaveImage.isEnabled = false
-//                    buttonSaveImage.alpha = 0.5f
+                    buttonSaveImage?.isEnabled = false
+                    buttonSaveImage?.alpha = 0.5f
                     status.setOnClickListener { showToast("Offline") }
                 }
             }
@@ -203,11 +203,6 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 EditObject.E_PO_OFFICE = Credentials.DEFAULT_PO
                 EditObject.E_ENTRY_BY = Credentials.DEFAULT_JUNIOR_ENGINEER
 
-//                school_Name: String,
-//                po_office: String,
-//                image_name: String,
-//                EntryBy: String,
-//                Description: String,
                 // Perform the upload
                 editScreenViewModel.editData(
                     EditObject.E_ID,
