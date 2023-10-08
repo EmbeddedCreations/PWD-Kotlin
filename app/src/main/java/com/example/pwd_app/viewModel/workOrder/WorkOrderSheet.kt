@@ -37,16 +37,16 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var workOrderViewModel: WorkOrderViewModel
     private lateinit var tableLayout: TableLayout
     private lateinit var spinnerSchool: Spinner
-    private lateinit var saveWorkorder: Button
     private lateinit var homeViewModel: HomeViewModel
-    private lateinit var uploadTimeline : Button
+    private lateinit var uploadTimeline: Button
     private var selectedSchool = "Select School"
-    private lateinit var checkboxStates:Array<IntArray>
+    private lateinit var checkboxStates: Array<IntArray>
     private var selectedId = ""
     private lateinit var progressBar: ProgressBar
     private var loadingDialog: Dialog? = null
     private var counter = 0
-    private var activeColumnIndex = 3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
+    private var activeColumnIndex =
+        3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -82,7 +82,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             // Increment the counter
             counter = activeColumnIndex
             counter++
-
+            returnOddRowArrays(checkboxStates)
             // Determine the active column index based on the counter
             activeColumnIndex = counter % 97
 
@@ -284,6 +284,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                             )
                         }
                     }
+
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
         }
@@ -389,6 +390,16 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         return -1 // Return -1 if no checkbox is checked in the row
     }
 
+    private fun returnOddRowArrays(checkboxStates: Array<IntArray>): List<IntArray> {
+        val oddRowArrays = mutableListOf<IntArray>()
+        for (i in 1 until checkboxStates.size step 2) {
+            val oddRowArray = checkboxStates[i]
+            oddRowArrays.add(oddRowArray)
+            println("Odd Row $i: ${oddRowArray.joinToString(", ")}")
+        }
+        return oddRowArrays
+    }
+
     private fun createDynamicTable(
         numRows: Int,
         numCols: Int,
@@ -475,7 +486,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             }
             tableLayout.addView(row)
         }
-        saveWorkorder.visibility = View.VISIBLE
+        uploadTimeline.visibility = View.VISIBLE
         disableColumns(activeColumnIndex)
     }
 
@@ -483,7 +494,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         when (parent?.id) {
             R.id.SelectedSchool -> {
                 tableLayout.removeAllViews()
-                saveWorkorder.visibility = View.INVISIBLE
+                uploadTimeline.visibility = View.INVISIBLE
                 val selectedItem = spinnerSchool.selectedItem as? String
                 Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
                 selectedSchool = selectedItem ?: ""
