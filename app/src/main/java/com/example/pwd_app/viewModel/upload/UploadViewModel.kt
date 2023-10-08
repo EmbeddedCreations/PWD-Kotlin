@@ -53,17 +53,17 @@ class UploadViewModel(
                 )
 
                 // Handle the response as needed
-                if (response.isSuccessful) {
+                if (response.code() == 200) {
                     // Handle a successful response
                     _uploadStatus.postValue(true)
                 } else {
                     // Handle an unsuccessful response
-//                    _uploadStatus.postValue(false)
+                    _uploadStatus.postValue(false)
                 }
             } catch (e: Exception) {
                 // Handle network or other errors
                 Log.d("ERROR", e.toString())
-                _uploadStatus.postValue(false)
+                //_uploadStatus.postValue(false)
             }
         }
     }

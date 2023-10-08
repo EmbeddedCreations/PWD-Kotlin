@@ -78,6 +78,7 @@ class BuildingAdapter(
             EditObject.E_DESCRIPTION = currentItem.Description.toString()
             EditObject.E_IMAGE_NAME = currentItem.image_name.toString()
             EditObject.E_SCHOOL_NAME = Credentials.SELECTED_SCHOOL_FOR_DISPLAY
+            EditObject.E_ID = currentItem.id.toString()
             val i = Intent(context, EditScreen::class.java)
             // Pass the image URL, description, and building name to the EditScreen
             i.putExtra("image_url", currentItem.image_pdf)

@@ -39,13 +39,14 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var spinnerSchool: Spinner
     private lateinit var saveWorkorder: Button
     private lateinit var homeViewModel: HomeViewModel
+    private lateinit var uploadTimeline : Button
     private var selectedSchool = "Select School"
+    private lateinit var checkboxStates:Array<IntArray>
     private var selectedId = ""
     private lateinit var progressBar: ProgressBar
     private var loadingDialog: Dialog? = null
     private var counter = 0
-    private var activeColumnIndex =
-        3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
+    private var activeColumnIndex = 3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -64,9 +65,8 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             WorkOrderViewModelFactory(timeLineRepository, homeRepository)
         )[WorkOrderViewModel::class.java]
 
-
+        uploadTimeline = requireView().findViewById(R.id.saveWorkorder)
         workOrderDropdown = requireView().findViewById(R.id.workOrder)
-        saveWorkorder = requireView().findViewById(R.id.saveWorkorder)
         spinnerSchool = requireView().findViewById(R.id.SelectedSchool)
         progressBar = requireView().findViewById(R.id.progressbar)
         // Observe the loading state from ViewModel
@@ -78,7 +78,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
 
-        saveWorkorder.setOnClickListener {
+        uploadTimeline.setOnClickListener {
             // Increment the counter
             counter = activeColumnIndex
             counter++
@@ -265,7 +265,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         Log.d("CheckSheet->numRows", numRows.toString())
 
                         // Generate checkbox states based on values from the 'work' array
-                        val checkboxStates = Array(numRows) { rowIndex ->
+                        checkboxStates = Array(numRows) { rowIndex ->
                             IntArray(24 * 4) { columnIndex ->
                                 // Use the corresponding value from the 'work' array if it exists, otherwise use 0
                                 work.getOrNull(rowIndex * (24 * 4) + columnIndex) ?: 0
@@ -284,7 +284,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                             )
                         }
                     }
-
                     override fun onNothingSelected(parent: AdapterView<*>?) {}
                 }
         }
