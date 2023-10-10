@@ -5,6 +5,7 @@ import com.example.pwd_app.model.LoginCredentials
 import com.example.pwd_app.model.RegisteredSchools
 import com.example.pwd_app.model.SchoolBuildings
 import com.example.pwd_app.model.SchoolData
+import com.example.pwd_app.model.UpdateResponse
 import com.example.pwd_app.model.UploadTimelineModel
 import com.example.pwd_app.model.WorkOrderTimelineModel
 import com.example.pwd_app.model.WorkOrders
@@ -72,7 +73,7 @@ interface ApiInterface {
         @Field("WorkorderNumber") workorderNumber: String,
         @Field("Description") description: String,
         @Field("Tags") tags: String
-    ): Response<ImageData>
+    ): Response<UpdateResponse>
 
     @FormUrlEncoded
     @POST("AppUpdateBuilding.php")
@@ -83,8 +84,8 @@ interface ApiInterface {
         @Field("image_name") imageName: String,
         @Field("EntryBy") entryBy: String,
         @Field("Description") description: String,
-    ): Response<ImageData>
+    ): Response<UpdateResponse>
 
     @POST("your_php_script.php")
-    suspend fun updateWorkOrder(@Body workOrderData: UploadTimelineModel?): Call<ResponseBody?>?
+    suspend fun updateWorkOrder(@Body workOrderData: UploadTimelineModel?): Response<UpdateResponse>
 }
