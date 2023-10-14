@@ -29,6 +29,7 @@ import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.TimeLineRepository
+import com.example.pwd_app.repository.UploadTimelineRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 
@@ -40,6 +41,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var uploadTimeline: Button
     lateinit var rowHeadings: Array<String>
+    lateinit var weekCount: Array<String>
     private var selectedSchool = "Select School"
     private lateinit var editedWorks: MutableList<String>
     private lateinit var checkboxStates: Array<IntArray>
@@ -56,6 +58,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(requireContext())
         val homeRepository = HomeRepository(apiInterface, database, requireContext())
+        val uploadTimelineRepository = UploadTimelineRepository(apiInterface)
         val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
 
         homeViewModel =
@@ -63,7 +66,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
         workOrderViewModel = ViewModelProvider(
             this,
-            WorkOrderViewModelFactory(timeLineRepository, homeRepository)
+            WorkOrderViewModelFactory(timeLineRepository, homeRepository,uploadTimelineRepository)
         )[WorkOrderViewModel::class.java]
 
         uploadTimeline = requireView().findViewById(R.id.saveWorkorder)
@@ -92,7 +95,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             // Disable columns based on the activeColumnIndex
             disableColumns(activeColumnIndex)
 
-
+//            workOrderViewModel.setWorkorderTimeline()
             // Show a message when the maximum limit is reached and reset the counter
             if (counter > 96) {
                 counter = 0
@@ -113,7 +116,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             spinnerSchool.adapter = adapter
         }
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
-           
             val workOrders = mutableListOf("Select Work Order")
             workOrders.addAll(timeLines
                 .filter {
@@ -247,6 +249,17 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         // Calculate the number of rows needed
                         Log.d("CheckSheet->Work", work.toList().toString())
 
+                        fun generateWeekCount():Array<String>{
+                            return timeLines
+                                .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
+                                .flatMap {
+                                    listOfNotNull(
+                                        it.countofweek
+                                    )
+                                }
+                                .toTypedArray()
+                        }
+
                         fun generateRowHeadings(): Array<String> {
                             return timeLines
                                 .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
@@ -259,6 +272,11 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         }
 
                         rowHeadings = generateRowHeadings()
+                        weekCount = generateWeekCount()
+                        if(weekCount.isNotEmpty()){
+                            activeColumnIndex = weekCount[0].toInt()+1
+                        }
+
                         editedWorks =  mutableListOf<String>()
                         for(i in 1 until rowHeadings.size step  2){
                             val row = rowHeadings[i]
