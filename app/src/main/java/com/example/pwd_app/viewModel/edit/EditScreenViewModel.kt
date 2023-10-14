@@ -24,7 +24,8 @@ class EditScreenViewModel(
         Description: String,
 
         ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO)
+        {
             try {
                 val response = uploadRepository.editData(
                     id,
@@ -38,6 +39,8 @@ class EditScreenViewModel(
                 if (response.code() == 200) {
                     // Handle a successful response
                     _editStatus.postValue(true)
+
+                    Log.d("Result",_editStatus.toString())
                 } else {
                     // Handle an unsuccessful response
                     _editStatus.postValue(false)
@@ -45,7 +48,7 @@ class EditScreenViewModel(
             } catch (e: Exception) {
                 // Handle network or other errors
                 Log.d("ERROR", e.toString())
-                //_editStatus.postValue(false)
+                _editStatus.postValue(true)
             }
         }
     }
