@@ -29,6 +29,7 @@ import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.TimeLineRepository
+import com.example.pwd_app.repository.UploadTimelineRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 
@@ -39,14 +40,16 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var spinnerSchool: Spinner
     private lateinit var homeViewModel: HomeViewModel
     private lateinit var uploadTimeline: Button
+    lateinit var rowHeadings: Array<String>
+    lateinit var weekCount: Array<String>
     private var selectedSchool = "Select School"
+    private lateinit var editedWorks: MutableList<String>
     private lateinit var checkboxStates: Array<IntArray>
     private var selectedId = ""
     private lateinit var progressBar: ProgressBar
     private var loadingDialog: Dialog? = null
     private var counter = 0
-    private var activeColumnIndex =
-        3  // isko 0 se initialize krna hai then jitna bhi progress hua usko db me save krna hai taki next time se wahi column use ho first time 0 rahega fir submit pe update hoga then isko save krna & next time se vo save wala use hone ko hona
+    private var activeColumnIndex: Int = 0
 
     @Deprecated("Deprecated in Java")
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -55,6 +58,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(requireContext())
         val homeRepository = HomeRepository(apiInterface, database, requireContext())
+        val uploadTimelineRepository = UploadTimelineRepository(apiInterface)
         val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
 
         homeViewModel =
@@ -62,7 +66,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
         workOrderViewModel = ViewModelProvider(
             this,
-            WorkOrderViewModelFactory(timeLineRepository, homeRepository)
+            WorkOrderViewModelFactory(timeLineRepository, homeRepository,uploadTimelineRepository)
         )[WorkOrderViewModel::class.java]
 
         uploadTimeline = requireView().findViewById(R.id.saveWorkorder)
@@ -82,14 +86,16 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             // Increment the counter
             counter = activeColumnIndex
             counter++
-            returnOddRowArrays(checkboxStates)
+            val oddStates = returnOddRowArrays(checkboxStates)
+            Log.d("OddStates", oddStates.toList().toString())
+            Log.d("Odd Entries",editedWorks.toString())
             // Determine the active column index based on the counter
             activeColumnIndex = counter % 97
 
             // Disable columns based on the activeColumnIndex
             disableColumns(activeColumnIndex)
 
-
+//            workOrderViewModel.setWorkorderTimeline()
             // Show a message when the maximum limit is reached and reset the counter
             if (counter > 96) {
                 counter = 0
@@ -110,11 +116,6 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             spinnerSchool.adapter = adapter
         }
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
-            Log.d(
-                "timelines",
-                timeLines.filter { it.school_name.toString().trim() != "Doma" }.toString()
-            )
-            Log.d("selected", Credentials.SELECTED_SCHOOL_FOR_WO)
             val workOrders = mutableListOf("Select Work Order")
             workOrders.addAll(timeLines
                 .filter {
@@ -141,9 +142,9 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         position: Int,
                         id: Long
                     ) {
-                        Credentials.SELECTED_WORKORDER_NUMBER =
-                            parent.getItemAtPosition(position).toString()
+                        Credentials.SELECTED_WORKORDER_NUMBER = parent.getItemAtPosition(position).toString()
                         val work = timeLines
+                            .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
                             .flatMap { timeline ->
                                 listOf(
                                     timeline.SelWeek1?.toInt(),
@@ -248,6 +249,17 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                         // Calculate the number of rows needed
                         Log.d("CheckSheet->Work", work.toList().toString())
 
+                        fun generateWeekCount():Array<String>{
+                            return timeLines
+                                .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
+                                .flatMap {
+                                    listOfNotNull(
+                                        it.countofweek
+                                    )
+                                }
+                                .toTypedArray()
+                        }
+
                         fun generateRowHeadings(): Array<String> {
                             return timeLines
                                 .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
@@ -259,8 +271,18 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                                 .toTypedArray()
                         }
 
-                        val rowHeadings = generateRowHeadings()
-                        Log.d("CheckSheet->rowHeadings", rowHeadings.toList().toString())
+                        rowHeadings = generateRowHeadings()
+                        weekCount = generateWeekCount()
+                        if(weekCount.isNotEmpty()){
+                            activeColumnIndex = weekCount[0].toInt()+1
+                        }
+
+                        editedWorks =  mutableListOf<String>()
+                        for(i in 1 until rowHeadings.size step  2){
+                            val row = rowHeadings[i]
+                            editedWorks.add(row)
+                        }
+                        Log.d("Edited Works", editedWorks.toString())
                         val numRows = rowHeadings.size
                         Log.d("CheckSheet->numRows", numRows.toString())
 
@@ -392,10 +414,11 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
     private fun returnOddRowArrays(checkboxStates: Array<IntArray>): List<IntArray> {
         val oddRowArrays = mutableListOf<IntArray>()
+
+
         for (i in 1 until checkboxStates.size step 2) {
             val oddRowArray = checkboxStates[i]
             oddRowArrays.add(oddRowArray)
-            println("Odd Row $i: ${oddRowArray.joinToString(", ")}")
         }
         return oddRowArrays
     }

@@ -26,6 +26,7 @@ import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.TimeLineRepository
+import com.example.pwd_app.repository.UploadTimelineRepository
 import com.example.pwd_app.viewModel.home.HomeViewModel
 import com.example.pwd_app.viewModel.home.HomeViewModelFactory
 import com.example.pwd_app.viewModel.workOrder.WorkOrderViewModel
@@ -51,13 +52,13 @@ class WorkProgress : Fragment(), AdapterView.OnItemSelectedListener {
         val database = DatabaseHelper.getDatabase(requireContext())
         val homeRepository = HomeRepository(apiInterface, database, requireContext())
         val timeLineRepository = TimeLineRepository(apiInterface, database, requireContext())
-
+        val uploadTimelineRepository = UploadTimelineRepository(apiInterface)
         homeViewModel =
             ViewModelProvider(this, HomeViewModelFactory(homeRepository))[HomeViewModel::class.java]
 
         workOrderViewModel = ViewModelProvider(
             this,
-            WorkOrderViewModelFactory(timeLineRepository, homeRepository)
+            WorkOrderViewModelFactory(timeLineRepository, homeRepository, uploadTimelineRepository)
         )[WorkOrderViewModel::class.java]
 
 
@@ -82,11 +83,7 @@ class WorkProgress : Fragment(), AdapterView.OnItemSelectedListener {
             spinnerSchool.adapter = adapter
         }
         workOrderViewModel.timeLine.observe(viewLifecycleOwner) { timeLines ->
-            Log.d(
-                "timelines",
-                timeLines.filter { it.school_name.toString().trim() != "Doma" }.toString()
-            )
-            Log.d("selected", Credentials.SELECTED_SCHOOL_FOR_WO)
+
             val workOrders = mutableListOf("Select Work Order")
             workOrders.addAll(timeLines
                 .filter {
@@ -115,7 +112,11 @@ class WorkProgress : Fragment(), AdapterView.OnItemSelectedListener {
                     ) {
                         Credentials.SELECTED_WORKORDER_NUMBER =
                             parent.getItemAtPosition(position).toString()
+
                         val work = timeLines
+                            .filter {
+                                it.school_name.toString().trim() == Credentials.SELECTED_SCHOOL_FOR_WO.trim()
+                            }
                             .flatMap { timeline ->
                                 listOf(
                                     timeline.SelWeek1?.toInt(),

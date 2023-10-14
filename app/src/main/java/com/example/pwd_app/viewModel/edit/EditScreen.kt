@@ -64,7 +64,6 @@ class EditScreen : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         networkStatusUtility = NetworkStatusUtility(this)
 
 
-
         // Retrieve the image URL or resource identifier from the intent
         val imageUrl = intent.getStringExtra("image_url")
         val description = intent.getStringExtra("description")

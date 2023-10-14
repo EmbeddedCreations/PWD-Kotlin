@@ -4,18 +4,9 @@ import com.google.gson.annotations.SerializedName
 
 data class UploadTimelineModel (
 
-    @SerializedName("school_name")
-    val schoolName: String,
-    @SerializedName("po_office")
     val poOffice: String,
-    @SerializedName("work`order_no")
+    @SerializedName("workorder_no")
     val workorderNo: String,
-    @SerializedName("workorder_name")
-    val workorderName: String,
-    @SerializedName("workorder_types")
-    val workorderTypes: String,
-    @SerializedName("srno")
-    val srno: String,
     @SerializedName("itemofwork")
     val itemOfWork: String,
     @SerializedName("countofweek")
