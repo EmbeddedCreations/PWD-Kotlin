@@ -16,6 +16,7 @@ import android.text.InputFilter
 import android.text.InputFilter.LengthFilter
 import android.text.TextUtils
 import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -270,34 +271,30 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                         UploadObject.DESCRIPTION,
                         UploadObject.AGS
                     )
+                    Log.d("Upload Status Observer", "Observer entered with isUploaded") // Add this line for logging
+
                     uploadViewModel.uploadStatus.observe(viewLifecycleOwner) { isUploaded ->
-
-
-                        progressDialog!!.dismiss()
-                        // Re-enable the "Upload" button after the upload is completed
-                        buttonUploadImage!!.isEnabled = true
-                        editTextDescription.setText("")
+                        Log.d("Upload Status", "isUploaded: $isUploaded") // Add this line for logging
+println("hello check")
+                        progressDialog?.dismiss()
+                        buttonUploadImage?.isEnabled = true
+                        editTextDescription.text.clear()
                         iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
                         selectedIssuesList.clear()
                         textView?.text = ""
                         imageChanged = false
 
-                        Toast.makeText(
-                            requireContext(),
-                            "Uploaded Successfull",
-                            Toast.LENGTH_SHORT
-                        ).show()
                         if (isUploaded) {
                             // Reset UI elements on successful upload
                             // Dismiss the progress dialog
-                            progressDialog!!.dismiss()
-                            // Re-enable the "Upload" button after the upload is completed
-                            buttonUploadImage!!.isEnabled = true
-                            editTextDescription.setText("")
-                            iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
-                            selectedIssuesList.clear()
-                            textView?.text = ""
-                            imageChanged = false
+//                            progressDialog!!.dismiss()
+//                            // Re-enable the "Upload" button after the upload is completed
+//                            buttonUploadImage!!.isEnabled = true
+//                            editTextDescription.setText("")
+//                            iv_imgView?.setImageResource(INITIAL_IMAGE_RESOURCE)
+//                            selectedIssuesList.clear()
+//                            textView?.text = ""
+//                            imageChanged = false
 
                             Toast.makeText(
                                 requireContext(),
@@ -305,9 +302,9 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                                 Toast.LENGTH_SHORT
                             ).show()
                         } else {
-                            progressDialog!!.dismiss()
-                            // Re-enable the "Upload" button after the upload is completed
-                            buttonUploadImage!!.isEnabled = true
+//                            progressDialog!!.dismiss()
+//                            // Re-enable the "Upload" button after the upload is completed
+//                            buttonUploadImage!!.isEnabled = true
                             Toast.makeText(
                                 requireContext(),
                                 "Uploaded Failed",

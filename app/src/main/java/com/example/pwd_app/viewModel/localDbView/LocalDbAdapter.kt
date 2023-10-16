@@ -1,8 +1,8 @@
 package com.example.pwd_app.viewModel.localDbView
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.app.Dialog
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.util.Base64
 import android.util.Log
@@ -15,7 +15,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.R
 import com.example.pwd_app.model.ImageData
-import com.example.pwd_app.viewModel.edit.EditScreen
 
 class LocalDbAdapter(
     private val buildingList: List<ImageData>,
@@ -70,9 +69,18 @@ class LocalDbAdapter(
             dialog.show()
         }
         holder.editView.setOnClickListener {
-            val context = holder.itemView.context
-            val i = Intent(context, EditScreen::class.java)
-            context.startActivity(i)
+            val alertDialogBuilder = AlertDialog.Builder(holder.itemView.context)
+            alertDialogBuilder.setTitle("Edit Building is not allowed")
+            alertDialogBuilder.setMessage("After uploading can edit in history") // Set your message here
+
+            alertDialogBuilder.setPositiveButton("ok") { dialog, which ->
+                dialog.dismiss()
+
+            }
+
+            val alertDialog = alertDialogBuilder.create()
+            alertDialog.show()
         }
+
     }
 }
