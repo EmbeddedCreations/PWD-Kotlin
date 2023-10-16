@@ -63,6 +63,7 @@ class UploadViewModel(
                 }
             } catch (e: Exception) {
                 // Handle network or other errors
+
                 Log.d("ERROR", e.toString())
                 //_uploadStatus.postValue(false)
             }

@@ -39,7 +39,8 @@ class SchoolAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val currentItem = schools[position]
-        holder.schoolName.text = currentItem.school_name
+        val nameSchool = Credentials.schools.find { it.id == currentItem.school_name }?.school_name
+        holder.schoolName.text = nameSchool
         holder.buildingNames.text = currentItem.buildings
         holder.schoolCard.setOnClickListener {
             //Intent to Start a New Activity

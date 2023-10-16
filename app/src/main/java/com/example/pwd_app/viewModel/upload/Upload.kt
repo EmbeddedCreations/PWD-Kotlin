@@ -271,8 +271,6 @@ class Upload : Fragment(), AdapterView.OnItemSelectedListener {
                         UploadObject.DESCRIPTION,
                         UploadObject.AGS
                     )
-                    Log.d("Upload Status Observer", "Observer entered with isUploaded") // Add this line for logging
-
                     uploadViewModel.uploadStatus.observe(viewLifecycleOwner) { isUploaded ->
                         Log.d("Upload Status", "isUploaded: $isUploaded") // Add this line for logging
 println("hello check")
