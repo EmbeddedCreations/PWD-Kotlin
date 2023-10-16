@@ -2,6 +2,7 @@ package com.example.pwd_app.viewModel.workOrder
 
 
 import android.app.Dialog
+import android.app.ProgressDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -27,6 +28,7 @@ import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
+import com.example.pwd_app.model.UploadTimelineModel
 import com.example.pwd_app.repository.HomeRepository
 import com.example.pwd_app.repository.TimeLineRepository
 import com.example.pwd_app.repository.UploadTimelineRepository
@@ -87,7 +89,127 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             counter = activeColumnIndex
             counter++
             val oddStates = returnOddRowArrays(checkboxStates)
-            Log.d("OddStates", oddStates.toList().toString())
+            var count = 0
+            for(work in 0 until editedWorks.size){
+
+                val workOrderData= UploadTimelineModel(
+                    poOffice = Credentials.DEFAULT_PO,
+                    workorderNo = Credentials.SELECTED_SCHOOL_FOR_WO,
+                    countOfWeek = activeColumnIndex.toString(),
+                    entryBy = Credentials.DEFAULT_JUNIOR_ENGINEER,
+                    itemOfWork = editedWorks[work],
+                    selWeek1 = oddStates[work][0].toString(),
+                    selWeek2 = oddStates[work][1].toString(),
+                    selWeek3 = oddStates[work][2].toString(),
+                    selWeek4 = oddStates[work][3].toString(),
+                    selWeek5 = oddStates[work][4].toString(),
+                    selWeek6 = oddStates[work][5].toString(),
+                    selWeek7 = oddStates[work][6].toString(),
+                    selWeek8 = oddStates[work][7].toString(),
+                    selWeek9 = oddStates[work][8].toString(),
+                    selWeek10 = oddStates[work][9].toString(),
+                    selWeek11 = oddStates[work][10].toString(),
+                    selWeek12 = oddStates[work][11].toString(),
+                    selWeek13 = oddStates[work][12].toString(),
+                    selWeek14 = oddStates[work][13].toString(),
+                    selWeek15 = oddStates[work][14].toString(),
+                    selWeek16 = oddStates[work][15].toString(),
+                    selWeek17 = oddStates[work][16].toString(),
+                    selWeek18 = oddStates[work][17].toString(),
+                    selWeek19 = oddStates[work][18].toString(),
+                    selWeek20 = oddStates[work][19].toString(),
+                    selWeek21 = oddStates[work][20].toString(),
+                    selWeek22 = oddStates[work][21].toString(),
+                    selWeek23 = oddStates[work][22].toString(),
+                    selWeek24 = oddStates[work][23].toString(),
+                    selWeek25 = oddStates[work][24].toString(),
+                    selWeek26 = oddStates[work][25].toString(),
+                    selWeek27 = oddStates[work][26].toString(),
+                    selWeek28 = oddStates[work][27].toString(),
+                    selWeek29 = oddStates[work][28].toString(),
+                    selWeek30 = oddStates[work][29].toString(),
+                    selWeek31 = oddStates[work][30].toString(),
+                    selWeek32 = oddStates[work][31].toString(),
+                    selWeek33 = oddStates[work][32].toString(),
+                    selWeek34 = oddStates[work][33].toString(),
+                    selWeek35 = oddStates[work][34].toString(),
+                    selWeek36 = oddStates[work][35].toString(),
+                    selWeek37 = oddStates[work][36].toString(),
+                    selWeek38 = oddStates[work][37].toString(),
+                    selWeek39 = oddStates[work][38].toString(),
+                    selWeek40 = oddStates[work][39].toString(),
+                    selWeek41 = oddStates[work][40].toString(),
+                    selWeek42 = oddStates[work][41].toString(),
+                    selWeek43 = oddStates[work][42].toString(),
+                    selWeek44 = oddStates[work][43].toString(),
+                    selWeek45 = oddStates[work][44].toString(),
+                    selWeek46 = oddStates[work][45].toString(),
+                    selWeek47 = oddStates[work][46].toString(),
+                    selWeek48 = oddStates[work][47].toString(),
+                    selWeek49 = oddStates[work][48].toString(),
+                    selWeek50 = oddStates[work][49].toString(),
+                    selWeek51 = oddStates[work][50].toString(),
+                    selWeek52 = oddStates[work][51].toString(),
+                    selWeek53 = oddStates[work][52].toString(),
+                    selWeek54 = oddStates[work][53].toString(),
+                    selWeek55 = oddStates[work][54].toString(),
+                    selWeek56 = oddStates[work][55].toString(),
+                    selWeek57 = oddStates[work][56].toString(),
+                    selWeek58 = oddStates[work][57].toString(),
+                    selWeek59 = oddStates[work][58].toString(),
+                    selWeek60 = oddStates[work][59].toString(),
+                    selWeek61 = oddStates[work][60].toString(),
+                    selWeek62 = oddStates[work][61].toString(),
+                    selWeek63 = oddStates[work][62].toString(),
+                    selWeek64 = oddStates[work][63].toString(),
+                    selWeek65 = oddStates[work][64].toString(),
+                    selWeek66 = oddStates[work][65].toString(),
+                    selWeek67 = oddStates[work][66].toString(),
+                    selWeek68 = oddStates[work][67].toString(),
+                    selWeek69 = oddStates[work][68].toString(),
+                    selWeek70 = oddStates[work][69].toString(),
+                    selWeek71 = oddStates[work][70].toString(),
+                    selWeek72 = oddStates[work][71].toString(),
+                    selWeek73 = oddStates[work][72].toString(),
+                    selWeek74 = oddStates[work][73].toString(),
+                    selWeek75 = oddStates[work][74].toString(),
+                    selWeek76 = oddStates[work][75].toString(),
+                    selWeek77 = oddStates[work][76].toString(),
+                    selWeek78 = oddStates[work][77].toString(),
+                    selWeek79 = oddStates[work][78].toString(),
+                    selWeek80 = oddStates[work][79].toString(),
+                    selWeek81 = oddStates[work][80].toString(),
+                    selWeek82 = oddStates[work][81].toString(),
+                    selWeek83 = oddStates[work][82].toString(),
+                    selWeek84 = oddStates[work][83].toString(),
+                    selWeek85 = oddStates[work][84].toString(),
+                    selWeek86 = oddStates[work][85].toString(),
+                    selWeek87 = oddStates[work][86].toString(),
+                    selWeek88 = oddStates[work][87].toString(),
+                    selWeek89 = oddStates[work][88].toString(),
+                    selWeek90 = oddStates[work][89].toString(),
+                    selWeek91 = oddStates[work][90].toString(),
+                    selWeek92 = oddStates[work][91].toString(),
+                    selWeek93 = oddStates[work][92].toString(),
+                    selWeek94 = oddStates[work][93].toString(),
+                    selWeek95 = oddStates[work][94].toString(),
+                    selWeek96 = oddStates[work][95].toString()
+                )
+                workOrderViewModel.setWorkorderTimeline(workOrderData)
+//                workOrderViewModel.uploadStatus.observe(viewLifecycleOwner){isUploaded->
+//                    if (isUploaded) {
+//                        // Reset UI elements on successful upload
+//                        // Dismiss the progress dialog
+//                        count++
+//                    } else {
+//
+//                    }
+//                }
+//                if(count == editedWorks.size){
+//                    progressDialog!!.dismiss()
+//                }
+            }
+
             Log.d("Odd Entries",editedWorks.toString())
             // Determine the active column index based on the counter
             activeColumnIndex = counter % 97
@@ -95,7 +217,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             // Disable columns based on the activeColumnIndex
             disableColumns(activeColumnIndex)
 
-//            workOrderViewModel.setWorkorderTimeline()
+
             // Show a message when the maximum limit is reached and reset the counter
             if (counter > 96) {
                 counter = 0
