@@ -56,6 +56,7 @@ class UploadViewModel(
                 if (response.code() == 200) {
                     // Handle a successful response
                     _uploadStatus.postValue(true)
+                    Log.d("Result",_uploadStatus.toString())
                 } else {
                     // Handle an unsuccessful response
                     _uploadStatus.postValue(false)
