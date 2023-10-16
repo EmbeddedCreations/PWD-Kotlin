@@ -2,6 +2,7 @@ package com.example.pwd_app.viewModel.home
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -128,7 +129,9 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
 
         //School Spinner
         homeViewModel.schools.observe(viewLifecycleOwner) { schoolList ->
-            val schools = schoolList.map { it.school_name.toString() }
+            val schools = mutableListOf<String>()
+            schools.add("Select School")
+            schools.addAll(schoolList.map { it.school_name.toString() })
             Credentials.schools = schoolList
             val adapter =
                 ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, schools)
@@ -190,10 +193,9 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
                 val selectedItem = spinnerSchool.selectedItem as? String
                 Credentials.SELECTED_SCHOOL_FOR_WO = selectedItem.toString()
                 selectedSchool = selectedItem ?: ""
-
-                selectedId = (homeViewModel.schools.value?.get(position)?.id ?: "")
+                val school = homeViewModel.schools.value?.find { it.school_name == selectedSchool  }
+                selectedId = school?.id ?: ""
                 Credentials.SELECTED_SCHOOL_ID = selectedId
-
                 homeViewModel.buildings.observe(viewLifecycleOwner) { buildingList ->
                     val buildings = mutableListOf("Select Building")
                     buildings.addAll(buildingList
