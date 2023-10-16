@@ -86,6 +86,6 @@ interface ApiInterface {
         @Field("Description") description: String,
     ): Response<UpdateResponse>
 
-    @POST("your_php_script.php")
+    @POST("AppUpdateTimeline.php")
     suspend fun updateWorkOrder(@Body workOrderData: UploadTimelineModel?): Response<UpdateResponse>
 }

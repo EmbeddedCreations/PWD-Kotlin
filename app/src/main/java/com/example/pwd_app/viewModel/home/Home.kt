@@ -129,6 +129,7 @@ class Home : Fragment(), AdapterView.OnItemSelectedListener {
         //School Spinner
         homeViewModel.schools.observe(viewLifecycleOwner) { schoolList ->
             val schools = schoolList.map { it.school_name.toString() }
+            Credentials.schools = schoolList
             val adapter =
                 ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, schools)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

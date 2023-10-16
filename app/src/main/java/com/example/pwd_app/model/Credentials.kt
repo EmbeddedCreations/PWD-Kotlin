@@ -9,5 +9,6 @@ object Credentials {
     var SELECTED_SCHOOL_ID = ""
     var SELECTED_BUILDING = ""
     var SELECTED_SCHOOL_FOR_WO = ""
+    lateinit var schools : List<RegisteredSchools>
 
 }
