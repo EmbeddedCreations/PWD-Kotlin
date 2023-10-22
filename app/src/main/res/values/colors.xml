@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="white">#FFFFFFFF</color>
+    <color name="lightGreen">#b3ffb3</color> <!-- Light green color -->
+    <color name="lightRed">#ff9999</color>   <!-- Light red color -->
+
 </resources>
