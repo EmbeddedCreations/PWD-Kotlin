@@ -1,6 +1,8 @@
 package com.example.pwd_app
 
 import android.app.AlertDialog
+import android.content.Context
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -38,37 +40,36 @@ class MainActivity : AppCompatActivity() {
             LoginViewModelFactory(loginRepository)
         )[LoginViewModel::class.java]
 
-        supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.home -> {
-                    showConfirmationDialog { // Callback when user confirms
+                    showConfirmationDialog {
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, homeFragment).commit()
                     }
                     return@OnItemSelectedListener true
                 }
-
                 R.id.profile -> {
                     showConfirmationDialog {
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                         supportFragmentManager.beginTransaction().replace(R.id.container, profile)
                             .commit()
                     }
                     return@OnItemSelectedListener true
                 }
-
                 R.id.progress -> {
-
                     showConfirmationDialog {
                         supportFragmentManager.beginTransaction()
                             .replace(R.id.container, workOrderSheet).commit()
+                        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                     }
                     return@OnItemSelectedListener true
                 }
-
                 R.id.analytics -> {
                     showConfirmationDialog {
+                        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
                         supportFragmentManager.beginTransaction().replace(R.id.container, analytics)
                             .commit()
                     }
@@ -106,4 +107,5 @@ class MainActivity : AppCompatActivity() {
             .setCancelable(false)
             .show()
     }
+
 }
