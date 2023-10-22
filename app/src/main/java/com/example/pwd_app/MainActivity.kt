@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             this,
             LoginViewModelFactory(loginRepository)
         )[LoginViewModel::class.java]
-
+        supportFragmentManager.beginTransaction().replace(R.id.container, homeFragment).commit()
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnItemSelectedListener(NavigationBarView.OnItemSelectedListener { item ->
             when (item.itemId) {
