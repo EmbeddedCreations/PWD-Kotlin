@@ -21,6 +21,7 @@ import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.R
@@ -507,9 +508,9 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         if (allMatch) {
-            currentProgressRow.setBackgroundColor(Color.GREEN)
+            currentProgressRow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.lightGreen))
         } else {
-            currentProgressRow.setBackgroundColor(Color.RED)
+            currentProgressRow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.lightRed))
         }
     }
 
