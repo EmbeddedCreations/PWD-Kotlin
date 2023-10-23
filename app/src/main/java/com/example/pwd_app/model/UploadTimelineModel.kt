@@ -12,197 +12,197 @@ data class UploadTimelineModel (
     @SerializedName("countofweek")
     val countOfWeek: String,
     @SerializedName("SelWeek1")
-    val selWeek1: String,
+    val SelWeek1: String,
     @SerializedName("SelWeek2")
-    val selWeek2: String,
+    val SelWeek2: String,
     @SerializedName("SelWeek3")
-    val selWeek3: String,
+    val SelWeek3: String,
     @SerializedName("SelWeek4")
-    val selWeek4: String,
+    val SelWeek4: String,
     @SerializedName("SelWeek5")
-    val selWeek5: String,
+    val SelWeek5: String,
     @SerializedName("SelWeek6")
-    val selWeek6: String,
+    val SelWeek6: String,
     @SerializedName("SelWeek7")
-    val selWeek7: String,
+    val SelWeek7: String,
     @SerializedName("SelWeek8")
-    val selWeek8: String,
+    val SelWeek8: String,
     @SerializedName("SelWeek9")
-    val selWeek9: String,
+    val SelWeek9: String,
     @SerializedName("SelWeek10")
-    val selWeek10: String,
+    val SelWeek10: String,
     @SerializedName("SelWeek11")
-    val selWeek11: String,
+    val SelWeek11: String,
     @SerializedName("SelWeek12")
-    val selWeek12: String,
+    val SelWeek12: String,
     @SerializedName("SelWeek13")
-    val selWeek13: String,
+    val SelWeek13: String,
     @SerializedName("SelWeek14")
-    val selWeek14: String,
+    val SelWeek14: String,
     @SerializedName("SelWeek15")
-    val selWeek15: String,
+    val SelWeek15: String,
     @SerializedName("SelWeek16")
-    val selWeek16: String,
+    val SelWeek16: String,
     @SerializedName("SelWeek17")
-    val selWeek17: String,
+    val SelWeek17: String,
     @SerializedName("SelWeek18")
-    val selWeek18: String,
+    val SelWeek18: String,
     @SerializedName("SelWeek19")
-    val selWeek19: String,
+    val SelWeek19: String,
     @SerializedName("SelWeek20")
-    val selWeek20: String,
+    val SelWeek20: String,
     @SerializedName("SelWeek21")
-    val selWeek21: String,
+    val SelWeek21: String,
     @SerializedName("SelWeek22")
-    val selWeek22: String,
+    val SelWeek22: String,
     @SerializedName("SelWeek23")
-    val selWeek23: String,
+    val SelWeek23: String,
     @SerializedName("SelWeek24")
-    val selWeek24: String,
+    val SelWeek24: String,
     @SerializedName("SelWeek25")
-    val selWeek25: String,
+    val SelWeek25: String,
     @SerializedName("SelWeek26")
-    val selWeek26: String,
+    val SelWeek26: String,
     @SerializedName("SelWeek27")
-    val selWeek27: String,
+    val SelWeek27: String,
     @SerializedName("SelWeek28")
-    val selWeek28: String,
+    val SelWeek28: String,
     @SerializedName("SelWeek29")
-    val selWeek29: String,
+    val SelWeek29: String,
     @SerializedName("SelWeek30")
-    val selWeek30: String,
+    val SelWeek30: String,
     @SerializedName("SelWeek31")
-    val selWeek31: String,
+    val SelWeek31: String,
     @SerializedName("SelWeek32")
-    val selWeek32: String,
+    val SelWeek32: String,
     @SerializedName("SelWeek33")
-    val selWeek33: String,
+    val SelWeek33: String,
     @SerializedName("SelWeek34")
-    val selWeek34: String,
+    val SelWeek34: String,
     @SerializedName("SelWeek35")
-    val selWeek35: String,
+    val SelWeek35: String,
     @SerializedName("SelWeek36")
-    val selWeek36: String,
+    val SelWeek36: String,
     @SerializedName("SelWeek37")
-    val selWeek37: String,
+    val SelWeek37: String,
     @SerializedName("SelWeek38")
-    val selWeek38: String,
+    val SelWeek38: String,
     @SerializedName("SelWeek39")
-    val selWeek39: String,
+    val SelWeek39: String,
     @SerializedName("SelWeek40")
-    val selWeek40: String,
+    val SelWeek40: String,
     @SerializedName("SelWeek41")
-    val selWeek41: String,
+    val SelWeek41: String,
     @SerializedName("SelWeek42")
-    val selWeek42: String,
+    val SelWeek42: String,
     @SerializedName("SelWeek43")
-    val selWeek43: String,
+    val SelWeek43: String,
     @SerializedName("SelWeek44")
-    val selWeek44: String,
+    val SelWeek44: String,
     @SerializedName("SelWeek45")
-    val selWeek45: String,
+    val SelWeek45: String,
     @SerializedName("SelWeek46")
-    val selWeek46: String,
+    val SelWeek46: String,
     @SerializedName("SelWeek47")
-    val selWeek47: String,
+    val SelWeek47: String,
     @SerializedName("SelWeek48")
-    val selWeek48: String,
+    val SelWeek48: String,
     @SerializedName("SelWeek49")
-    val selWeek49: String,
+    val SelWeek49: String,
     @SerializedName("SelWeek50")
-    val selWeek50: String,
+    val SelWeek50: String,
     @SerializedName("SelWeek51")
-    val selWeek51: String,
+    val SelWeek51: String,
     @SerializedName("SelWeek52")
-    val selWeek52: String,
+    val SelWeek52: String,
     @SerializedName("SelWeek53")
-    val selWeek53: String,
+    val SelWeek53: String,
     @SerializedName("SelWeek54")
-    val selWeek54: String,
+    val SelWeek54: String,
     @SerializedName("SelWeek55")
-    val selWeek55: String,
+    val SelWeek55: String,
     @SerializedName("SelWeek56")
-    val selWeek56: String,
+    val SelWeek56: String,
     @SerializedName("SelWeek57")
-    val selWeek57: String,
+    val SelWeek57: String,
     @SerializedName("SelWeek58")
-    val selWeek58: String,
+    val SelWeek58: String,
     @SerializedName("SelWeek59")
-    val selWeek59: String,
+    val SelWeek59: String,
     @SerializedName("SelWeek60")
-    val selWeek60: String,
+    val SelWeek60: String,
     @SerializedName("SelWeek61")
-    val selWeek61: String,
+    val SelWeek61: String,
     @SerializedName("SelWeek62")
-    val selWeek62: String,
+    val SelWeek62: String,
     @SerializedName("SelWeek63")
-    val selWeek63: String,
+    val SelWeek63: String,
     @SerializedName("SelWeek64")
-    val selWeek64: String,
+    val SelWeek64: String,
     @SerializedName("SelWeek65")
-    val selWeek65: String,
+    val SelWeek65: String,
     @SerializedName("SelWeek66")
-    val selWeek66: String,
+    val SelWeek66: String,
     @SerializedName("SelWeek67")
-    val selWeek67: String,
+    val SelWeek67: String,
     @SerializedName("SelWeek68")
-    val selWeek68: String,
+    val SelWeek68: String,
     @SerializedName("SelWeek69")
-    val selWeek69: String,
+    val SelWeek69: String,
     @SerializedName("SelWeek70")
-    val selWeek70: String,
+    val SelWeek70: String,
     @SerializedName("SelWeek71")
-    val selWeek71: String,
+    val SelWeek71: String,
     @SerializedName("SelWeek72")
-    val selWeek72: String,
+    val SelWeek72: String,
     @SerializedName("SelWeek73")
-    val selWeek73: String,
+    val SelWeek73: String,
     @SerializedName("SelWeek74")
-    val selWeek74: String,
+    val SelWeek74: String,
     @SerializedName("SelWeek75")
-    val selWeek75: String,
+    val SelWeek75: String,
     @SerializedName("SelWeek76")
-    val selWeek76: String,
+    val SelWeek76: String,
     @SerializedName("SelWeek77")
-    val selWeek77: String,
+    val SelWeek77: String,
     @SerializedName("SelWeek78")
-    val selWeek78: String,
+    val SelWeek78: String,
     @SerializedName("SelWeek79")
-    val selWeek79: String,
+    val SelWeek79: String,
     @SerializedName("SelWeek80")
-    val selWeek80: String,
+    val SelWeek80: String,
     @SerializedName("SelWeek81")
-    val selWeek81: String,
+    val SelWeek81: String,
     @SerializedName("SelWeek82")
-    val selWeek82: String,
+    val SelWeek82: String,
     @SerializedName("SelWeek83")
-    val selWeek83: String,
+    val SelWeek83: String,
     @SerializedName("SelWeek84")
-    val selWeek84: String,
+    val SelWeek84: String,
     @SerializedName("SelWeek85")
-    val selWeek85: String,
+    val SelWeek85: String,
     @SerializedName("SelWeek86")
-    val selWeek86: String,
+    val SelWeek86: String,
     @SerializedName("SelWeek87")
-    val selWeek87: String,
+    val SelWeek87: String,
     @SerializedName("SelWeek88")
-    val selWeek88: String,
+    val SelWeek88: String,
     @SerializedName("SelWeek89")
-    val selWeek89: String,
+    val SelWeek89: String,
     @SerializedName("SelWeek90")
-    val selWeek90: String,
+    val SelWeek90: String,
     @SerializedName("SelWeek91")
-    val selWeek91: String,
+    val SelWeek91: String,
     @SerializedName("SelWeek92")
-    val selWeek92: String,
+    val SelWeek92: String,
     @SerializedName("SelWeek93")
-    val selWeek93: String,
+    val SelWeek93: String,
     @SerializedName("SelWeek94")
-    val selWeek94: String,
+    val SelWeek94: String,
     @SerializedName("SelWeek95")
-    val selWeek95: String,
+    val SelWeek95: String,
     @SerializedName("SelWeek96")
-    val selWeek96: String,
+    val SelWeek96: String,
     @SerializedName("EntryBy")
     val entryBy: String
 ){}
