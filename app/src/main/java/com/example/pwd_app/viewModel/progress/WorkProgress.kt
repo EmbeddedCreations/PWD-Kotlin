@@ -313,7 +313,12 @@ class WorkProgress : Fragment(), AdapterView.OnItemSelectedListener {
         }
 
         if (allMatch) {
-            currentProgressRow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.lightGreen))
+            if(countCheckedCheckboxes(currentProgressRow)==0){
+                currentProgressRow.setBackgroundColor(Color.TRANSPARENT);
+
+            }else{
+                currentProgressRow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.lightGreen))
+            }
         } else {
             currentProgressRow.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.lightRed))
         }
