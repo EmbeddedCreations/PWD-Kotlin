@@ -95,7 +95,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
                 val workOrderData= UploadTimelineModel(
                     poOffice = Credentials.DEFAULT_PO,
-                    workorderNo = Credentials.SELECTED_SCHOOL_FOR_WO,
+                    workorderNo = Credentials.SELECTED_WORKORDER_NUMBER,
                     countOfWeek = activeColumnIndex.toString(),
                     entryBy = Credentials.DEFAULT_JUNIOR_ENGINEER,
                     itemOfWork = editedWorks[work],
@@ -313,15 +313,15 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
             Log.d("Odd Entries",editedWorks.toString())
             // Determine the active column index based on the counter
-            activeColumnIndex = counter % 97
+            counter = activeColumnIndex % 97
 
             // Disable columns based on the activeColumnIndex
-            disableColumns(activeColumnIndex)
+            disableColumns(counter)
 
 
             // Show a message when the maximum limit is reached and reset the counter
             if (counter > 96) {
-                counter = 0
+                activeColumnIndex = 0
                 Toast.makeText(
                     requireContext(),
                     "Maximum limit of 96 columns reached. Columns have been reset.",
@@ -483,6 +483,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
                                 .toTypedArray()
                         }
 
+
                         fun generateRowHeadings(): Array<String> {
                             return timeLines
                                 .filter { it.workorder_no == Credentials.SELECTED_WORKORDER_NUMBER }
@@ -496,8 +497,10 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
                         rowHeadings = generateRowHeadings()
                         weekCount = generateWeekCount()
+
                         if(weekCount.isNotEmpty()){
-                            activeColumnIndex = weekCount[0].toInt()+1
+                            activeColumnIndex = weekCount[1].toInt()+1
+                            Log.d("week Count",weekCount[1])
                         }
 
                         editedWorks =  mutableListOf<String>()
