@@ -78,6 +78,14 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/textViewSecondDropdownTitle" />
             </LinearLayout>
+            <TableLayout
+                android:id="@+id/columnHeaders"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:stretchColumns="*"
+                tools:ignore="MissingConstraints">
+            </TableLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -96,7 +104,6 @@
                 </TableLayout>
 
             </HorizontalScrollView>
-
             <Button
                 android:id="@+id/saveWorkorder"
                 android:layout_width="wrap_content"
