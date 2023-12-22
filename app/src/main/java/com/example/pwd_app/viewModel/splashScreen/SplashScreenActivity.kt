@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
+import com.example.pwd_app.MainActivity2
 import com.example.pwd_app.R
 import com.example.pwd_app.viewModel.login.Login
 
@@ -26,7 +27,7 @@ class SplashScreenActivity : AppCompatActivity() {
         // Use a handler to run a task after a specific time interval.
         Handler().postDelayed({
             // Create a new intent.
-            val i = Intent(this, Login::class.java)
+            val i = Intent(this, MainActivity2::class.java)
 
             // Start a new activity.
             startActivity(i)

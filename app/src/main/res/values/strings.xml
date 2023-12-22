@@ -46,4 +46,6 @@
     <string name="schools">School</string>
     <string name="workorder_progress_check">Workorder Progress Check</string>
     <string name="save_progress">save progress</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

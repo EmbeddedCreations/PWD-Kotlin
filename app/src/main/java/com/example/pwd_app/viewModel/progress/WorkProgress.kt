@@ -335,7 +335,6 @@ class WorkProgress : Fragment(), AdapterView.OnItemSelectedListener {
         return checkedCount
     }
 
-
     private fun getLastCheckedCheckboxIndex(row: TableRow): Int {
         for (i in row.childCount - 1 downTo 1) {
             val checkBox = row.getChildAt(i) as CheckBox

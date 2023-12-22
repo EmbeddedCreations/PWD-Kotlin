@@ -12,6 +12,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import com.example.pwd_app.MainActivity2
 import com.example.pwd_app.R
 import com.example.pwd_app.Utilities.General
 import com.example.pwd_app.data.local.DatabaseHelper
@@ -360,7 +361,7 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
         sessionManager.logoutUser()
 
         // Navigate back to the login screen
-        val intent = Intent(requireContext(), Login::class.java)
+        val intent = Intent(requireContext(), MainActivity2::class.java)
         startActivity(intent)
     }
 
