@@ -29,6 +29,8 @@ class WorkOrderViewModel(
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> get() = _loading
 
+    var currentFragmentTag: String? = null
+
     //upload Status
     private val _uploadStatus = MutableLiveData<Boolean>()
     val uploadStatus: LiveData<Boolean> = _uploadStatus
