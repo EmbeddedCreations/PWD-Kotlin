@@ -20,7 +20,7 @@
         android:theme="@style/Theme.Pwd_app"
         tools:targetApi="31">
         <activity
-            android:name=".MainActivity2"
+            android:name=".viewModel.mapActivity.MainActivity2"
             android:exported="false" />
         <activity
             android:name=".viewModel.progress.WorkProgress"
