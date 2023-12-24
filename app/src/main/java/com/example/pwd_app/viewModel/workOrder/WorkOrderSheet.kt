@@ -15,6 +15,7 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.CompoundButton
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.Spinner
 import android.widget.TableLayout
@@ -87,8 +88,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
 
         uploadTimeline.setOnClickListener {
             // Increment the counter
-            counter = activeColumnIndex
-            counter++
+            activeColumnIndex++
             val oddStates = returnOddRowArrays(checkboxStates)
             var count = 0
             for(work in 0 until editedWorks.size){
@@ -676,6 +676,7 @@ class WorkOrderSheet : Fragment(), AdapterView.OnItemSelectedListener {
             }
         }
         tableLayout.addView(headerRow)
+
 
         // Create rows with labels and checkboxes
         for (i in 1..numRows) {

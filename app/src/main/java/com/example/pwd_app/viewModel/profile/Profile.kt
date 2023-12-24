@@ -12,7 +12,7 @@ import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import com.example.pwd_app.MainActivity2
+import com.example.pwd_app.viewModel.mapActivity.MainActivity2
 import com.example.pwd_app.R
 import com.example.pwd_app.Utilities.General
 import com.example.pwd_app.data.local.DatabaseHelper
@@ -25,7 +25,6 @@ import com.example.pwd_app.repository.LocalDatabaseRepository
 import com.example.pwd_app.viewModel.localDbView.LocalDbView
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModel
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModelFactory
-import com.example.pwd_app.viewModel.login.Login
 import com.example.pwd_app.viewModel.login.SessionManager
 import com.example.pwd_app.viewModel.progress.WorkProgress
 import com.example.pwd_app.viewModel.schoolDisplay.SchoolDisplay
