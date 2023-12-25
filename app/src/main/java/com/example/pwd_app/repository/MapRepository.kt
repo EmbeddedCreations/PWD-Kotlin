@@ -22,8 +22,9 @@ class MapRepository(
     suspend fun getSchools() {
 
         if (NetworkUtil.isInternetAvailable(applicationContext)) {
+
             val result =
-                apiInterface.getRegisteredSchools("Amravati", "Kalamnuri")
+                apiInterface.getSchoolCoordinates()
             if (result.body() != null) {
                 database.Dao().insertRegisteredSchools(result.body()!!)
                 schoolLiveData.postValue(result.body())
