@@ -2,6 +2,7 @@ package com.example.pwd_app.viewModel.mapActivity
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -26,12 +27,15 @@ class MainActivity2 : AppCompatActivity(), OnMapReadyCallback {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
+        Log.d("MainActivity2", "onCreate method is called")
+
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(applicationContext)
         val homeRepository = HomeRepository(apiInterface, database, applicationContext)
         mapViewModel = ViewModelProvider(this,MapViewModelFactory(homeRepository))[MapViewModel::class.java]
 
         mapViewModel.schools.observe(this) { schoolList ->
+            Log.d("MainActivity2", "Observer triggered with schoolList size: ${schoolList.size}")
             markerList = schoolList.map {
                 MarkerInfo(
                     LatLng(it.location_lat!!.toDouble(), it.location_long!!.toDouble()),
@@ -51,6 +55,7 @@ class MainActivity2 : AppCompatActivity(), OnMapReadyCallback {
                 startActivity(intent)
                 finish() // Optional: Close the current activity if needed
             }
+            Log.d("data","end of data");
         }
 
     }
@@ -63,6 +68,8 @@ class MainActivity2 : AppCompatActivity(), OnMapReadyCallback {
                     .title(markerInfo.title)
                     .snippet(markerInfo.additionalInfo)
             )
+            Log.d("MarkerInfo", "Title: ${markerInfo.title}, LatLng: ${markerInfo.latLng}, Additional Info: ${markerInfo.additionalInfo}")
+
         }
 
         // Add map settings
