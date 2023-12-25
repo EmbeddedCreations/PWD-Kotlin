@@ -55,6 +55,9 @@ interface ApiInterface {
         @Query("po_office") po_office: String,
     ): Response<List<WorkOrderTimelineModel>>
 
+    @GET("app_registeredSchools.php")
+    suspend fun getSchoolCoordinates(): Response<List<RegisteredSchools>>
+
     @FormUrlEncoded
     @POST("app_upload_Image.php")
     suspend fun uploadData(

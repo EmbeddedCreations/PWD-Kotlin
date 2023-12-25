@@ -5,15 +5,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pwd_app.model.RegisteredSchools
 import com.example.pwd_app.repository.HomeRepository
+import com.example.pwd_app.repository.MapRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MapViewModel (private val homeRepository: HomeRepository) : ViewModel() {
-    init {
+class MapViewModel (private val mapRepository: MapRepository) : ViewModel() {
+
+    fun fetchSchools(){
         viewModelScope.launch(Dispatchers.IO) {
-            homeRepository.getSchools()
+            mapRepository.getSchools()
         }
     }
+
     val schools: LiveData<List<RegisteredSchools>>
-        get() = homeRepository.schools
+        get() = mapRepository.schools
 }
