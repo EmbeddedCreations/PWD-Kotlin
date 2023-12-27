@@ -22,15 +22,6 @@
         android:padding="16dp"
         tools:ignore="UselessParent">
 
-<!--        <ImageView-->
-<!--            android:id="@+id/logo"-->
-<!--            android:layout_width="326dp"-->
-<!--            android:layout_height="226dp"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:contentDescription="@string/login_logo"-->
-<!--            android:src="@drawable/AppIcon" />-->
-
-        <!-- Add the "Select ATC office" dropdown -->
         <Spinner
             android:id="@+id/select_atc_office"
             android:layout_width="match_parent"
