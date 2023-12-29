@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pwd_app.Workorder
 
 class WorkLog : AppCompatActivity() {
 
@@ -47,18 +48,9 @@ class CustomAdapter(private val dataList: List<String>, private val context: App
         val itemText = dataList[position]
         holder.itemTextView.text = itemText
 
-        // Set click listener only for the first item
-        if (position == 0) {
             holder.itemView.setOnClickListener {
-                // Handle click for the first item
                 startFormActivity()
             }
-        } else {
-            holder.itemView.setOnClickListener {
-                // Show a message for non-clickable items
-                showToast("Please complete the first task")
-            }
-        }
     }
 
     override fun getItemCount(): Int {
@@ -74,7 +66,7 @@ class CustomAdapter(private val dataList: List<String>, private val context: App
     }
 
     private fun startFormActivity() {
-        val intent = Intent(context, Form::class.java)
+        val intent = Intent(context, Workorder::class.java)
         context.startActivity(intent)
     }
 }

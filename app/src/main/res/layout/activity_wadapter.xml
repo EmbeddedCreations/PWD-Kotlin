@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Left side: Date Range -->
+        <TextView
+            android:id="@+id/workOrder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Workorder name"
+            android:textSize="18sp" />
+
+        <!-- Center side: Contractor name -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="8dp">
+
+            <TextView
+                android:id="@+id/textViewItem"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Contractor name"
+                android:textSize="18sp" />
+
+            <!-- Additional TextView below Contractor name -->
+            <TextView
+                android:id="@+id/textViewListItem2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Pending work"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
