@@ -20,13 +20,13 @@
         android:theme="@style/Theme.Pwd_app"
         tools:targetApi="31">
         <activity
-            android:name=".Workorder"
+            android:name=".viewModel.Analytics.Workorder"
             android:exported="false" />
         <activity
-            android:name=".viewModel.Form"
+            android:name=".viewModel.Analytics.Form"
             android:exported="false" />
         <activity
-            android:name=".viewModel.WorkLog"
+            android:name=".viewModel.Analytics.WorkLog"
             android:exported="false" />
         <activity
             android:name=".viewModel.mapActivity.MapActivity"

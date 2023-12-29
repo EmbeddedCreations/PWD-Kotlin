@@ -1,4 +1,4 @@
-package com.example.pwd_app.viewModel
+package com.example.pwd_app.viewModel.Analytics
 
 import android.os.Bundle
 import com.example.pwd_app.R
