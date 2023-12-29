@@ -20,10 +20,10 @@
         android:theme="@style/Theme.Pwd_app"
         tools:targetApi="31">
         <activity
-            android:name=".viewModel.Form"
+            android:name=".Workorder"
             android:exported="false" />
         <activity
-            android:name=".viewModel.Adapter"
+            android:name=".viewModel.Form"
             android:exported="false" />
         <activity
             android:name=".viewModel.WorkLog"

@@ -1,19 +1,28 @@
-package com.example.pwd_app.viewModel
+package com.example.pwd_app
 
-import com.example.pwd_app.R
-
+import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pwd_app.viewModel.Form
 
-class Adapter(private val dataList: List<String>) :
-    RecyclerView.Adapter<Adapter.ViewHolder>() {
+class Workorder : AppCompatActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_workorder)
+    }
+}
+class CustomAdapter(private val dataList: List<String>, private val context: AppCompatActivity) :
+    RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.activity_adapter, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.activity_wadapter, parent, false)
         return ViewHolder(view)
     }
 
@@ -25,7 +34,7 @@ class Adapter(private val dataList: List<String>) :
         if (position == 0) {
             holder.itemView.setOnClickListener {
                 // Handle click for the first item
-                // Add your logic here
+                startFormActivity()
             }
         } else {
             holder.itemView.setOnClickListener {
@@ -44,7 +53,11 @@ class Adapter(private val dataList: List<String>) :
     }
 
     private fun showToast(message: String) {
-        // Implement your logic to show a toast message
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
+
+    private fun startFormActivity() {
+        val intent = Intent(context, Form::class.java)
+        context.startActivity(intent)
     }
 }
-
