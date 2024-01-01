@@ -17,7 +17,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="17/12/23 to 19/12/23"
+            android:text="Date"
             android:textSize="18sp" />
 
         <!-- Right side: List of Texts -->
@@ -26,23 +26,10 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="8dp"
+            android:id="@+id/linearLayoutWorkOrder">
 
-            <TextView
-                android:id="@+id/textViewItem"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="l1"
-                android:textSize="18sp" />
 
-            <TextView
-                android:id="@+id/textViewListItem2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Item2"
-                android:textSize="18sp" />
-
-            <!-- Add more TextViews for additional list items as needed -->
 
         </LinearLayout>
     </LinearLayout>

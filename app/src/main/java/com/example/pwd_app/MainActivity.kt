@@ -1,7 +1,6 @@
 package com.example.pwd_app
 
 import android.app.AlertDialog
-import android.content.Context
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -10,7 +9,8 @@ import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.repository.LoginRepository
-import com.example.pwd_app.viewModel.Analytics.Analytics
+import com.example.pwd_app.viewModel.analytics.Analytics
+
 import com.example.pwd_app.viewModel.home.Home
 import com.example.pwd_app.viewModel.login.LoginViewModel
 import com.example.pwd_app.viewModel.login.LoginViewModelFactory
