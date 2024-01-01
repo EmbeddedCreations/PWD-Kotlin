@@ -23,7 +23,7 @@ class AnalyticsFragment : Fragment() {
         // Set click listener for the button
         goButton.setOnClickListener {
             // Create an Intent to navigate to the WorkLog class
-            val intent = Intent(activity, WorkLog::class.java)
+            val intent = Intent(activity, Form::class.java)
 
             // Start the WorkLog activity
             startActivity(intent)
