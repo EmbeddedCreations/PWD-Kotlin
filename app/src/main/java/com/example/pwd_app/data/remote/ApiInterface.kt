@@ -63,6 +63,13 @@ interface ApiInterface {
     suspend fun getSchoolCoordinates(): Response<List<RegisteredSchools>>
 
     @FormUrlEncoded
+    @POST
+    suspend fun loginLog(
+        @Field("poOfficeName") poOfficeName : String,
+        @Field("jrName") jrName : String
+    ):Response<UpdateResponse>
+
+    @FormUrlEncoded
     @POST("app_upload_Image.php")
     suspend fun uploadData(
         @Field("school_Name") schoolName: String,

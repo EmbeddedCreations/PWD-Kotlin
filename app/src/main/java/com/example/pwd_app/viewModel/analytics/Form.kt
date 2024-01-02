@@ -7,8 +7,8 @@ import com.example.pwd_app.R
 import android.widget.RatingBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
-import com.example.pwd_app.viewModel.mapActivity.MapActivity
+import com.example.pwd_app.viewModel.Analytics.PowerBI
+
 
 class Form : AppCompatActivity() {
 

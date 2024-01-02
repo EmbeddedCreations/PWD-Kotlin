@@ -20,7 +20,11 @@ import com.example.pwd_app.data.local.DatabaseHelper
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.Credentials
+import com.example.pwd_app.repository.LoginLogRepository
 import com.example.pwd_app.repository.LoginRepository
+import com.example.pwd_app.repository.UploadRepository
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
 class Login : AppCompatActivity() {
@@ -35,6 +39,7 @@ class Login : AppCompatActivity() {
         val loginApiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
         val database = DatabaseHelper.getDatabase(applicationContext)
         val loginRepository = LoginRepository(loginApiInterface, database, applicationContext)
+        val loginLogUpload = LoginLogRepository(loginApiInterface)
         loginViewModel = ViewModelProvider(
             this,
             LoginViewModelFactory(loginRepository)
@@ -71,13 +76,12 @@ class Login : AppCompatActivity() {
         }
 
         //Observe the user and Populate the atc Spinner
-        loginViewModel.users.observe(this) { userList ->
-            val atcOffices = mutableListOf("Select ATC Office")
-            atcOffices.addAll(userList.map { it.atc_office }.distinct())
-            val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, atcOffices)
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            selectAtcOfficeSpinner.adapter = adapter
-        }
+
+        val atcOffices = mutableListOf("Select ATC Office")
+        atcOffices.add("Amravati")
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, atcOffices)
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        selectAtcOfficeSpinner.adapter = adapter
 
         selectAtcOfficeSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
@@ -87,8 +91,7 @@ class Login : AppCompatActivity() {
                     loginViewModel.users.observe(this@Login) { userList ->
                         val filteredPoOffice = mutableListOf("Select Po Office")
                         filteredPoOffice.addAll(userList
-                            .filter { it.atc_office == selectedAtcOffice }
-                            .map { it.po_office })
+                            .map { it.AssignedPoOffice })
                         val adapter = ArrayAdapter(
                             this@Login,
                             android.R.layout.simple_spinner_item,
@@ -111,8 +114,8 @@ class Login : AppCompatActivity() {
                 loginViewModel.users.observe(this@Login) { userList ->
                     val filteredJe = mutableListOf("Select JE")
                     filteredJe.addAll(userList
-                        .filter { it.atc_office == selectedAtcOffice && it.po_office == selectedPoOffice && it.ErStatus == "Y" }
-                        .map { it.username })
+                        .filter {  it.AssignedPoOffice == selectedPoOffice && it.status == "Y" }
+                        .map { it.LgnErName })
                     val adapter = ArrayAdapter(
                         this@Login,
                         android.R.layout.simple_spinner_item,
@@ -135,8 +138,8 @@ class Login : AppCompatActivity() {
                     //Observe the user and populate poSpinner
                     loginViewModel.users.observe(this@Login) { userList ->
                         val passKey = userList
-                            .filter { it.atc_office == selectedAtcOffice && it.po_office == selectedPoOffice && it.username == selectedJe }
-                            .map { it.password }
+                            .filter { it.AssignedPoOffice == selectedPoOffice && it.LgnErName == selectedJe }
+                            .map { it.cnfLgnPass }
 
                         enteredPassword = passKey.toString()
                     }
@@ -153,7 +156,6 @@ class Login : AppCompatActivity() {
 
             loadingProgressBar.visibility = View.VISIBLE
             val inputPassword = passwordEditText.text.toString()
-            Log.d("password", enteredPassword)
             if (inputPassword == "" || selectedAtcOffice == "Select ATC Office" || selectedPoOffice == "Select Po Office" || selectedJe == "Select JE") {
                 Toast.makeText(
                     this@Login,
@@ -167,6 +169,15 @@ class Login : AppCompatActivity() {
                     )
                 )
             ) {
+
+                GlobalScope.launch {
+                    try {
+                        val response = loginLogUpload.addLog(selectedPoOffice, selectedJe)
+                        // Handle the response or perform other tasks
+                    } catch (e: Exception) {
+                        // Handle exceptions if any
+                    }
+                }
                 onLoginSuccess(selectedAtcOffice, selectedPoOffice, selectedJe)
 
                 Toast.makeText(this@Login, "Successful Login", Toast.LENGTH_SHORT).show()

@@ -17,7 +17,7 @@ interface Dao {
     suspend fun insertLoginCredentials(credentials: List<LoginCredentials>)
 
     // Select all login credentials
-    @Query("SELECT * FROM LoginCredTable")
+    @Query("SELECT * FROM LoginTableCred")
     suspend fun getAll(): List<LoginCredentials>
 
     //RegisteredSchoolsTable
