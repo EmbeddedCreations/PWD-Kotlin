@@ -2,6 +2,7 @@ package com.example.pwd_app.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity(tableName = "WorkOrderMaster")
 data class WorkOrders(
@@ -46,4 +47,4 @@ data class WorkOrders(
     val EntryTime: String? = "",
     val UpdateDate: String? = "",
     val UpdateTime: String? = ""
-)
+) : Serializable

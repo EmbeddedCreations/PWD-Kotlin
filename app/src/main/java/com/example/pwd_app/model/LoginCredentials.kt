@@ -3,13 +3,12 @@ package com.example.pwd_app.model
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "LoginCredTable")
+@Entity(tableName = "LoginTableCred")
 data class LoginCredentials(
-    @PrimaryKey val id: String,
-    val username: String,
-    val po_office: String,
-    val atc_office: String,
-    val password: String,
-    val position: String,
-    val ErStatus: String
+    @PrimaryKey val EID: String,
+    val LgnErName: String,
+    val ErPosition: String,
+    val AssignedPoOffice: String,
+    val cnfLgnPass: String,
+    val status: String,
 )

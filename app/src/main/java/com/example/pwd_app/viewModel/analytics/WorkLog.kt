@@ -6,12 +6,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.pwd_app.model.WorkOrders
 
 class WorkLog : AppCompatActivity() {
 
@@ -22,25 +22,26 @@ class WorkLog : AppCompatActivity() {
         val headingTextView: TextView = findViewById(R.id.textViewHeading)
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
 
+        //get serialized content from previous intent
+        val workItems = intent.getSerializableExtra("workItem") as? ArrayList<WorkOrders>
+
         // Set up RecyclerView
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
 
-        // Sample data for the RecyclerView
-        val dataList = listOf("Item 1", "Item 2", "Item 3", "Item 4", "Item 5")
 
         // Create and set the adapter
-        val adapter = CustomAdapter(dataList, this)
+        val adapter = CustomAdapter(workItems, this)
         recyclerView.adapter = adapter
     }
 }
 
-class CustomAdapter(private val dataList: List<String>, private val context: AppCompatActivity) :
+class CustomAdapter(private val dataList: ArrayList<WorkOrders>?, private val context: AppCompatActivity) :
     RecyclerView.Adapter<CustomAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.activity_adapter, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.activity_wadapter, parent, false)
         return ViewHolder(view)
     }
 
@@ -55,12 +56,12 @@ class CustomAdapter(private val dataList: List<String>, private val context: App
     }
 
     override fun getItemCount(): Int {
-        return dataList.size
+        return dataList?.size ?: 0
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        var textViewDateRange : TextView = itemView.findViewById(R.id.textViewDateRange)
-        var linearLayout: LinearLayout = itemView.findViewById(R.id.linearLayoutWorkOrder)
+        var workOrderName: TextView = itemView.findViewById(R.id.workOrder)
+        var contractor : TextView = itemView.findViewById(R.id.ContractorName)
     }
 
     private fun showToast(message: String) {

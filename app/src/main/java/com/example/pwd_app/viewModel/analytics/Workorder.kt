@@ -39,7 +39,7 @@ class Workorder : AppCompatActivity() {
         )[WorkCardViewModel::class.java]
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
-        val currentDate = LocalDate.parse("2023-01-02",formatter)
+       
         // Set up RecyclerView
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
@@ -48,7 +48,7 @@ class Workorder : AppCompatActivity() {
             for(workItem in workItems){
                 val workStartDate = LocalDate.parse(workItem.WorkorderDate)
                 val duration = workItem.DurationMonthsOrDays?.toLong() ?: 0L
-                val dateRanges = generateDateRanges(currentDate,workStartDate,duration)
+                val dateRanges = generateDateRanges(workStartDate,duration)
 
                 for(dateRange in dateRanges) {
                     val dateRangeKey = "${dateRange.first} to ${dateRange.second}"
@@ -66,16 +66,18 @@ class Workorder : AppCompatActivity() {
         }
     }
     @RequiresApi(Build.VERSION_CODES.O)
-    fun generateDateRanges(currentDate : LocalDate, workStartDate : LocalDate, duration : Long) : List<Pair<LocalDate, LocalDate>>{
+    fun generateDateRanges( workStartDate : LocalDate, duration : Long) : List<Pair<LocalDate, LocalDate>>{
+        val currentDate = LocalDate.now()
         val dateRanges = mutableListOf<Pair<LocalDate, LocalDate>>()
-        var startOfWeek = currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+        var startOfWeek = LocalDate.of(2023, 1, 2)
+            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
-        while(startOfWeek.isBefore(currentDate)){
+        while (startOfWeek.isBefore(currentDate)) {
             val endOfWeek = startOfWeek.plusDays(6)
             val workRange = Pair(startOfWeek, endOfWeek)
 
-            //check if the workOrder is within a range in the calendar
-            if(isWorkInRange(workStartDate,duration,workRange)){
+            // check if the workOrder is within a range in the calendar
+            if (isWorkInRange(workStartDate, duration, workRange)) {
                 dateRanges.add(workRange)
             }
             startOfWeek = startOfWeek.plusDays(7)
@@ -94,7 +96,7 @@ class CustomAdapter2(private val dataList: HashMap<String, MutableList<WorkOrder
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view =
-            LayoutInflater.from(parent.context).inflate(R.layout.activity_wadapter, parent, false)
+            LayoutInflater.from(parent.context).inflate(R.layout.activity_adapter, parent, false)
         return ViewHolder(view)
     }
 
@@ -114,7 +116,7 @@ class CustomAdapter2(private val dataList: HashMap<String, MutableList<WorkOrder
         if (position == 0) {
             holder.itemView.setOnClickListener {
                 // Handle click for the first item
-                startFormActivity()
+                startFormActivity(workItems)
             }
         } else {
             holder.itemView.setOnClickListener {
@@ -138,8 +140,9 @@ class CustomAdapter2(private val dataList: HashMap<String, MutableList<WorkOrder
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun startFormActivity() {
+    private fun startFormActivity(workItems: List<WorkOrders>) {
         val intent = Intent(context, WorkLog::class.java)
+        intent.putExtra("workItem",ArrayList(workItems))
         context.startActivity(intent)
     }
 
