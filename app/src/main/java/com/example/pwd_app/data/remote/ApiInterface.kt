@@ -31,6 +31,10 @@ interface ApiInterface {
         @Query("po_office") po_office: String
     ): Response<List<RegisteredSchools>>
 
+    @GET("app_workOrderSurvey.php")
+    suspend fun getWorks(
+        @Query("juniorEngineer") juniorEngineer : String
+    ): Response<List<WorkOrders>>
     @GET("app_building_select.php")
     suspend fun getSchoolBuildings(): Response<List<SchoolBuildings>>
 

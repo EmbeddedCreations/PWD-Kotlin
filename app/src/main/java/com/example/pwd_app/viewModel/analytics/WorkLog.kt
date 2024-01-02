@@ -1,11 +1,12 @@
-package com.example.pwd_app.viewModel.Analytics
-import com.example.pwd_app.R
+package com.example.pwd_app.viewModel.analytics
 
+import com.example.pwd_app.R
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -43,9 +44,10 @@ class CustomAdapter(private val dataList: List<String>, private val context: App
         return ViewHolder(view)
     }
 
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val itemText = dataList[position]
-        holder.itemTextView.text = itemText
+
+
 
             holder.itemView.setOnClickListener {
                 startFormActivity()
@@ -57,7 +59,8 @@ class CustomAdapter(private val dataList: List<String>, private val context: App
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val itemTextView: TextView = itemView.findViewById(R.id.textViewItem)
+        var textViewDateRange : TextView = itemView.findViewById(R.id.textViewDateRange)
+        var linearLayout: LinearLayout = itemView.findViewById(R.id.linearLayoutWorkOrder)
     }
 
     private fun showToast(message: String) {
@@ -65,7 +68,8 @@ class CustomAdapter(private val dataList: List<String>, private val context: App
     }
 
     private fun startFormActivity() {
-        val intent = Intent(context, Workorder::class.java)
+        val intent = Intent(context, Form::class.java)
         context.startActivity(intent)
     }
+
 }

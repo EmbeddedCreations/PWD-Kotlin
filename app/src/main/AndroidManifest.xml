@@ -20,16 +20,15 @@
         android:theme="@style/Theme.Pwd_app"
         tools:targetApi="31">
         <activity
+            android:name=".viewModel.analytics.Workorder"
             android:name=".viewModel.Analytics.PowerBI"
             android:exported="false" />
+
         <activity
-            android:name=".viewModel.Analytics.Workorder"
+            android:name=".viewModel.analytics.Form"
             android:exported="false" />
         <activity
-            android:name=".viewModel.Analytics.Form"
-            android:exported="false" />
-        <activity
-            android:name=".viewModel.Analytics.WorkLog"
+            android:name=".viewModel.analytics.WorkLog"
             android:exported="false" />
         <activity
             android:name=".viewModel.mapActivity.MapActivity"

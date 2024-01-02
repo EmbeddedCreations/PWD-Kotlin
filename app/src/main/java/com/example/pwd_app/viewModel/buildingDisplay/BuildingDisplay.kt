@@ -31,7 +31,6 @@ class BuildingDisplay : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         buildingDisplayViewModel.fetchBuildingData()
         buildingDisplayViewModel.schoolList.observe(this) { buildings ->
-            Log.d("Buildings", buildings.toString())
             recyclerView.adapter = BuildingAdapter(buildings)
         }
 

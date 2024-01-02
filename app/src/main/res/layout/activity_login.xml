@@ -16,8 +16,9 @@
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/round_border"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="320sp"
+        android:background="#D9FFFFFF"
         android:orientation="vertical"
         android:padding="16dp"
         tools:ignore="UselessParent">

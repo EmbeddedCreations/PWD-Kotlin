@@ -1,4 +1,4 @@
-package com.example.pwd_app.viewModel.Analytics
+package com.example.pwd_app.viewModel.analytics
 
 import android.content.Intent
 import android.os.Bundle
@@ -9,7 +9,7 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.pwd_app.R
 
-class AnalyticsFragment : Fragment() {
+class Analytics : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,7 +23,7 @@ class AnalyticsFragment : Fragment() {
         // Set click listener for the button
         goButton.setOnClickListener {
             // Create an Intent to navigate to the WorkLog class
-            val intent = Intent(activity, WorkLog::class.java)
+            val intent = Intent(activity, Workorder::class.java)
 
             // Start the WorkLog activity
             startActivity(intent)
