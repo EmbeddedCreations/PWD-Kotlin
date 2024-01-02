@@ -18,6 +18,7 @@ import com.example.pwd_app.R
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
 import com.example.pwd_app.model.WorkOrders
+import com.example.pwd_app.model.WorkorderLog
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -45,53 +46,13 @@ class Workorder : AppCompatActivity() {
         recyclerView.layoutManager = layoutManager
         workCardViewModel.fetchWorkOrders()
         workCardViewModel.workList.observe(this){ workItems ->
-            for(workItem in workItems){
-                val workStartDate = LocalDate.parse(workItem.WorkorderDate)
-                val duration = workItem.DurationMonthsOrDays?.toLong() ?: 0L
-                val dateRanges = generateDateRanges(workStartDate,duration)
 
-                for(dateRange in dateRanges) {
-                    val dateRangeKey = "${dateRange.first} to ${dateRange.second}"
-
-                    // Use putIfAbsent to ensure that if there are duplicates, only the first encountered workItem is associated with the date range
-                    val workItemList = uniqueDateRangesMap.getOrPut(dateRangeKey) { mutableListOf() }
-
-                    if (workItemList.none { it.SRN == workItem.SRN }) {
-                        // Add the current workItem to the list associated with the key
-                        workItemList.add(workItem)
-                    }
-                }
-            }
-            recyclerView.adapter = CustomAdapter2(uniqueDateRangesMap,this)
+//            recyclerView.adapter = CustomAdapter2(uniqueDateRangesMap,this)
         }
     }
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun generateDateRanges( workStartDate : LocalDate, duration : Long) : List<Pair<LocalDate, LocalDate>>{
-        val currentDate = LocalDate.now()
-        val dateRanges = mutableListOf<Pair<LocalDate, LocalDate>>()
-        var startOfWeek = LocalDate.of(2023, 1, 2)
-            .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
 
-        while (startOfWeek.isBefore(currentDate)) {
-            val endOfWeek = startOfWeek.plusDays(6)
-            val workRange = Pair(startOfWeek, endOfWeek)
-
-            // check if the workOrder is within a range in the calendar
-            if (isWorkInRange(workStartDate, duration, workRange)) {
-                dateRanges.add(workRange)
-            }
-            startOfWeek = startOfWeek.plusDays(7)
-        }
-        return dateRanges
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun isWorkInRange(workStartDate : LocalDate, duration : Long, dateRange: Pair<LocalDate, LocalDate>) : Boolean{
-        val workEndDate = workStartDate.plusDays(duration)
-        return !(workEndDate.isBefore(dateRange.first) || workEndDate.isAfter(dateRange.second))
-    }
 }
-class CustomAdapter2(private val dataList: HashMap<String, MutableList<WorkOrders>>, private val context: AppCompatActivity) :
+class CustomAdapter2(private val dataList: List<WorkorderLog>, private val context: AppCompatActivity) :
     RecyclerView.Adapter<CustomAdapter2.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -101,22 +62,29 @@ class CustomAdapter2(private val dataList: HashMap<String, MutableList<WorkOrder
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val entry = dataList.entries.elementAt(position)
-        val dateRange = entry.key
-        val workItems = entry.value
+        val entry = dataList[position]
 
+        val dateString = entry.weekStartDate + "to" + entry.weekEndDate
+        holder.textViewDateRange.text = dateString
 
-        holder.textViewDateRange.text = dateRange
-        for(workItem  in workItems){
-            val textView = TextView(context)
-            textView.text = workItem.WorkorderNumber
-            holder.linearLayout.addView(textView)
-        }
+        val textView = TextView(holder.itemView.context)
+        textView.text = entry.contractorName
+        textView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        holder.linearLayout.addView(textView)
+        textView.text = entry.workOrderName
+        textView.layoutParams = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        )
+        holder.linearLayout.addView(textView)
         // Set click listener only for the first item
         if (position == 0) {
             holder.itemView.setOnClickListener {
                 // Handle click for the first item
-                startFormActivity(workItems)
+                startFormActivity()
             }
         } else {
             holder.itemView.setOnClickListener {
@@ -140,9 +108,8 @@ class CustomAdapter2(private val dataList: HashMap<String, MutableList<WorkOrder
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
     }
 
-    private fun startFormActivity(workItems: List<WorkOrders>) {
-        val intent = Intent(context, WorkLog::class.java)
-        intent.putExtra("workItem",ArrayList(workItems))
+    private fun startFormActivity() {
+        val intent = Intent(context, Form::class.java)
         context.startActivity(intent)
     }
 

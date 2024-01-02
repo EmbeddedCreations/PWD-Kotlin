@@ -9,6 +9,7 @@ import com.example.pwd_app.model.UpdateResponse
 import com.example.pwd_app.model.UploadTimelineModel
 import com.example.pwd_app.model.WorkOrderTimelineModel
 import com.example.pwd_app.model.WorkOrders
+import com.example.pwd_app.model.WorkorderLog
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -34,7 +35,8 @@ interface ApiInterface {
     @GET("app_workOrderSurvey.php")
     suspend fun getWorks(
         @Query("juniorEngineer") juniorEngineer : String
-    ): Response<List<WorkOrders>>
+    ): Response<List<WorkorderLog>>
+
     @GET("app_building_select.php")
     suspend fun getSchoolBuildings(): Response<List<SchoolBuildings>>
 
@@ -63,7 +65,7 @@ interface ApiInterface {
     suspend fun getSchoolCoordinates(): Response<List<RegisteredSchools>>
 
     @FormUrlEncoded
-    @POST
+    @POST("app_Login_Log.php")
     suspend fun loginLog(
         @Field("poOfficeName") poOfficeName : String,
         @Field("jrName") jrName : String

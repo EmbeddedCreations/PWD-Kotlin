@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "LoginTableCred")
 data class LoginCredentials(
-    @PrimaryKey val EID: String,
+    @PrimaryKey
+    val EID: String,
     val LgnErName: String,
     val ErPosition: String,
     val AssignedPoOffice: String,
