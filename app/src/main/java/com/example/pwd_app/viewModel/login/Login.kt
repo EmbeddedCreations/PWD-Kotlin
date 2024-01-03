@@ -14,6 +14,7 @@ import android.widget.Spinner
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.pwd_app.MainActivity
 import com.example.pwd_app.R
 import com.example.pwd_app.data.local.DatabaseHelper
@@ -90,8 +91,11 @@ class Login : AppCompatActivity() {
                     //Observe the user and populate poSpinner
                     loginViewModel.users.observe(this@Login) { userList ->
                         val filteredPoOffice = mutableListOf("Select Po Office")
-                        filteredPoOffice.addAll(userList
-                            .map { it.AssignedPoOffice })
+                        filteredPoOffice.addAll(
+                            userList
+                                .map { it.AssignedPoOffice }
+                                .distinct()
+                        )
                         val adapter = ArrayAdapter(
                             this@Login,
                             android.R.layout.simple_spinner_item,
@@ -114,7 +118,7 @@ class Login : AppCompatActivity() {
                 loginViewModel.users.observe(this@Login) { userList ->
                     val filteredJe = mutableListOf("Select JE")
                     filteredJe.addAll(userList
-                        .filter {  it.AssignedPoOffice == selectedPoOffice && it.status == "Y" }
+                        .filter {  it.AssignedPoOffice == selectedPoOffice && it.status == "Y"}
                         .map { it.LgnErName })
                     val adapter = ArrayAdapter(
                         this@Login,
@@ -170,10 +174,12 @@ class Login : AppCompatActivity() {
                 )
             ) {
 
-                GlobalScope.launch {
+               GlobalScope.launch {
                     try {
+                        Log.d("select",selectedPoOffice+selectedJe);
                         val response = loginLogUpload.addLog(selectedPoOffice, selectedJe)
                         // Handle the response or perform other tasks
+                        Log.d("Response",response.toString())
                     } catch (e: Exception) {
                         // Handle exceptions if any
                     }

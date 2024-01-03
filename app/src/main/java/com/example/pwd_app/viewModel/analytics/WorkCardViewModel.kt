@@ -7,14 +7,15 @@ import androidx.lifecycle.viewModelScope
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.model.WorkOrders
+import com.example.pwd_app.model.WorkorderLog
 import kotlinx.coroutines.launch
 
 class WorkCardViewModel(
     private val apiInterface: ApiInterface
 ) : ViewModel(){
-    private val _workData = MutableLiveData<List<WorkOrders>>()
+    private val _workData = MutableLiveData<List<WorkorderLog>>()
 
-    val workList: LiveData<List<WorkOrders>> get() = _workData
+    val workList: LiveData<List<WorkorderLog>> get() = _workData
 
     fun fetchWorkOrders(){
         viewModelScope.launch{
