@@ -11,7 +11,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Question 1"
+        android:text="Have you visited the site?"
         android:textSize="18sp"
         android:textStyle="bold"/>
 
@@ -31,14 +31,15 @@
             android:id="@+id/radioNo1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No"/>
+            android:text="No"
+            android:checked="true"/>
     </RadioGroup>
 
     <!-- Question 2 -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Question 2"
+        android:text="Have you uploaded the photos?"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp"/>
@@ -59,14 +60,15 @@
             android:id="@+id/radioNo2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="No"/>
+            android:text="No"
+            android:checked="true"/>
     </RadioGroup>
 
     <!-- Question 3 - Text Answer -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="How much payement received till now"
+        android:text="How much payment received till now"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_marginTop="16dp"/>
@@ -75,7 +77,11 @@
         android:id="@+id/editTextAnswer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Type your answer here"/>
+        android:hint="Type your answer here"
+        android:inputType="number"
+    android:textColorHint="@android:color/darker_gray"/>
+
+
 
     <!-- Question 4 - Rating Type -->
     <TextView
