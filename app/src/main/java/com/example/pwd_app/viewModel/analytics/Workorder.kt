@@ -47,7 +47,7 @@ class Workorder : AppCompatActivity() {
         workCardViewModel.fetchWorkOrders()
         workCardViewModel.workList.observe(this){ workItems ->
 
-//            recyclerView.adapter = CustomAdapter2(uniqueDateRangesMap,this)
+           recyclerView.adapter = CustomAdapter2(workItems,this)
         }
     }
 
@@ -68,18 +68,19 @@ class CustomAdapter2(private val dataList: List<WorkorderLog>, private val conte
         holder.textViewDateRange.text = dateString
 
         val textView = TextView(holder.itemView.context)
-        textView.text = entry.contractorName
+        textView.text = entry.contractorName.toString()
         textView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         holder.linearLayout.addView(textView)
-        textView.text = entry.workOrderName
-        textView.layoutParams = LinearLayout.LayoutParams(
+        val textView2 = TextView(holder.itemView.context)
+        textView2.text = entry.workOrderName.toString()
+        textView2.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        holder.linearLayout.addView(textView)
+        holder.linearLayout.addView(textView2)
         // Set click listener only for the first item
         if (position == 0) {
             holder.itemView.setOnClickListener {
