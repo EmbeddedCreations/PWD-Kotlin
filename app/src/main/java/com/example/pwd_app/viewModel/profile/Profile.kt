@@ -22,6 +22,7 @@ import com.example.pwd_app.model.Credentials
 import com.example.pwd_app.network.NetworkStatusUtility
 import com.example.pwd_app.repository.DataRepository
 import com.example.pwd_app.repository.LocalDatabaseRepository
+import com.example.pwd_app.viewModel.analytics.Workorder
 import com.example.pwd_app.viewModel.localDbView.LocalDbView
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModel
 import com.example.pwd_app.viewModel.localDbView.LocalDbViewModelFactory
@@ -41,6 +42,7 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
     private lateinit var poOfficeText: TextView
     private lateinit var juniorEngineerNameText: TextView
     private lateinit var viewHistoryButton: Button
+    private lateinit var viewpendingButton: Button
     private lateinit var logOutButton: Button
     private lateinit var workorderProgress: Button
     private lateinit var status: ImageView
@@ -83,6 +85,7 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
         viewHistoryButton = view.findViewById(R.id.view_history_button)
         logOutButton = view.findViewById(R.id.logOutButton)
         workorderProgress = view.findViewById(R.id.progressButton)
+        viewpendingButton = view.findViewById(R.id.view_pending_work)
         status = view.findViewById(R.id.statusIcon)
         viewLocalDBButton = view.findViewById(R.id.view_db_button)
         uploadDbButton = requireView().findViewById(R.id.upload_db_button)
@@ -316,6 +319,10 @@ class Profile : Fragment(), AdapterView.OnItemSelectedListener {
                 0,                // Pop enter animation (you can specify one if needed)
                 0                 // Pop exit animation (you can specify one if needed)
             )
+        }
+        viewpendingButton.setOnClickListener{
+            val intent = Intent(requireContext(), Workorder::class.java)
+            startActivity(intent)
         }
 
     }

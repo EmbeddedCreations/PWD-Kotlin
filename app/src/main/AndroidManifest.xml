@@ -19,18 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pwd_app"
         tools:targetApi="31">
-        <activity
 
-            android:name=".viewModel.analytics.PowerBI"
-            android:exported="false" />
         <activity
             android:name=".viewModel.analytics.Workorder"
             android:exported="false" />
+        <activity android:name=".viewModel.Analytics.PowerBI"
+            android:exported="false"/>
         <activity
             android:name=".viewModel.analytics.Form"
-            android:exported="false" />
-        <activity
-            android:name=".viewModel.analytics.WorkLog"
             android:exported="false" />
         <activity
             android:name=".viewModel.mapActivity.MapActivity"

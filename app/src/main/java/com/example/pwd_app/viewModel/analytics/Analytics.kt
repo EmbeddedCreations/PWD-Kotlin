@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.example.pwd_app.R
+import com.example.pwd_app.viewModel.Analytics.PowerBI
 
 class Analytics : Fragment() {
 
@@ -23,7 +24,7 @@ class Analytics : Fragment() {
         // Set click listener for the button
         goButton.setOnClickListener {
             // Create an Intent to navigate to the WorkLog class
-            val intent = Intent(activity, Workorder::class.java)
+            val intent = Intent(activity, PowerBI::class.java)
 
             // Start the WorkLog activity
             startActivity(intent)
