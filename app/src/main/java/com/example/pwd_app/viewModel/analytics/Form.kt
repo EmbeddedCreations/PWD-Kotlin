@@ -6,11 +6,20 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Button
+import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.example.pwd_app.R
+import com.example.pwd_app.data.remote.ApiInterface
+import com.example.pwd_app.data.remote.ApiUtility
+import com.example.pwd_app.model.Log
+import com.example.pwd_app.repository.UploadWorkLogRepository
 import com.example.pwd_app.viewModel.Analytics.PowerBI
 
 class Form : AppCompatActivity() {
@@ -19,15 +28,31 @@ class Form : AppCompatActivity() {
     private lateinit var textViewRatingFeedback: TextView
     private lateinit var editTextAnswer: EditText
     private lateinit var submit: Button
-
+    private lateinit var workCardViewModel : WorkCardViewModel
+    private lateinit var siteVisited : RadioGroup
+    private lateinit var uploadPhotos : RadioGroup
+    private lateinit var payment : EditText
+    private lateinit var complete : CheckBox
+    private lateinit var onTime : RadioGroup
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_form)
 
         ratingBar = findViewById(R.id.ratingBar)
         textViewRatingFeedback = findViewById(R.id.textViewRatingFeedback)
-        editTextAnswer = findViewById(R.id.editTextAnswer)
         submit = findViewById(R.id.buttonSubmit)
+        siteVisited = findViewById(R.id.radioGroup1)
+        uploadPhotos = findViewById(R.id.radioGroup2)
+        payment = findViewById(R.id.editTextAnswer)
+        complete = findViewById(R.id.checkBoxAgree)
+
+
+        val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
+        val uploadWorkLogRepository = UploadWorkLogRepository(apiInterface)
+        workCardViewModel = ViewModelProvider(
+            this,
+            WorkCardViewModelFactory(apiInterface,uploadWorkLogRepository)
+        )[WorkCardViewModel::class.java]
 
         // Set a listener to the RatingBar
         ratingBar.setOnRatingBarChangeListener { _, rating, _ ->
@@ -55,8 +80,53 @@ class Form : AppCompatActivity() {
         })
 
         submit.setOnClickListener() {
-            val intent = Intent(this, PowerBI::class.java)
-            startActivity(intent)
+
+            val intent = Intent(this, Workorder::class.java)
+            siteVisited.setOnCheckedChangeListener{group ,checkedId ->
+                val radioButton : RadioButton =findViewById(checkedId)
+                Log.sitePhysicalVisit = radioButton.text.toString()
+            }
+            uploadPhotos.setOnCheckedChangeListener{group,checkedId ->
+                val radioButton : RadioButton =findViewById(checkedId)
+                Log.isPhotoUploaded = radioButton.text.toString()
+            }
+            onTime.setOnCheckedChangeListener{group,checkedId ->
+                val radioButton : RadioButton =findViewById(checkedId)
+                Log.isWorkOnTime = radioButton.text.toString()
+            }
+            val inputText = payment.text.toString()
+            Log.amountReleased = if (inputText.isNotEmpty()) ({
+                inputText.toInt()
+            }).toString() else ({
+                0
+            }).toString()
+            val result = if (complete.isChecked) {
+                "Complete"
+            } else {
+                "Incomplete"
+            }
+            workCardViewModel.updateLog(
+                Log.ID,
+                Log.assignedJE,
+                Log.weekNumber,
+                Log.isWorkOnTime,
+                Log.isPhotoUploaded,
+                Log.sitePhysicalVisit,
+                Log.amountReleased,
+                Log.progressRating,
+                result
+            )
+            workCardViewModel.editStatus.observe(this) { editStatus ->
+                
+                if (editStatus) {
+                    Toast.makeText(this, "Updated Successfully", Toast.LENGTH_SHORT)
+                        .show()
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, "Update Failed Please Try Again", Toast.LENGTH_SHORT).show()
+                }
+            }
+
         }
     }
 
@@ -71,5 +141,6 @@ class Form : AppCompatActivity() {
             else -> ""
         }
         textViewRatingFeedback.text = feedback
+        Log.progressRating = rating.toString()
     }
 }

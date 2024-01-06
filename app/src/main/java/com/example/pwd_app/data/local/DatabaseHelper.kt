@@ -20,7 +20,7 @@ import com.example.pwd_app.model.WorkOrders
         ImageData::class,
         WorkOrderTimelineModel::class
     ],
-    version = 2
+    version = 3
 )
 abstract class DatabaseHelper : RoomDatabase() {
 

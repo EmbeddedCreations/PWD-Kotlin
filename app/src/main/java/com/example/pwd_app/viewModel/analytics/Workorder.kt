@@ -17,8 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.R
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
+import com.example.pwd_app.model.Log
 import com.example.pwd_app.model.WorkOrders
 import com.example.pwd_app.model.WorkorderLog
+import com.example.pwd_app.repository.UploadWorkLogRepository
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -26,17 +28,16 @@ import java.time.temporal.TemporalAdjusters
 
 class Workorder : AppCompatActivity() {
     private lateinit var workCardViewModel : WorkCardViewModel
-    private var resultArray = mutableListOf<List<Any>>()
-    private var uniqueDateRangesMap = HashMap<String, MutableList<WorkOrders>>()
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_workorder)
-
         val apiInterface = ApiUtility.getInstance().create(ApiInterface::class.java)
+        val uploadWorkLogRepository = UploadWorkLogRepository(apiInterface)
         workCardViewModel = ViewModelProvider(
             this,
-            WorkCardViewModelFactory(apiInterface)
+            WorkCardViewModelFactory(apiInterface,uploadWorkLogRepository)
         )[WorkCardViewModel::class.java]
         val recyclerView: RecyclerView = findViewById(R.id.recyclerView)
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
@@ -84,6 +85,9 @@ class CustomAdapter2(private val dataList: List<WorkorderLog>, private val conte
         if (position == 0) {
             holder.itemView.setOnClickListener {
                 // Handle click for the first item
+                Log.ID = entry.ID
+                Log.assignedJE = entry.assignedJE.toString()
+                Log.weekNumber =entry.weekNumber.toString()
                 startFormActivity()
             }
         } else {

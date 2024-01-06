@@ -72,6 +72,19 @@ interface ApiInterface {
     ):Response<UpdateResponse>
 
     @FormUrlEncoded
+    @POST("app_uploadWorkLog.php")
+    suspend fun uploadWorkLog(
+        @Field("ID") id : String,
+        @Field("assignedJE") assignedJE : String,
+        @Field("weekNumber") weekNumber : String,
+        @Field("isWorkOnTime") isWorkOnTime : String,
+        @Field("isPhotoUploaded") isPhotoUploaded : String,
+        @Field("sitePhysicalVisit") sitePhysicalVisit : String,
+        @Field("amountReleased") amountReleased : String,
+        @Field("progressRating") progressRating : String,
+        @Field("weeklyProgressUpdateStatus") weeklyProgressUpdateStatus : String
+    ):Response<UpdateResponse>
+    @FormUrlEncoded
     @POST("app_upload_Image.php")
     suspend fun uploadData(
         @Field("school_Name") schoolName: String,
