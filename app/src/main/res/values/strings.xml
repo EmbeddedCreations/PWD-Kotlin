@@ -20,7 +20,6 @@
     <string name="upload_image_button">Upload Image</string>
     <string name="save_image_to_local_db">Save Image to local Db</string>
     <string name="launch_logo">Launch logo</string>
-    <string name="login_logo">Login logo</string>
     <string name="password">Password</string>
     <string name="toggle_password_visibility">Toggle Password Visibility</string>
     <string name="log_in">Log In</string>
@@ -47,5 +46,4 @@
     <string name="workorder_progress_check">Workorder Progress Check</string>
     <string name="save_progress">save progress</string>
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
