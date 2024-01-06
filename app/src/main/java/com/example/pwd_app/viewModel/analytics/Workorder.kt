@@ -17,14 +17,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pwd_app.R
 import com.example.pwd_app.data.remote.ApiInterface
 import com.example.pwd_app.data.remote.ApiUtility
-import com.example.pwd_app.model.Log
-import com.example.pwd_app.model.WorkOrders
+import com.example.pwd_app.model.WorkLog
 import com.example.pwd_app.model.WorkorderLog
 import com.example.pwd_app.repository.UploadWorkLogRepository
-import java.time.DayOfWeek
-import java.time.LocalDate
 import java.time.format.DateTimeFormatter
-import java.time.temporal.TemporalAdjusters
 
 class Workorder : AppCompatActivity() {
     private lateinit var workCardViewModel : WorkCardViewModel
@@ -48,7 +44,7 @@ class Workorder : AppCompatActivity() {
         workCardViewModel.fetchWorkOrders()
         workCardViewModel.workList.observe(this){ workItems ->
 
-//            recyclerView.adapter = CustomAdapter2(uniqueDateRangesMap,this)
+            recyclerView.adapter = CustomAdapter2(workItems,this)
         }
     }
 
@@ -75,19 +71,20 @@ class CustomAdapter2(private val dataList: List<WorkorderLog>, private val conte
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
         holder.linearLayout.addView(textView)
+        val textView2 = TextView(holder.itemView.context)
         textView.text = entry.workOrderName
         textView.layoutParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         )
-        holder.linearLayout.addView(textView)
+        holder.linearLayout.addView(textView2)
         // Set click listener only for the first item
         if (position == 0) {
             holder.itemView.setOnClickListener {
                 // Handle click for the first item
-                Log.ID = entry.ID
-                Log.assignedJE = entry.assignedJE.toString()
-                Log.weekNumber =entry.weekNumber.toString()
+                WorkLog.ID = entry.ID.toString()
+                WorkLog.assignedJE = entry.assignedJE.toString()
+                WorkLog.weekNumber =entry.weekNumber.toString()
                 startFormActivity()
             }
         } else {

@@ -1,10 +1,9 @@
 package com.example.pwd_app.model
 
-object Log {
+object WorkLog {
     var weekNumber: String = ""
     var ID: String =""
     var assignedJE = ""
-    var WorkOrderSRN: String= ""
     var isWorkOnTime: String= ""
     var isPhotoUploaded: String= ""
     var sitePhysicalVisit: String= ""
